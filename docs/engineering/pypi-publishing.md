@@ -22,7 +22,7 @@ GitHub's current OIDC guidance is linked from the
 ## Publish an accepted tag
 
 1. Open **Actions → Publish package to PyPI → Run workflow**.
-2. Enter an existing tag such as `v1.5.0`.
+2. Enter an existing tag such as `v1.6.0`.
 3. Approve the `pypi` environment when protection rules require it.
 4. After success, install in a clean environment and compare the installed
    version and wheel hash with the GitHub Release asset.

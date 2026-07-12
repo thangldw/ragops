@@ -4,6 +4,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-07-13
+
 ### Added
 
 - Reusable, read-only GitHub pull-request release gate with Step Summary and
@@ -16,6 +18,7 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 ### Changed
 
 - Standalone HTML comparison reports now include print-ready A4 styles.
+- Release-check virtual environments are excluded from source distributions.
 
 ## [1.5.0] - 2026-07-12
 
