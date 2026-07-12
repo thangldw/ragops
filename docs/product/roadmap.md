@@ -42,6 +42,14 @@ PR comment integration and notifications remain hosted/integration work.
 - Remaining launch gates: PyPI publishing, PR-native GitHub Action, starter
   issues, and design-partner feedback.
 
+## 1.6 — pull-request adoption path (in progress)
+
+- Reusable read-only GitHub PR gate with evidence summary and artifact.
+- Print-ready standalone HTML comparison report.
+- Framework-neutral first-trace tutorial.
+- Manual PyPI Trusted Publishing workflow; registry ownership remains an owner
+  setup gate.
+
 ## 2.0 — hosted control plane (local alpha boundary implemented)
 
 - Workspace isolation, SSO/RBAC, audit retention, managed ingestion, and

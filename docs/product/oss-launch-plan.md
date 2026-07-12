@@ -13,6 +13,8 @@ agree with the current code.
 - MIT license for repository HEAD and future releases.
 - Bug, feature, evaluator, and design-partner issue forms.
 - Contributor, support, conduct, security, and roadmap guidance.
+- Reusable PR gate, printable evidence, first-trace tutorial, and guarded PyPI
+  Trusted Publishing workflow.
 
 ## GitHub settings checklist
 
@@ -27,15 +29,14 @@ owner:
 5. Enable Discussions with Welcome, Q&A, and Show and Tell categories.
 6. Protect `main`, require CI, disable force pushes, and enable available
    dependency, secret, and security alerts.
-7. Create the PyPI `ragops` project and configure a Trusted Publisher before
-   enabling release publication.
+7. Create the PyPI `ragops` project and configure the `pypi` environment and
+   Trusted Publisher before running the manual publication workflow.
 
 ## Release readiness gaps
 
-- GitHub's latest public release must be synchronized with package version and
-  changelog before launch.
-- PyPI publication is not active, so public instructions must not claim that
-  `pip install ragops` works from the registry.
+- GitHub Release v1.5.0 is synchronized with package version and changelog.
+- PyPI publication is not active; the workflow and runbook are ready, but public
+  instructions must not claim registry installation until owner setup succeeds.
 - Create real starter issues from the backlog and apply `good first issue`,
   `help wanted`, `documentation`, or `integration` labels as appropriate.
 

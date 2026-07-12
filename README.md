@@ -183,6 +183,9 @@ before adapting the example to production.
 - [Product thesis](docs/product/product_thesis.md)
 - [System architecture](docs/architecture/system-overview.md)
 - [Evaluation strategy](docs/evaluation/strategy.md)
+- [Reusable GitHub PR gate](docs/engineering/github-pr-gate.md)
+- [Export your first portable trace](docs/engineering/export-your-first-trace.md)
+- [PyPI Trusted Publishing runbook](docs/engineering/pypi-publishing.md)
 - [Reference benchmark report](docs/evaluation/benchmark-report-v0.2.md)
 - [Roadmap](docs/product/roadmap.md)
 - [Contributing](CONTRIBUTING.md), [support](SUPPORT.md), and

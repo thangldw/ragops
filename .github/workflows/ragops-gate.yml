@@ -1,0 +1,104 @@
+name: RAGOps reusable release gate
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        description: Python version used to run RAGOps
+        required: false
+        type: string
+        default: "3.12"
+      ragops-version:
+        description: RAGOps Git revision or tag to install
+        required: false
+        type: string
+        default: "v1.5.0"
+      scenario:
+        description: Caller-relative scenario JSON path
+        required: true
+        type: string
+      baseline:
+        description: Caller-relative accepted baseline response path
+        required: true
+        type: string
+      candidate:
+        description: Caller-relative candidate response path
+        required: true
+        type: string
+      policy:
+        description: Optional caller-relative regression policy path
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+      - name: Install RAGOps
+        env:
+          RAGOPS_VERSION: ${{ inputs.ragops-version }}
+        run: >-
+          python -m pip install
+          "ragops @ git+https://github.com/thangldw/ragops.git@${RAGOPS_VERSION}"
+      - id: gate
+        name: Compare candidate with accepted baseline
+        shell: bash
+        env:
+          RAGOPS_SCENARIO: ${{ inputs.scenario }}
+          RAGOPS_BASELINE: ${{ inputs.baseline }}
+          RAGOPS_CANDIDATE: ${{ inputs.candidate }}
+          RAGOPS_POLICY: ${{ inputs.policy }}
+        run: |
+          set +e
+          command=(
+            ragops compare
+            --scenario "$RAGOPS_SCENARIO"
+            --baseline "$RAGOPS_BASELINE"
+            --candidate "$RAGOPS_CANDIDATE"
+            --format markdown
+            --output ragops-report.md
+          )
+          if [[ -n "$RAGOPS_POLICY" ]]; then
+            command+=(--policy "$RAGOPS_POLICY")
+          fi
+          "${command[@]}" >ragops-command.log 2>&1
+          gate_exit=$?
+          set -e
+          if [[ ! -f ragops-report.md ]]; then
+            {
+              echo "# RAGOps release gate error"
+              echo
+              echo '```text'
+              cat ragops-command.log
+              echo '```'
+            } >ragops-report.md
+          fi
+          echo "exit_code=$gate_exit" >>"$GITHUB_OUTPUT"
+      - name: Publish evidence to job summary
+        if: always()
+        run: cat ragops-report.md >>"$GITHUB_STEP_SUMMARY"
+      - name: Upload release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ragops-release-evidence
+          path: |
+            ragops-report.md
+            ragops-command.log
+      - name: Enforce release decision
+        if: always()
+        env:
+          RAGOPS_GATE_EXIT: ${{ steps.gate.outputs.exit_code }}
+        run: |
+          if [[ -z "$RAGOPS_GATE_EXIT" ]]; then
+            echo "RAGOps gate did not produce an exit code." >&2
+            exit 1
+          fi
+          exit "$RAGOPS_GATE_EXIT"

@@ -72,6 +72,16 @@ body{{font:16px system-ui;max-width:960px;margin:40px auto;padding:0 20px;color:
 table{{border-collapse:collapse;width:100%;margin:24px 0}}th,td{{padding:10px;border-bottom:1px solid #d7dce5;text-align:right}}
 th:first-child,td:first-child{{text-align:left}}code{{background:#f3f4f6;padding:2px 5px;border-radius:4px}}
 .critical{{color:#991b1b;font-weight:700}}.ok{{color:#065f46}}
+footer{{margin-top:32px;color:#5f6b7a;font-size:13px}}
+@media print{{
+  @page{{size:A4;margin:14mm}}
+  body{{max-width:none;margin:0;padding:0;color:#111;font-size:11pt}}
+  h1,h2{{break-after:avoid}}table{{break-inside:auto}}
+  tr{{break-inside:avoid;break-after:auto}}
+  .status{{border:1px solid currentColor;background:transparent!important}}
+  a{{color:inherit;text-decoration:none}}
+  footer{{border-top:1px solid #bbb;padding-top:10px}}
+}}
 </style></head><body>
 <h1>RAGOps regression report</h1><p class="status {status_class}">{status}</p>
 <p>Scenario: <code>{html.escape(report.scenario_id)}</code></p>

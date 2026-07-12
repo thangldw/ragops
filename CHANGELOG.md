@@ -4,6 +4,17 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+### Added
+
+- Reusable, read-only GitHub pull-request release gate with Step Summary and
+  evidence artifact output.
+- Credential-free portable trace tutorial and a manual, OIDC-based PyPI Trusted
+  Publishing workflow with tag/version verification.
+
+### Changed
+
+- Standalone HTML comparison reports now include print-ready A4 styles.
+
 ## [1.5.0] - 2026-07-12
 
 ### Added

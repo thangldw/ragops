@@ -35,12 +35,18 @@ ragops compare \
 Exit code `0` means release gates pass. Exit code `2` means evaluation completed
 but the build is blocked. Invalid contracts exit non-zero with an explanation.
 
+For pull requests, use the
+[reusable GitHub release gate](engineering/github-pr-gate.md) to preserve the
+same exit decision while publishing a job summary and evidence artifact.
+
 ## Import application traces
 
 Export one JSON object per line following
 `schemas/trace-0.4.schema.json`, then load it with
 `ragops.traces.load_trace_jsonl`. Provider-specific adapters should map their
 events into this envelope instead of changing the core domain model.
+See [Export your first portable trace](engineering/export-your-first-trace.md)
+for a complete credential-free walkthrough.
 
 ## Run the workbench
 

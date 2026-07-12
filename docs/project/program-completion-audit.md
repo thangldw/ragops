@@ -19,6 +19,7 @@ public presentation assets.
 | M4 local team workflow | Complete | `docs/project/m4-acceptance.md` |
 | M5 commercial alpha boundary | Complete as local alpha | `docs/project/m5-acceptance.md` |
 | v1.5 adoption-first experience | Ready for owner review | `docs/project/v1.5-acceptance.md` |
+| v1.6 pull-request adoption path | Ready for main deployment | `docs/project/v1.6-acceptance.md` |
 
 ## FDE competency coverage
 

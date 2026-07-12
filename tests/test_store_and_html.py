@@ -34,3 +34,6 @@ def test_html_report_is_standalone_and_escaped() -> None:
     assert "Candidate case drill-down" in rendered
     assert "Citation precision" in rendered
     assert "error-e42" in rendered
+    assert "@media print" in rendered
+    assert "@page{size:A4" in rendered
+    assert "break-inside:avoid" in rendered

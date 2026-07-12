@@ -1,0 +1,24 @@
+name: RAGOps reusable gate smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ragops-gate.yml"
+      - ".github/workflows/ragops-gate-smoke.yml"
+      - "tests/test_github_workflows.py"
+  pull_request:
+    paths:
+      - ".github/workflows/ragops-gate.yml"
+      - ".github/workflows/ragops-gate-smoke.yml"
+      - "tests/test_github_workflows.py"
+  workflow_dispatch:
+
+jobs:
+  passing-reference:
+    uses: ./.github/workflows/ragops-gate.yml
+    with:
+      ragops-version: v1.5.0
+      scenario: scenarios/japanese_troubleshooting/benchmark-v0.2.json
+      baseline: scenarios/japanese_troubleshooting/benchmark-baseline.json
+      candidate: scenarios/japanese_troubleshooting/benchmark-baseline.json
