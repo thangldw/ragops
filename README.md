@@ -103,7 +103,7 @@ validate the harness and architecture comparison; they do not claim customer
 adoption or production ROI.
 
 The repository currently validates its core, adapters, reference deployment,
-showcase, and demo paths with 84 automated tests.
+showcase, and demo paths with 99 automated tests.
 
 <p align="center">
   <img src="docs/demo/infographics/evidence-stack.svg" alt="RAGOps evidence stack combining quality, safety, operational budgets, and regression comparison into a release decision" width="100%">
@@ -162,6 +162,23 @@ ragops evaluate \
   --evaluator citation_correctness \
   --evaluator claim_support
 ```
+
+### Measure a design-partner pilot (development preview)
+
+The `main` branch includes a portable pilot evidence contract. Rehearse it with
+synthetic data before collecting consented, pseudonymous partner observations:
+
+```bash
+ragops pilot-report \
+  --manifest docs/gtm/pilot-fixtures/synthetic-manifest.json \
+  --observations docs/gtm/pilot-fixtures/synthetic-observations.jsonl \
+  --economics docs/gtm/pilot-fixtures/synthetic-economics.json \
+  --output pilot-report.md
+```
+
+See the [pilot runbook](docs/gtm/design-partner-pilot-runbook.md) and
+[synthetic report](docs/gtm/synthetic-pilot-report.md). Synthetic results are
+examples only and are not customer adoption or ROI claims.
 
 ## Architecture
 

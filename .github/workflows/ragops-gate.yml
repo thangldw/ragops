@@ -37,8 +37,8 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: ${{ inputs.python-version }}
       - name: Install RAGOps
@@ -81,17 +81,46 @@ jobs:
             } >ragops-report.md
           fi
           echo "exit_code=$gate_exit" >>"$GITHUB_OUTPUT"
+      - name: Write bounded evidence manifest
+        if: always()
+        env:
+          RAGOPS_EVENT_NAME: ${{ github.event_name }}
+          RAGOPS_GATE_EXIT: ${{ steps.gate.outputs.exit_code }}
+          RAGOPS_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          RAGOPS_PR_NUMBER: ${{ github.event.pull_request.number }}
+          RAGOPS_WORKFLOW: ${{ github.workflow }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+
+          gate_exit = os.environ.get("RAGOPS_GATE_EXIT", "")
+          manifest = {
+              "schema_version": "ragops-github-evidence-0.1",
+              "repository": os.environ["GITHUB_REPOSITORY"],
+              "event_name": os.environ["RAGOPS_EVENT_NAME"],
+              "workflow": os.environ["RAGOPS_WORKFLOW"],
+              "run_id": int(os.environ["GITHUB_RUN_ID"]),
+              "head_sha": os.environ["RAGOPS_HEAD_SHA"],
+              "pull_request_number": int(os.environ["RAGOPS_PR_NUMBER"] or 0),
+              "gate_exit_code": int(gate_exit) if gate_exit else -1,
+          }
+          with open("ragops-evidence.json", "w", encoding="utf-8") as output:
+              json.dump(manifest, output, ensure_ascii=False, indent=2)
+              output.write("\n")
+          PY
       - name: Publish evidence to job summary
         if: always()
         run: cat ragops-report.md >>"$GITHUB_STEP_SUMMARY"
       - name: Upload release evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ragops-release-evidence
           path: |
             ragops-report.md
             ragops-command.log
+            ragops-evidence.json
       - name: Enforce release decision
         if: always()
         env:

@@ -39,7 +39,7 @@ public presentation assets.
 ## Verification baseline
 
 - Python 3.11+ dependency-free core.
-- Eighty-four automated tests at the latest acceptance run.
+- Ninety-nine automated tests at the latest acceptance run.
 - Ruff and diff checks pass.
 - Baseline and reference deployment pass; regressed/adversarial builds return
   expected release-blocking exit codes.

@@ -1,0 +1,10 @@
+{
+  "schema_version": "ragops-pilot-economics-0.1",
+  "hourly_cost_usd": 60,
+  "pilot_investment_usd": 20,
+  "assumptions": [
+    "Loaded labor cost is illustrative and must be replaced by the design partner.",
+    "Time saved uses the difference between baseline and pilot median task duration.",
+    "No revenue uplift or downstream benefit is included."
+  ]
+}

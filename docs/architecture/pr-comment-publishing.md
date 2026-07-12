@@ -53,8 +53,13 @@ evidence instead of adding noise.
   failure as the release gate.
 - API failure: do not weaken or reinterpret the evaluation result.
 
-## Deferred implementation gate
+## Implemented controls
 
-Before adding a workflow, review pinned actions, artifact validation, fork
-behavior, token permissions, shell data flow, and negative tests. The current
-read-only summary/artifact workflow remains the supported default.
+The publisher is implemented in `.github/workflows/ragops-pr-comment.yml` and
+`apps/github_pr_comment.py`. Actions are pinned to full commit SHAs. The source
+gate emits a bounded manifest, while the publisher validates the event,
+artifact allowlist, sizes, manifest, conclusion, PR association, and comment
+cardinality before writing through the GitHub JSON API.
+
+The current read-only summary/artifact workflow remains the canonical release
+gate. The comment is reviewer visibility only and cannot change PASS/BLOCK.

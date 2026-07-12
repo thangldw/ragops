@@ -38,7 +38,8 @@ installed evaluator package.
 
 - `ragops-report.md` is appended to `$GITHUB_STEP_SUMMARY` even when the gate
   blocks the candidate.
-- `ragops-report.md` and `ragops-command.log` are uploaded as
+- `ragops-report.md`, `ragops-command.log`, and bounded
+  `ragops-evidence.json` metadata are uploaded as
   `ragops-release-evidence`.
 - Contract errors create an error report and fail after evidence upload.
 - The reusable workflow requests only `contents: read` and does not comment on
@@ -67,3 +68,17 @@ ragops compare \
 
 The workflow is an adapter only. Metric definitions and release semantics stay
 inside the dependency-free core.
+
+## Optional PR comment publisher
+
+This repository now includes `.github/workflows/ragops-pr-comment.yml`. It runs
+only after the exact caller workflow completes, checks out trusted default-
+branch code, validates the bounded evidence artifact, and creates or updates one
+`<!-- ragops-release-gate -->` bot comment.
+
+The publisher has `actions: read`, `contents: read`, and
+`pull-requests: write`. It never checks out PR code, uses
+`pull_request_target`, executes artifact content, or changes the gate result.
+Copying the publisher to another repository requires changing
+`RAGOPS_SOURCE_WORKFLOW` and the `workflow_run.workflows` allowlist to the exact
+caller workflow name.

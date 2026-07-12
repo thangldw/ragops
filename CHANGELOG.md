@@ -4,6 +4,16 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+### Added
+
+- Isolated, least-privilege GitHub `workflow_run` publisher that validates a
+  bounded evidence artifact and creates or updates one idempotent PR comment.
+- Portable design-partner pilot manifest, observation, economics, and report
+  contracts with deterministic adoption, task-outcome, safety, time-saved, and
+  optional ROI estimates.
+- Synthetic pilot rehearsal fixtures, generated report, measurement plan, and
+  real-pilot runbook with explicit consent and evidence limits.
+
 ## [1.7.0] - 2026-07-13
 
 ### Added

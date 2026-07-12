@@ -30,4 +30,5 @@ def test_pr_comment_design_keeps_write_path_separate() -> None:
         "<!-- ragops-release-gate -->",
     ):
         assert required in design
-    assert "implementation deferred" in adr
+    assert "Accepted for bounded implementation" in adr
+    assert "owner authorized" in adr

@@ -17,6 +17,14 @@ from ragops.plugins import (
     ClaimSupportEvaluator,
     RetrievalRecallEvaluator,
 )
+from ragops.pilot import (
+    PilotContractError,
+    load_pilot_economics,
+    load_pilot_manifest,
+    load_pilot_observations,
+    pilot_markdown,
+    summarize_pilot,
+)
 from ragops.reporters import comparison_html, comparison_markdown, evaluation_markdown
 from ragops.store import ExperimentStore
 from ragops.traces import load_trace_jsonl
@@ -107,6 +115,14 @@ def build_parser() -> argparse.ArgumentParser:
     workspace_audit.add_argument("--root", required=True)
     workspace_audit.add_argument("--workspace-id", required=True)
     workspace_audit.add_argument("--limit", type=int, default=100)
+    pilot_parser = commands.add_parser(
+        "pilot-report", help="Summarize design-partner adoption and ROI evidence"
+    )
+    pilot_parser.add_argument("--manifest", required=True)
+    pilot_parser.add_argument("--observations", required=True)
+    pilot_parser.add_argument("--economics")
+    pilot_parser.add_argument("--output")
+    pilot_parser.add_argument("--format", choices=("json", "markdown"), default="markdown")
     return parser
 
 
@@ -143,6 +159,27 @@ def main() -> int:
     if args.command == "workspace-audit":
         events = ControlPlane(args.root).audit_events(args.workspace_id, limit=args.limit)
         print(json.dumps(events, ensure_ascii=False, indent=2))
+        return 0
+    if args.command == "pilot-report":
+        try:
+            report = summarize_pilot(
+                load_pilot_manifest(args.manifest),
+                load_pilot_observations(args.observations),
+                load_pilot_economics(args.economics) if args.economics else None,
+            )
+        except PilotContractError as exc:
+            raise SystemExit(f"pilot contract error: {exc}") from exc
+        rendered = (
+            json.dumps(report.to_dict(), ensure_ascii=False, indent=2)
+            if args.format == "json"
+            else pilot_markdown(report)
+        )
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
+        else:
+            print(rendered.rstrip())
         return 0
     if args.command == "history":
         runs = ExperimentStore(args.store).list_runs(limit=args.limit)

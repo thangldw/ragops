@@ -61,7 +61,11 @@ are recorded.
 | --- | --- | --- | --- |
 | INTEG-02 | [#1](https://github.com/thangldw/ragops/issues/1) | Add a copyable GitLab CI release-gate recipe | Complete; issue closed |
 | DX-02 | [#2](https://github.com/thangldw/ragops/issues/2) | Add a credential-free proposal-review demo | Complete; issue closed |
-| INTEG-03 | [#3](https://github.com/thangldw/ragops/issues/3) | Design safe pull-request comment publishing | Design complete; issue closed; implementation deferred |
+| INTEG-03 | [#3](https://github.com/thangldw/ragops/issues/3) | Design safe pull-request comment publishing | Design and bounded implementation complete; issue closed |
+
+Completed after v1.7.0: bounded PR-comment implementation and portable design-
+partner pilot measurement. Real adoption and ROI remain external evidence work,
+not source-code completion claims.
 
 ## Work assignment convention
 

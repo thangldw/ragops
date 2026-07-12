@@ -1,0 +1,15 @@
+{
+  "schema_version": "ragops-pilot-manifest-0.1",
+  "pilot_id": "synthetic-support-pilot",
+  "label": "Synthetic support workflow pilot",
+  "period_start": "2026-06-15",
+  "period_end": "2026-07-12",
+  "synthetic": true,
+  "consent_status": "synthetic",
+  "eligible_user_ids": ["user_001", "user_002", "user_003"],
+  "targets": {
+    "min_repeat_usage_rate": 0.5,
+    "min_task_success_uplift": 0.1,
+    "min_time_saved_rate": 0.2
+  }
+}

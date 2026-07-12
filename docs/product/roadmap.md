@@ -59,6 +59,15 @@ PR comment integration and notifications remain hosted/integration work.
 - GitHub discovery metadata, Discussions, and real starter issues.
 - GitLab CI release-gate recipe and reviewed least-privilege PR-comment design.
 
+## 1.8 — review visibility and measured adoption (complete on main, unreleased)
+
+- Isolated, write-enabled PR comment publisher with bounded artifact parsing,
+  exact metadata verification, pinned actions, and idempotent updates.
+- Portable design-partner manifest, JSONL observations, optional economics,
+  deterministic KPI/ROI report, and explicit evidence limits.
+- Synthetic rehearsal, consent/data-minimization runbook, and public design-
+  partner outreach pack.
+
 ## 2.0 — hosted control plane (local alpha boundary implemented)
 
 - Workspace isolation, SSO/RBAC, audit retention, managed ingestion, and

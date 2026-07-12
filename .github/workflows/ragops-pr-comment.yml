@@ -1,0 +1,27 @@
+name: RAGOps PR comment publisher
+
+on:
+  workflow_run:
+    workflows: ["RAGOps reusable gate smoke"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: write
+
+jobs:
+  publish:
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout trusted default-branch publisher
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - name: Validate evidence and publish one idempotent comment
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RAGOPS_SOURCE_WORKFLOW: RAGOps reusable gate smoke
+        run: python apps/github_pr_comment.py

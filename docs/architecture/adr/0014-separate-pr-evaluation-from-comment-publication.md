@@ -1,6 +1,6 @@
 # ADR 0014: Separate PR evaluation from comment publication
 
-- Status: Accepted design; implementation deferred
+- Status: Accepted for bounded implementation
 - Date: 2026-07-13
 
 ## Context
@@ -27,13 +27,14 @@ the source of truth.
 
 ## Compatibility impact
 
-This ADR changes no workflow or public runtime behavior. The current reusable
-gate stays read-only. A future implementation requires separate owner review,
-permission regression tests, and bounded artifact parsing.
+The reusable gate stays read-only and adds only a bounded evidence manifest.
+The owner authorized the separate publisher implementation on 2026-07-13.
+Permission regression tests and bounded artifact parsing remain mandatory.
 
 ## Consequences
 
 - Reviewers get a concrete path to PR-native evidence without weakening the
   current workflow.
 - The privileged publisher treats all upstream artifacts as untrusted data.
-- Comment convenience remains deferred until implementation evidence is ready.
+- Comment publication is allowed only through the isolated publisher described
+  here; failure must not weaken or reinterpret the release decision.
