@@ -66,6 +66,10 @@ def evaluate(
             sum(finding.severity == "critical" for result in results for finding in result.findings)
         ),
     }
+    custom_metric_names = sorted({name for result in results for name in result.custom_metrics})
+    for name in custom_metric_names:
+        values = [result.custom_metrics[name] for result in results if name in result.custom_metrics]
+        metrics[name] = fmean(values)
     thresholds = scenario.thresholds
     failed: list[str] = []
     if metrics["citation_coverage"] < thresholds.citation_coverage:

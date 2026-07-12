@@ -8,6 +8,12 @@ from ragops.benchmarks import scenario_summary
 from ragops.config import load_regression_policy
 from ragops.engine import compare, evaluate
 from ragops.loader import ContractError, load_responses, load_scenario
+from ragops.plugins import (
+    CaseEvaluator,
+    CitationCorrectnessEvaluator,
+    ClaimSupportEvaluator,
+    RetrievalRecallEvaluator,
+)
 from ragops.reporters import comparison_html, comparison_markdown, evaluation_markdown
 from ragops.store import ExperimentStore
 
@@ -22,6 +28,12 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate_parser.add_argument("--format", choices=("json", "markdown"), default="json")
     evaluate_parser.add_argument("--store")
     evaluate_parser.add_argument("--label", default="")
+    evaluate_parser.add_argument(
+        "--evaluator",
+        action="append",
+        choices=("retrieval_recall", "citation_correctness", "claim_support"),
+        default=[],
+    )
     compare_parser = commands.add_parser("compare", help="Compare candidate responses to baseline")
     compare_parser.add_argument("--scenario", required=True)
     compare_parser.add_argument("--baseline", required=True)
@@ -55,7 +67,11 @@ def main() -> int:
     try:
         scenario = load_scenario(args.scenario)
         if args.command == "evaluate":
-            report = evaluate(scenario, load_responses(args.responses))
+            report = evaluate(
+                scenario,
+                load_responses(args.responses),
+                evaluators=_evaluators_from_names(args.evaluator),
+            )
         else:
             report = compare(
                 scenario,
@@ -82,6 +98,15 @@ def main() -> int:
     else:
         print(rendered)
     return 0 if report.passed else 2
+
+
+def _evaluators_from_names(names: list[str]) -> tuple[CaseEvaluator, ...]:
+    factories = {
+        "retrieval_recall": RetrievalRecallEvaluator,
+        "citation_correctness": CitationCorrectnessEvaluator,
+        "claim_support": ClaimSupportEvaluator,
+    }
+    return tuple(factories[name]() for name in names)
 
 
 if __name__ == "__main__":

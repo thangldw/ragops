@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Protocol, runtime_checkable
 
@@ -44,3 +45,73 @@ class RetrievalRecallEvaluator:
         else:
             score = len(relevant.intersection(response.retrieved_ids)) / len(relevant)
         return PluginResult(metrics={"score": score})
+
+
+class CitationCorrectnessEvaluator:
+    """Measure cited IDs that belong to the case's trusted evidence contract."""
+
+    name = "citation_correctness"
+
+    def evaluate(self, case: EvalCase, response: RecordedResponse) -> PluginResult:
+        supplied = set(response.citation_ids)
+        required = set(case.required_citation_ids)
+        if not supplied:
+            score = 1.0 if not required else 0.0
+        else:
+            score = len(supplied.intersection(required)) / len(supplied)
+        findings = ()
+        if score < 1.0:
+            findings = (
+                Finding(
+                    rule="unsupported_citation",
+                    severity="high",
+                    message="Response includes a citation outside the case evidence contract",
+                ),
+            )
+        return PluginResult(metrics={"score": score}, findings=findings)
+
+
+class ClaimSupportEvaluator:
+    """Transparent claim-level lexical support baseline.
+
+    Sentences are treated as claims. A claim is supported when its meaningful
+    tokens overlap trusted evidence above ``min_overlap``. This is intentionally
+    not described as semantic entailment.
+    """
+
+    name = "claim_support"
+
+    def __init__(self, *, min_overlap: float = 0.5) -> None:
+        if not 0 <= min_overlap <= 1:
+            raise ValueError("min_overlap must be between 0 and 1")
+        self.min_overlap = min_overlap
+
+    def evaluate(self, case: EvalCase, response: RecordedResponse) -> PluginResult:
+        evidence_tokens = _meaningful_tokens(" ".join(case.evidence))
+        claims = [part.strip() for part in re.split(r"[.!?。！？]+", response.answer) if part.strip()]
+        if not claims:
+            return PluginResult(metrics={"score": 0.0, "unsupported_claims": 1.0})
+        supported = 0
+        for claim in claims:
+            tokens = _meaningful_tokens(claim)
+            overlap = len(tokens.intersection(evidence_tokens)) / len(tokens) if tokens else 0.0
+            supported += overlap >= self.min_overlap
+        score = supported / len(claims)
+        unsupported = len(claims) - supported
+        findings = ()
+        if unsupported:
+            findings = (
+                Finding(
+                    rule="unsupported_claim",
+                    severity="high",
+                    message=f"{unsupported} of {len(claims)} answer claims lack lexical support",
+                ),
+            )
+        return PluginResult(
+            metrics={"score": score, "unsupported_claims": float(unsupported)},
+            findings=findings,
+        )
+
+
+def _meaningful_tokens(value: str) -> set[str]:
+    return {token.casefold() for token in re.findall(r"[\w\-]+", value) if len(token) > 1}

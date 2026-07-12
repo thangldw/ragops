@@ -20,6 +20,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
   families, attack metadata, a passing baseline, coverage tests, and CI gates.
 - Response-fixture overlays, explicit regressed/adversarial benchmark candidates,
   expected-failure CI checks, and a reproducible benchmark report.
+- Optional claim-support and citation-correctness evaluators with aggregate
+  plugin metrics, calibration tests, CLI selection, and M1 acceptance evidence.
 
 ## [1.0.0] - 2026-07-12
 

@@ -33,7 +33,9 @@ pip install -e '.[dev,api]'
 pytest
 ragops evaluate \
   --scenario scenarios/japanese_troubleshooting/scenario.json \
-  --responses scenarios/japanese_troubleshooting/sample_responses.json
+  --responses scenarios/japanese_troubleshooting/sample_responses.json \
+  --evaluator citation_correctness \
+  --evaluator claim_support
 ragops compare \
   --scenario scenarios/japanese_troubleshooting/scenario.json \
   --baseline scenarios/japanese_troubleshooting/sample_responses.json \

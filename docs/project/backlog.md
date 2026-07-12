@@ -2,6 +2,9 @@
 
 ## Now — milestone M1
 
+M1 is accepted in `docs/project/m1-acceptance.md`. The completed stories remain
+below as a traceable record; active implementation moves to M2.
+
 | ID | Story | Acceptance evidence |
 | --- | --- | --- |
 | BENCH-01 | Define scenario case metadata contract | ADR, schema proposal, compatibility tests |
@@ -32,4 +35,3 @@
 - Claude Code or Codex implements one issue-sized story at a time.
 - The implementer links requirement, ADR, tests, and evidence in the pull request.
 - Thang reviews metric meaning, architecture, product fit, and final acceptance.
-

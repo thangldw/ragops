@@ -26,6 +26,8 @@ jobs:
           ragops evaluate
           --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json
           --responses scenarios/japanese_troubleshooting/benchmark-baseline.json
+          --evaluator citation_correctness
+          --evaluator claim_support
       - name: Confirm regressed benchmark is blocked
         shell: bash
         run: |
