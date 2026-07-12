@@ -8,6 +8,7 @@
 | 2026-07-12 | Treat deterministic checks as the first layer | Explainability and repeatability before model judges | Accepted |
 | 2026-07-12 | Keep reference retrieval/generation outside the core | Prevent product boundary drift | Accepted |
 | 2026-07-12 | License repository HEAD and future releases under MIT | Lower adoption and contribution friction without weakening the OSS core | Accepted |
+| 2026-07-12 | Repair trace 0.4 schema syntax without changing its fields or semantics | Restore the published schema as valid JSON before v1.5.0 | Accepted |
 
 Architecturally significant changes must be captured as ADRs; this table is
 the concise presentation-oriented index.

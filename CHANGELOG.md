@@ -4,6 +4,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-07-12
+
 ### Added
 
 - Credential-free `ragops demo` command that writes portable fixtures plus
@@ -33,6 +35,11 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 - Made `ragops demo` fail closed for existing output directories and reject
   symlinked destinations or files; intentional replacement now requires
   `--force` and uses an atomic temporary-file swap.
+
+### Fixed
+
+- Repaired the malformed trace 0.4 JSON Schema object boundary and added a
+  regression gate that parses every published schema.
 
 ## [1.4.0] - 2026-07-12
 

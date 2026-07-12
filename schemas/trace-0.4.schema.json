@@ -28,6 +28,7 @@
     "retrieval": {
       "type": "object",
       "properties": {"document_ids": {"type": "array", "items": {"type": "string"}}
+      }
     },
     "latency_ms": {"type": "integer", "minimum": 0},
     "usage": {

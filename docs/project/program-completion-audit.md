@@ -36,7 +36,7 @@ public presentation assets.
 ## Verification baseline
 
 - Python 3.11+ dependency-free core.
-- Fifty-seven automated tests at the latest acceptance run.
+- Sixty-one automated tests at the latest acceptance run.
 - Ruff and diff checks pass.
 - Baseline and reference deployment pass; regressed/adversarial builds return
   expected release-blocking exit codes.
@@ -55,6 +55,6 @@ therefore launch activities rather than missing repository implementation:
 
 ## Final recommendation
 
-Use release 1.4.0 for FDE interviews, OSS feedback, and customer discovery.
+Use release 1.5.0 for FDE interviews, OSS feedback, and customer discovery.
 Proceed to a real offline design-partner pilot; do not market the control-plane
 alpha as production SaaS or claim measured ROI until external evidence exists.
