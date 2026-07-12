@@ -25,6 +25,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 - Reworked the README around the product value, reproducible evidence, quick
   start, architecture boundaries, and honest production limitations.
 - Updated the product showcase to reflect the current 50+ test validation suite.
+- Expanded the GitHub README with two architecture/evidence infographics and
+  current desktop, limitations, and mobile product screens.
 
 ### Security
 

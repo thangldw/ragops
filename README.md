@@ -13,7 +13,7 @@ optional.
 
 <p align="center">
   <a href="https://thangldw.github.io/ragops/">
-    <img src="docs/demo/screenshots/ragops-showcase-hero.jpg" alt="RAGOps product showcase: from an ambiguous AI request to a defensible release decision" width="100%">
+    <img src="docs/demo/screenshots/ragops-release-screen.jpg" alt="RAGOps product screen showing a recorded blocked regression and local release evidence" width="100%">
   </a>
 </p>
 
@@ -33,6 +33,16 @@ optional.
 - Exports JSON, Markdown, and standalone HTML evidence for review and CI.
 - Supports Python, CLI, an optional FastAPI adapter, and portable JSONL traces.
 - Keeps scenarios, policies, and reports versioned and provider-independent.
+
+## How the release gate works
+
+<p align="center">
+  <img src="docs/demo/infographics/release-gate-flow.svg" alt="RAGOps workflow: application output becomes a portable trace, runs through versioned checks, is compared with a baseline, and receives a pass or block decision" width="100%">
+</p>
+
+RAGOps stays outside the application and model stack. It consumes portable
+evidence, applies the same versioned contract to baseline and candidate, and
+returns a decision with named reasons rather than an isolated dashboard score.
 
 ## Five-minute proof
 
@@ -74,6 +84,23 @@ adoption or production ROI.
 
 The repository currently validates its core, adapters, reference deployment,
 showcase, and demo path with more than 50 automated tests.
+
+<p align="center">
+  <img src="docs/demo/infographics/evidence-stack.svg" alt="RAGOps evidence stack combining quality, safety, operational budgets, and regression comparison into a release decision" width="100%">
+</p>
+
+## Main product screens
+
+| Recorded release decision | Known limits and rollout recommendation |
+| --- | --- |
+| <img src="docs/demo/screenshots/ragops-release-screen.jpg" alt="RAGOps desktop release-decision screen" width="640"> | <img src="docs/demo/screenshots/ragops-limitations-screen.jpg" alt="RAGOps known-limitations and rollout-recommendation screen" width="640"> |
+
+<p align="center">
+  <img src="docs/demo/screenshots/ragops-mobile-screen.jpg" alt="RAGOps responsive mobile product screen" width="320">
+</p>
+
+The screens show the public reference experience and recorded synthetic
+evidence. They do not claim production security, customer adoption, or ROI.
 
 ## Evaluate your own fixtures
 

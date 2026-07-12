@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="500" viewBox="0 0 1400 500" role="img" aria-labelledby="title desc">
+  <title id="title">RAGOps evidence stack</title>
+  <desc id="desc">Four evidence layers combine quality, safety, operations, and regression comparison into a release decision with reviewable artifacts.</desc>
+  <rect width="1400" height="500" rx="28" fill="#101216"/>
+  <text x="64" y="66" fill="#5da2ff" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" letter-spacing="3">EVIDENCE, NOT A SINGLE SCORE</text>
+  <text x="64" y="112" fill="#f4f2ed" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="750">Four layers support one defensible release decision.</text>
+
+  <g font-family="Inter,Arial,sans-serif">
+    <g transform="translate(64 166)">
+      <rect width="260" height="210" rx="16" fill="#171a20" stroke="#303846"/>
+      <rect width="260" height="8" rx="4" fill="#5da2ff"/>
+      <text x="24" y="62" fill="#5da2ff" font-size="15" font-weight="700">QUALITY</text>
+      <text x="24" y="105" fill="#f4f2ed" font-size="20" font-weight="700">Grounded answers</text>
+      <text x="24" y="141" fill="#a7afbc" font-size="15">Citation coverage</text>
+      <text x="24" y="166" fill="#a7afbc" font-size="15">Citation precision</text>
+      <text x="24" y="191" fill="#a7afbc" font-size="15">Retrieval recall</text>
+    </g>
+    <g transform="translate(348 166)">
+      <rect width="260" height="210" rx="16" fill="#171a20" stroke="#303846"/>
+      <rect width="260" height="8" rx="4" fill="#8bb8ff"/>
+      <text x="24" y="62" fill="#8bb8ff" font-size="15" font-weight="700">SAFETY</text>
+      <text x="24" y="105" fill="#f4f2ed" font-size="20" font-weight="700">Policy findings</text>
+      <text x="24" y="141" fill="#a7afbc" font-size="15">Prompt injection</text>
+      <text x="24" y="166" fill="#a7afbc" font-size="15">Permission leakage</text>
+      <text x="24" y="191" fill="#a7afbc" font-size="15">Approval requirements</text>
+    </g>
+    <g transform="translate(632 166)">
+      <rect width="260" height="210" rx="16" fill="#171a20" stroke="#303846"/>
+      <rect width="260" height="8" rx="4" fill="#b8d5ff"/>
+      <text x="24" y="62" fill="#b8d5ff" font-size="15" font-weight="700">OPERATIONS</text>
+      <text x="24" y="105" fill="#f4f2ed" font-size="20" font-weight="700">Runtime budgets</text>
+      <text x="24" y="141" fill="#a7afbc" font-size="15">Latency</text>
+      <text x="24" y="166" fill="#a7afbc" font-size="15">Cost per task</text>
+      <text x="24" y="191" fill="#a7afbc" font-size="15">Failure drill-down</text>
+    </g>
+    <g transform="translate(916 166)">
+      <rect width="260" height="210" rx="16" fill="#171a20" stroke="#303846"/>
+      <rect width="260" height="8" rx="4" fill="#6f7b8b"/>
+      <text x="24" y="62" fill="#b8c0cc" font-size="15" font-weight="700">REGRESSION</text>
+      <text x="24" y="105" fill="#f4f2ed" font-size="20" font-weight="700">Baseline deltas</text>
+      <text x="24" y="141" fill="#a7afbc" font-size="15">Accepted behavior</text>
+      <text x="24" y="166" fill="#a7afbc" font-size="15">Candidate changes</text>
+      <text x="24" y="191" fill="#a7afbc" font-size="15">Named failed gates</text>
+    </g>
+    <path d="M1188 271H1232" stroke="#6f7b8b" stroke-width="3"/>
+    <g transform="translate(1236 188)">
+      <rect width="108" height="166" rx="16" fill="#25191c" stroke="#9b4d4b"/>
+      <text x="54" y="50" text-anchor="middle" fill="#ff847b" font-size="14" font-weight="700">DECISION</text>
+      <text x="54" y="91" text-anchor="middle" fill="#f4f2ed" font-size="24" font-weight="800">BLOCK</text>
+      <text x="54" y="125" text-anchor="middle" fill="#a7afbc" font-size="12">with reasons</text>
+    </g>
+  </g>
+  <text x="64" y="438" fill="#a7afbc" font-family="Inter,Arial,sans-serif" font-size="15">Deterministic checks run first. Optional model-based judges can extend the stack with recorded provider/model metadata.</text>
+</svg>
