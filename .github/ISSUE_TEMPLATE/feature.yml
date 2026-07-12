@@ -1,0 +1,38 @@
+name: Product feature
+description: Propose a capability tied to a user outcome and release contract.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Who has the problem, in what workflow, and why does it matter?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe observable success without prescribing implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: contract
+    attributes:
+      label: Contract and acceptance criteria
+      description: Include input, output, release behavior, compatibility, and tests.
+    validations:
+      required: true
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: Non-goals and boundaries
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Supporting evidence
+      description: Customer observation, benchmark case, incident, or design-partner request.
+

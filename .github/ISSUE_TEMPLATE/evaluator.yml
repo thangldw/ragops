@@ -1,0 +1,40 @@
+name: Evaluator proposal
+description: Propose a measurable evaluator with calibration and failure modes.
+title: "[Evaluator]: "
+labels: [evaluation]
+body:
+  - type: textarea
+    id: construct
+    attributes:
+      label: Construct being measured
+      description: Define precisely what the score means and does not mean.
+    validations:
+      required: true
+  - type: textarea
+    id: method
+    attributes:
+      label: Method and inputs
+      description: Explain deterministic/provider behavior, required evidence, and output range.
+    validations:
+      required: true
+  - type: textarea
+    id: calibration
+    attributes:
+      label: Calibration plan
+      description: Labeled cases, human rubric, agreement analysis, and thresholds.
+    validations:
+      required: true
+  - type: textarea
+    id: failures
+    attributes:
+      label: Known failure modes
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Product boundary
+      options:
+        - label: The core remains useful offline or this is an explicitly optional plugin.
+          required: true
+

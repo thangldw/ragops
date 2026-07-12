@@ -2,6 +2,18 @@
 
 All notable changes follow Keep a Changelog. This project uses Semantic Versioning.
 
+## [Unreleased]
+
+### Added
+
+- Product personas, jobs to be done, success metrics, competitive positioning,
+  commercialization boundary, and staged roadmap.
+- Milestones, work breakdown, risk register, release plan, and decision log.
+- Context/component diagrams, data model, threat model, and architecture decisions
+  for reference applications and the open-core boundary.
+- Engineering, evaluation, red-team, demo, portfolio, and AI-collaboration guidance.
+- Repository skills for feature implementation, release validation, and presentations.
+
 ## [1.0.0] - 2026-07-12
 
 ### Added
@@ -21,4 +33,3 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 - Optional API-key authentication using constant-time comparison.
 - Non-root, read-only container defaults with no-new-privileges.
 - Offline core with no required model-provider connection.
-

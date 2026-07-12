@@ -67,6 +67,13 @@ See [Product thesis](docs/product/product_thesis.md),
 [v0.1 requirements](docs/product/requirements-v0.1.md), and
 [architecture](docs/architecture/system-overview.md).
 
+For the longer-term product and delivery plan, see the
+[roadmap](docs/product/roadmap.md), [work breakdown](docs/project/work-breakdown.md),
+[evaluation strategy](docs/evaluation/strategy.md), and
+[presentation outline](docs/demo/presentation-outline.md).
+The implementation queue is maintained in the
+[prioritized backlog](docs/project/backlog.md).
+
 Start with [Getting started](docs/getting-started.md). Release history is in
 [CHANGELOG.md](CHANGELOG.md); security and contribution policies are documented
 in [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
