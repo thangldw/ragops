@@ -10,6 +10,7 @@ class Thresholds:
     lexical_groundedness: float
     max_latency_ms: int
     max_cost_usd: float
+    citation_precision: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -25,6 +26,11 @@ class EvalCase:
     question: str
     evidence: tuple[str, ...]
     required_citation_ids: tuple[str, ...]
+    category: str = "unspecified"
+    severity: str = "medium"
+    language: str = "und"
+    tags: tuple[str, ...] = ()
+    attack_category: str | None = None
 
 
 @dataclass(frozen=True)
@@ -49,6 +55,24 @@ class RecordedResponse:
 
 
 @dataclass(frozen=True)
+class AttackCase:
+    id: str
+    category: str
+    input_text: str
+    expected_rule: str
+    severity: str
+    tags: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class AttackPack:
+    schema_version: str
+    id: str
+    name: str
+    attacks: tuple[AttackCase, ...]
+
+
+@dataclass(frozen=True)
 class Finding:
     rule: str
     severity: str
@@ -59,6 +83,7 @@ class Finding:
 class CaseResult:
     case_id: str
     citation_coverage: float
+    citation_precision: float
     lexical_groundedness: float
     latency_ms: int
     cost_usd: float
@@ -83,6 +108,7 @@ class EvaluationReport:
 @dataclass(frozen=True)
 class RegressionPolicy:
     max_citation_coverage_drop: float = 0.0
+    max_citation_precision_drop: float = 0.0
     max_groundedness_drop: float = 0.05
     max_latency_increase_ms: float = 250.0
     max_cost_increase_usd: float = 0.005

@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from ragops.benchmarks import scenario_summary
 from ragops.config import load_regression_policy
 from ragops.engine import compare, evaluate
 from ragops.loader import ContractError, load_responses, load_scenario
@@ -33,11 +34,20 @@ def build_parser() -> argparse.ArgumentParser:
     history_parser = commands.add_parser("history", help="List saved experiment runs")
     history_parser.add_argument("--store", required=True)
     history_parser.add_argument("--limit", type=int, default=20)
+    inspect_parser = commands.add_parser("inspect", help="Inspect scenario benchmark coverage")
+    inspect_parser.add_argument("--scenario", required=True)
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
+    if args.command == "inspect":
+        try:
+            summary = scenario_summary(load_scenario(args.scenario))
+        except ContractError as exc:
+            raise SystemExit(f"contract error: {exc}") from exc
+        print(json.dumps(summary, ensure_ascii=False, indent=2))
+        return 0
     if args.command == "history":
         runs = ExperimentStore(args.store).list_runs(limit=args.limit)
         print(json.dumps(runs, ensure_ascii=False, indent=2))

@@ -39,6 +39,8 @@ ragops compare \
   --baseline scenarios/japanese_troubleshooting/sample_responses.json \
   --candidate scenarios/japanese_troubleshooting/regressed_responses.json \
   --format markdown
+ragops inspect \
+  --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json
 uvicorn apps.api.main:app --reload
 ```
 
@@ -73,6 +75,11 @@ For the longer-term product and delivery plan, see the
 [presentation outline](docs/demo/presentation-outline.md).
 The implementation queue is maintained in the
 [prioritized backlog](docs/project/backlog.md).
+
+The reference Japanese enterprise benchmark contains 30 cases across direct
+procedures, escalation, synthesis, abstention, stale evidence, model
+disambiguation, permission leakage, prompt injection, and consequential action.
+Its passing baseline is validated in CI.
 
 Start with [Getting started](docs/getting-started.md). Release history is in
 [CHANGELOG.md](CHANGELOG.md); security and contribution policies are documented

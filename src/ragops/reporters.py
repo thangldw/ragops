@@ -59,6 +59,9 @@ def comparison_html(report: ComparisonReport) -> str:
     )
     gates = "".join(f"<li><code>{html.escape(gate)}</code></li>" for gate in report.failed_gates)
     gates = gates or "<li>None</li>"
+    case_rows = "".join(
+        _case_comparison_row(report, index) for index in range(len(report.candidate.cases))
+    )
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
 <title>RAGOps regression report</title>
@@ -68,12 +71,37 @@ body{{font:16px system-ui;max-width:960px;margin:40px auto;padding:0 20px;color:
 .pass{{background:#d1fae5;color:#065f46}}.fail{{background:#fee2e2;color:#991b1b}}
 table{{border-collapse:collapse;width:100%;margin:24px 0}}th,td{{padding:10px;border-bottom:1px solid #d7dce5;text-align:right}}
 th:first-child,td:first-child{{text-align:left}}code{{background:#f3f4f6;padding:2px 5px;border-radius:4px}}
+.critical{{color:#991b1b;font-weight:700}}.ok{{color:#065f46}}
 </style></head><body>
 <h1>RAGOps regression report</h1><p class="status {status_class}">{status}</p>
 <p>Scenario: <code>{html.escape(report.scenario_id)}</code></p>
 <table><thead><tr><th>Metric</th><th>Baseline</th><th>Candidate</th><th>Delta</th></tr></thead>
 <tbody>{rows}</tbody></table><h2>Failed gates</h2><ul>{gates}</ul>
+<h2>Candidate case drill-down</h2>
+<table><thead><tr><th>Case</th><th>Citation coverage</th><th>Citation precision</th><th>Groundedness</th><th>Latency</th><th>Cost</th><th>Findings</th></tr></thead>
+<tbody>{case_rows}</tbody></table>
 </body></html>"""
+
+
+def _case_comparison_row(report: ComparisonReport, index: int) -> str:
+    case = report.candidate.cases[index]
+    finding_items = "".join(
+        f'<li class="{html.escape(finding.severity)}">'
+        f"{html.escape(finding.rule)}: {html.escape(finding.message)}</li>"
+        for finding in case.findings
+    )
+    finding_html = f"<ul>{finding_items}</ul>" if finding_items else '<span class="ok">None</span>'
+    return (
+        "<tr>"
+        f"<td><code>{html.escape(case.case_id)}</code></td>"
+        f"<td>{_format(case.citation_coverage)}</td>"
+        f"<td>{_format(case.citation_precision)}</td>"
+        f"<td>{_format(case.lexical_groundedness)}</td>"
+        f"<td>{case.latency_ms} ms</td>"
+        f"<td>${_format(case.cost_usd)}</td>"
+        f"<td>{finding_html}</td>"
+        "</tr>"
+    )
 
 
 def _format(value: float) -> str:

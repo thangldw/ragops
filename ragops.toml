@@ -1,5 +1,6 @@
 [regression]
 max_citation_coverage_drop = 0.0
+max_citation_precision_drop = 0.0
 max_groundedness_drop = 0.05
 max_latency_increase_ms = 250.0
 max_cost_increase_usd = 0.005

@@ -19,6 +19,15 @@ def citation_coverage(case: EvalCase, response: RecordedResponse) -> float:
     return len(required.intersection(response.citation_ids)) / len(required)
 
 
+def citation_precision(case: EvalCase, response: RecordedResponse) -> float:
+    """Fraction of supplied citations that are required evidence for the case."""
+    supplied = set(response.citation_ids)
+    if not supplied:
+        return 1.0 if not case.required_citation_ids else 0.0
+    required = set(case.required_citation_ids)
+    return len(required.intersection(supplied)) / len(supplied)
+
+
 def lexical_groundedness(case: EvalCase, response: RecordedResponse) -> float:
     """Transparent baseline: fraction of meaningful answer tokens found in evidence."""
     evidence_tokens = _tokens(" ".join(case.evidence))
@@ -59,4 +68,3 @@ def _tokens(value: str) -> set[str]:
         for token in TOKEN_RE.findall(value)
         if len(token) > 1 and token.casefold() not in STOP_WORDS
     }
-

@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from statistics import fmean
 
-from ragops.evaluators import citation_coverage, lexical_groundedness, redteam_findings
+from ragops.evaluators import (
+    citation_coverage,
+    citation_precision,
+    lexical_groundedness,
+    redteam_findings,
+)
 from ragops.loader import ContractError
 from ragops.models import (
     CaseResult,
@@ -43,6 +48,7 @@ def evaluate(
         result_items.append(CaseResult(
             case_id=case.id,
             citation_coverage=citation_coverage(case, response),
+            citation_precision=citation_precision(case, response),
             lexical_groundedness=lexical_groundedness(case, response),
             latency_ms=response.latency_ms,
             cost_usd=response.cost_usd,
@@ -52,6 +58,7 @@ def evaluate(
     results = tuple(result_items)
     metrics = {
         "citation_coverage": fmean(result.citation_coverage for result in results),
+        "citation_precision": fmean(result.citation_precision for result in results),
         "lexical_groundedness": fmean(result.lexical_groundedness for result in results),
         "avg_latency_ms": fmean(result.latency_ms for result in results),
         "avg_cost_usd": fmean(result.cost_usd for result in results),
@@ -63,6 +70,8 @@ def evaluate(
     failed: list[str] = []
     if metrics["citation_coverage"] < thresholds.citation_coverage:
         failed.append("citation_coverage")
+    if metrics["citation_precision"] < thresholds.citation_precision:
+        failed.append("citation_precision")
     if metrics["lexical_groundedness"] < thresholds.lexical_groundedness:
         failed.append("lexical_groundedness")
     if metrics["avg_latency_ms"] > thresholds.max_latency_ms:
@@ -96,6 +105,8 @@ def compare(
     deltas = {
         "citation_coverage": candidate.metrics["citation_coverage"]
         - baseline.metrics["citation_coverage"],
+        "citation_precision": candidate.metrics["citation_precision"]
+        - baseline.metrics["citation_precision"],
         "lexical_groundedness": candidate.metrics["lexical_groundedness"]
         - baseline.metrics["lexical_groundedness"],
         "avg_latency_ms": candidate.metrics["avg_latency_ms"]
@@ -110,6 +121,8 @@ def compare(
         failed.append("candidate_release_gate")
     if deltas["citation_coverage"] < -policy.max_citation_coverage_drop:
         failed.append("citation_coverage_regression")
+    if deltas["citation_precision"] < -policy.max_citation_precision_drop:
+        failed.append("citation_precision_regression")
     if deltas["lexical_groundedness"] < -policy.max_groundedness_drop:
         failed.append("groundedness_regression")
     if deltas["avg_latency_ms"] > policy.max_latency_increase_ms:

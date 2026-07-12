@@ -20,6 +20,7 @@ instead of only checking static thresholds.
 | Metric | Allowed regression |
 | --- | ---: |
 | Citation coverage | 0 |
+| Citation precision | 0 |
 | Lexical groundedness | 0.05 |
 | Average latency | +250 ms |
 | Average cost | +$0.005 |
@@ -35,4 +36,3 @@ deferred until the policy file format is stabilized.
 - New critical findings fail the comparison.
 - Markdown output includes baseline, candidate, delta, and failed gates.
 - Existing v0.1 evaluation behavior remains compatible.
-

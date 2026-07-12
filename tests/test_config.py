@@ -7,6 +7,7 @@ def test_loads_regression_policy() -> None:
     policy = load_regression_policy("ragops.toml")
 
     assert policy.max_groundedness_drop == 0.05
+    assert policy.max_citation_precision_drop == 0.0
     assert policy.max_latency_increase_ms == 250.0
 
 

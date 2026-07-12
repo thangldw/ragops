@@ -4,7 +4,15 @@ import json
 from pathlib import Path
 from typing import Any
 
-from ragops.models import EvalCase, RecordedResponse, RedTeamPolicy, Scenario, Thresholds
+from ragops.models import (
+    AttackCase,
+    AttackPack,
+    EvalCase,
+    RecordedResponse,
+    RedTeamPolicy,
+    Scenario,
+    Thresholds,
+)
 
 
 class ContractError(ValueError):
@@ -24,7 +32,14 @@ def load_scenario(path: str | Path) -> Scenario:
 
 def scenario_from_dict(data: dict[str, Any]) -> Scenario:
     try:
-        thresholds = Thresholds(**data["thresholds"])
+        threshold_data = data["thresholds"]
+        thresholds = Thresholds(
+            citation_coverage=threshold_data["citation_coverage"],
+            lexical_groundedness=threshold_data["lexical_groundedness"],
+            max_latency_ms=threshold_data["max_latency_ms"],
+            max_cost_usd=threshold_data["max_cost_usd"],
+            citation_precision=threshold_data.get("citation_precision", 0.0),
+        )
         redteam = RedTeamPolicy(
             forbidden_output_terms=tuple(data.get("redteam", {}).get("forbidden_output_terms", [])),
             require_human_approval_for_external_actions=data.get("redteam", {}).get(
@@ -42,6 +57,11 @@ def scenario_from_dict(data: dict[str, Any]) -> Scenario:
                 question=item["question"],
                 evidence=tuple(item["evidence"]),
                 required_citation_ids=tuple(item["required_citation_ids"]),
+                category=item.get("category", "unspecified"),
+                severity=item.get("severity", "medium"),
+                language=item.get("language", "und"),
+                tags=tuple(item.get("tags", [])),
+                attack_category=item.get("attack_category"),
             )
             for item in data["cases"]
         )
@@ -56,7 +76,7 @@ def scenario_from_dict(data: dict[str, Any]) -> Scenario:
     except (KeyError, TypeError, ValueError) as exc:
         raise ContractError(f"Invalid scenario contract: {exc}") from exc
 
-    if scenario.schema_version != "0.1":
+    if scenario.schema_version not in {"0.1", "0.2"}:
         raise ContractError(f"Unsupported scenario schema: {scenario.schema_version}")
     if not scenario.cases or len({case.id for case in scenario.cases}) != len(scenario.cases):
         raise ContractError("Scenario needs at least one case and case IDs must be unique")
@@ -65,6 +85,38 @@ def scenario_from_dict(data: dict[str, Any]) -> Scenario:
 
 def load_responses(path: str | Path) -> tuple[RecordedResponse, ...]:
     return responses_from_data(_read_json(path))
+
+
+def load_attack_pack(path: str | Path) -> AttackPack:
+    data = _read_json(path)
+    try:
+        attacks = tuple(
+            AttackCase(
+                id=item["id"],
+                category=item["category"],
+                input_text=item["input_text"],
+                expected_rule=item["expected_rule"],
+                severity=item["severity"],
+                tags=tuple(item.get("tags", [])),
+            )
+            for item in data["attacks"]
+        )
+        pack = AttackPack(
+            schema_version=data["schema_version"],
+            id=data["id"],
+            name=data["name"],
+            attacks=attacks,
+        )
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ContractError(f"Invalid attack-pack contract: {exc}") from exc
+    if pack.schema_version != "0.1":
+        raise ContractError(f"Unsupported attack-pack schema: {pack.schema_version}")
+    if not pack.attacks or len({attack.id for attack in pack.attacks}) != len(pack.attacks):
+        raise ContractError("Attack pack needs at least one attack and IDs must be unique")
+    allowed_severities = {"low", "medium", "high", "critical"}
+    if any(attack.severity not in allowed_severities for attack in pack.attacks):
+        raise ContractError("Attack severity must be low, medium, high, or critical")
+    return pack
 
 
 def responses_from_data(data: list[dict[str, Any]]) -> tuple[RecordedResponse, ...]:

@@ -1,7 +1,8 @@
 # Japanese troubleshooting benchmark taxonomy
 
-The reference benchmark should contain at least 30 cases before it is presented
-as credible evidence.
+The reference benchmark contains 30 synthetic cases. This establishes coverage
+discipline, not external validity; customer-derived and human-reviewed cases are
+still required before making production-quality claims.
 
 | Family | Minimum cases | Purpose |
 | --- | ---: | --- |
@@ -18,3 +19,8 @@ as credible evidence.
 Each case should document expected evidence, failure mode, severity, language,
 and whether it is deterministic, judge-assisted, or human-reviewed.
 
+Inspect current coverage with:
+
+```bash
+ragops inspect --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json
+```

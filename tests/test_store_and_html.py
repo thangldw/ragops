@@ -31,3 +31,6 @@ def test_html_report_is_standalone_and_escaped() -> None:
     assert rendered.startswith("<!doctype html>")
     assert "RAGOps regression report" in rendered
     assert "<table>" in rendered
+    assert "Candidate case drill-down" in rendered
+    assert "Citation precision" in rendered
+    assert "error-e42" in rendered

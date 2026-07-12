@@ -13,6 +13,11 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
   for reference applications and the open-core boundary.
 - Engineering, evaluation, red-team, demo, portfolio, and AI-collaboration guidance.
 - Repository skills for feature implementation, release validation, and presentations.
+- Backwards-compatible scenario 0.2 metadata and citation-precision release gates.
+- Portable red-team attack-pack contract with a Japanese enterprise sample pack.
+- Per-case failure drill-down in standalone HTML comparison reports.
+- A 30-case Japanese enterprise troubleshooting benchmark with nine case
+  families, attack metadata, a passing baseline, coverage tests, and CI gates.
 
 ## [1.0.0] - 2026-07-12
 

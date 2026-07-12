@@ -19,6 +19,13 @@ jobs:
       - run: ruff check .
       - run: pytest
       - run: ragops evaluate --scenario scenarios/japanese_troubleshooting/scenario.json --responses scenarios/japanese_troubleshooting/sample_responses.json
+      - name: Validate reference benchmark coverage
+        run: ragops inspect --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json
+      - name: Evaluate reference benchmark baseline
+        run: >-
+          ragops evaluate
+          --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json
+          --responses scenarios/japanese_troubleshooting/benchmark-baseline.json
       - name: Render regression report
         run: >-
           ragops compare
