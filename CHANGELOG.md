@@ -25,6 +25,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 - A credential-free Japanese GraphRAG-style reference agent with ACL filtering,
   workflow decisions, trace 0.4 metadata, JSONL CLI evaluation/comparison,
   generic HTTP adapter, recorded regression experiment, and M2 acceptance.
+- A responsive FDE case-study site, GitHub Pages workflow, reproducible metrics,
+  video script, personal-portfolio handoff, and M3 acceptance evidence.
 
 ## [1.0.0] - 2026-07-12
 

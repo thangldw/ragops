@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="RAGOps FDE case study: from an ambiguous Japanese enterprise problem to an evaluated AI deployment decision.">
+  <title>RAGOps — Forward Deployed AI, evaluated</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307110f'/%3E%3Cpath d='M16 17h19c9 0 14 5 14 13 0 6-3 10-8 12l9 12H38l-7-10h-4v10H16V17zm11 9v10h7c3 0 5-2 5-5s-2-5-5-5h-7z' fill='%2378f0bf'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="nav" aria-label="Primary navigation">
+    <a class="brand" href="#top" aria-label="RAGOps home">RAG<span>Ops</span></a>
+    <nav>
+      <a href="#problem">Problem</a>
+      <a href="#system">System</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#decision">Decision</a>
+    </nav>
+    <a class="nav-cta" href="https://github.com/thangldw/ragops">View source</a>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <p class="eyebrow">Forward Deployed Engineering case study</p>
+        <h1>From an ambiguous AI request to a <em>defensible release decision.</em></h1>
+        <p class="lede">RAGOps is a local-first evaluation and red-team harness for RAG and agent systems. This reference deployment shows how I scope, build, evaluate, and prepare a Japanese enterprise AI workflow for controlled rollout.</p>
+        <div class="actions">
+          <a class="button primary" href="#evidence">See the evidence</a>
+          <a class="button secondary" href="https://github.com/thangldw/ragops/tree/main/examples/japanese_troubleshooting_agent">Run the reference app</a>
+        </div>
+        <ul class="signals" aria-label="Project signals">
+          <li><strong>39</strong><span>automated tests</span></li>
+          <li><strong>30</strong><span>Japanese benchmark cases</span></li>
+          <li><strong>0</strong><span>credentials for local demo</span></li>
+        </ul>
+      </div>
+      <aside class="terminal" aria-label="Example release decision">
+        <div class="terminal-bar"><span></span><span></span><span></span><b>release-check</b></div>
+        <pre><code><span class="muted">$ ragops compare \</span>
+  --baseline-traces graph.jsonl \
+  --candidate-traces lexical.jsonl
+
+<span class="fail">RELEASE: BLOCKED</span>
+
+citation coverage      <span class="down">−25.00%</span>
+citation precision     <span class="down">−25.00%</span>
+lexical groundedness   <span class="down">−21.88%</span>
+
+<span class="muted">Decision evidence is portable,
+versioned, and reproducible.</span></code></pre>
+      </aside>
+    </section>
+
+    <section class="section problem" id="problem">
+      <div class="section-title">
+        <p class="eyebrow">01 — Discovery</p>
+        <h2>The request was not “build a chatbot.”</h2>
+      </div>
+      <div class="problem-grid">
+        <blockquote>“Use AI to help Japanese field engineers troubleshoot machines faster.”</blockquote>
+        <div class="constraints">
+          <article><b>Trusted evidence</b><p>Answers must cite current manuals and escalation policies.</p></article>
+          <article><b>Permission safety</b><p>Restricted notes cannot enter retrieval for an unauthorized role.</p></article>
+          <article><b>Controlled agency</b><p>External communication requires human approval, not autonomous execution.</p></article>
+          <article><b>Measurable rollout</b><p>Quality gates and workflow outcomes determine scale, not demo appeal.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="system">
+      <div class="section-title split">
+        <div><p class="eyebrow">02 — Build</p><h2>A small system with production-shaped boundaries.</h2></div>
+        <p>The reference app stays outside the RAGOps core. It owns retrieval and workflow behavior; RAGOps owns evidence, evaluation, comparison, and release policy.</p>
+      </div>
+      <div class="pipeline" role="img" aria-label="Question and role flow through ACL, lexical and graph retrieval, ranking, workflow decision, trace, and RAGOps release gate">
+        <div><span>01</span><b>Question + role</b><small>Japanese field workflow</small></div>
+        <i>→</i><div><span>02</span><b>ACL first</b><small>Filter before ranking</small></div>
+        <i>→</i><div><span>03</span><b>Hybrid context</b><small>Lexical + graph expansion</small></div>
+        <i>→</i><div><span>04</span><b>Workflow decision</b><small>Answer · clarify · escalate · approve</small></div>
+        <i>→</i><div class="accent-card"><span>05</span><b>RAGOps gate</b><small>Trace → evidence → decision</small></div>
+      </div>
+      <div class="principles">
+        <article><span>Local-first</span><h3>Runs without an API key</h3><p>The offline reference makes CI and review reproducible. Provider generation remains an optional adapter.</p></article>
+        <article><span>Permission-aware</span><h3>ACL before retrieval</h3><p>Unauthorized documents are removed before scoring, reducing the chance of downstream leakage.</p></article>
+        <article><span>Approval-aware</span><h3>Agent does not mean autonomous</h3><p>Consequential actions return an approval decision. The reference never sends or deletes externally.</p></article>
+      </div>
+    </section>
+
+    <section class="section evidence" id="evidence">
+      <div class="section-title split">
+        <div><p class="eyebrow">03 — Evaluate</p><h2>Every architecture claim needs a regression test.</h2></div>
+        <p>The graph-assisted build is the accepted baseline. A lexical-only candidate uses the same questions and release contract, exposing the value of relationship-aware retrieval.</p>
+      </div>
+      <div class="scoreboard">
+        <div class="score-head"><span>Metric</span><span>Graph + ACL</span><span>Lexical only</span><span>Delta</span></div>
+        <div><b>Citation coverage</b><span>100%</span><span>75%</span><strong>−25.00%</strong></div>
+        <div><b>Citation precision</b><span>100%</span><span>75%</span><strong>−25.00%</strong></div>
+        <div><b>Lexical groundedness</b><span>100%</span><span>78.12%</span><strong>−21.88%</strong></div>
+        <div><b>Release decision</b><span class="pill pass">PASS</span><span class="pill fail">BLOCK</span><strong>Hold release</strong></div>
+      </div>
+      <p class="disclaimer">Synthetic evidence validates the harness and architecture comparison. It does not establish semantic model quality, customer adoption, or business ROI.</p>
+    </section>
+
+    <section class="section decision" id="decision">
+      <div class="decision-card">
+        <p class="eyebrow">04 — Deploy responsibly</p>
+        <h2>Recommendation: proceed to customer-reviewed offline pilot. Do not deploy to production.</h2>
+        <p>The integration works and catches a meaningful retrieval regression. Production readiness still requires customer-reviewed data, enterprise identity, shadow-mode observation, incident ownership, and measured workflow impact.</p>
+        <div class="rollout">
+          <div><b>0</b><span>Offline acceptance</span><small>Golden cases, owners, risks</small></div>
+          <div><b>1</b><span>Shadow mode</span><small>Compare with real resolutions</small></div>
+          <div><b>2</b><span>20-user pilot</span><small>Advisory answers only</small></div>
+          <div><b>3</b><span>Controlled scale</span><small>Only after guardrails hold</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section closing">
+      <p class="eyebrow">The FDE operating loop</p>
+      <h2>Discover. Build. Evaluate. Deploy. Measure. Improve.</h2>
+      <p>RAGOps turns that loop into a reusable product capability—not a one-off demo.</p>
+      <div class="actions centered">
+        <a class="button primary" href="https://github.com/thangldw/ragops">Explore the repository</a>
+        <a class="button secondary" href="https://github.com/thangldw">More work by Thang Luu</a>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>RAGOps · Apache-2.0</span><span>Built as an open Forward Deployed Engineering case study.</span></footer>
+</body>
+</html>

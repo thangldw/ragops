@@ -93,6 +93,10 @@ decisions, portable trace 0.4 export, and an end-to-end RAGOps release gate.
 The recorded experiment blocks a lexical-only candidate that regresses against
 the accepted graph-assisted baseline.
 
+The presentation-oriented case study is published from `site/` through GitHub
+Pages and is designed to link from `thangldw.github.io` as a featured FDE
+deployment story.
+
 Start with [Getting started](docs/getting-started.md). Release history is in
 [CHANGELOG.md](CHANGELOG.md); security and contribution policies are documented
 in [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
