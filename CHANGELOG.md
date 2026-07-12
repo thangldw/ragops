@@ -4,6 +4,13 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+### Added
+
+- Dependency-free optional OpenAI Responses API adapter with explicit model,
+  output/usage mapping, injected-transport tests, and provider guidance.
+- Portfolio desktop/mobile screenshots, design-partner outreach and pilot
+  measurement templates, plus CV/LinkedIn copy based on public evidence.
+
 ## [1.4.0] - 2026-07-12
 
 ### Added

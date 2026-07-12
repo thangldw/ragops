@@ -1,0 +1,48 @@
+name: Design-partner interest
+description: Explore an offline RAGOps evaluation pilot using synthetic or redacted data.
+title: "[Design partner]: "
+labels: [design-partner]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include production secrets, personal data, customer-confidential
+        content, API keys, or proprietary traces in this public issue.
+  - type: textarea
+    id: workflow
+    attributes:
+      label: AI workflow
+      description: What RAG or agent workflow are you evaluating?
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: Release decision today
+      description: How do you currently decide whether a candidate is safe and useful enough to release?
+    validations:
+      required: true
+  - type: textarea
+    id: failure
+    attributes:
+      label: Representative synthetic failure
+      description: Describe a redacted or synthetic regression without sharing sensitive data.
+    validations:
+      required: true
+  - type: dropdown
+    id: data
+    attributes:
+      label: Safe fixture availability
+      options:
+        - Synthetic fixtures available
+        - Redacted fixtures available
+        - Need help creating safe fixtures
+    validations:
+      required: true
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Public issue safety
+      options:
+        - label: I confirm this issue contains no secrets, personal data, or customer-confidential content.
+          required: true

@@ -1,5 +1,7 @@
 # RAGOps 1.4
 
+![RAGOps portfolio case study](docs/demo/screenshots/ragops-portfolio-desktop.jpg)
+
 RAGOps is an open evaluation and red-team harness for production RAG and agent
 systems. It turns product quality requirements into versioned scenarios,
 repeatable checks, machine-readable reports, and release gates.
@@ -111,6 +113,17 @@ ragops trend --store reports/runs.db \
 
 Set `RAGOPS_STORE` for the optional API/workbench run explorer. This is a
 single-workspace collaboration layer, not a multi-tenant hosted service.
+
+Optional provider integrations live outside the core. The dependency-free
+OpenAI Responses API adapter requires an explicit model and is tested with an
+injected transport, so public CI never needs an API key.
+
+## Design partners
+
+Teams with an existing RAG or agent pilot can open the **Design-partner
+interest** issue template. The first engagement uses synthetic or redacted
+fixtures only and produces a versioned scenario, regression report, and rollout
+recommendation. Never put customer-confidential data in a public issue.
 
 ## Control-plane alpha
 
