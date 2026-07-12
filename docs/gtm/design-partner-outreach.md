@@ -1,6 +1,9 @@
 # Design-partner outreach pack
 
-These are drafts for owner review. Nothing is sent automatically.
+The owner-authorized public invitation is live in
+[GitHub Discussion #5](https://github.com/thangldw/ragops/discussions/5).
+The copy below remains reusable for direct, reviewed outreach; no direct
+messages or emails have been sent automatically.
 
 ## Ideal design partner
 
@@ -34,4 +37,3 @@ does or does not replace existing notebooks and manual review.
 4. Baseline quality, latency, cost, and operational budgets.
 5. Smallest synthetic/redacted evaluation set.
 6. Pilot success and stop conditions.
-
