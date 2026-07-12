@@ -8,8 +8,15 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 - Dependency-free optional OpenAI Responses API adapter with explicit model,
   output/usage mapping, injected-transport tests, and provider guidance.
-- Portfolio desktop/mobile screenshots, design-partner outreach and pilot
-  measurement templates, plus CV/LinkedIn copy based on public evidence.
+- A focused 16:9 product-showcase image for the GitHub README.
+- Design-partner outreach and pilot measurement templates, plus CV/LinkedIn
+  copy based on public evidence.
+
+### Changed
+
+- Reworked the README around the product value, reproducible evidence, quick
+  start, architecture boundaries, and honest production limitations.
+- Updated the product showcase to reflect the current 50-test validation suite.
 
 ## [1.4.0] - 2026-07-12
 

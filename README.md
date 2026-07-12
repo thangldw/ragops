@@ -1,28 +1,53 @@
-# RAGOps 1.4
+# RAGOps
 
-![RAGOps portfolio case study](docs/demo/screenshots/ragops-portfolio-desktop.jpg)
+**Evaluation and red-team release gates for RAG and agent systems.**
 
-RAGOps is an open evaluation and red-team harness for production RAG and agent
-systems. It turns product quality requirements into versioned scenarios,
-repeatable checks, machine-readable reports, and release gates.
+RAGOps turns AI quality requirements into versioned scenarios, repeatable
+checks, machine-readable reports, and defensible release decisions. The
+dependency-free core runs locally; provider and hosted integrations remain
+optional.
 
-This repository is intentionally product-first: the reference scenario is a
-Japanese enterprise troubleshooting assistant, while the evaluation engine is
-domain-independent.
+<p align="center">
+  <a href="https://thangldw.github.io/ragops/">
+    <img src="docs/demo/screenshots/ragops-showcase-hero.jpg" alt="RAGOps product showcase: from an ambiguous AI request to a defensible release decision" width="100%">
+  </a>
+</p>
 
-## Stable open-source capabilities
+<p align="center">
+  <a href="https://thangldw.github.io/ragops/"><strong>Product showcase</strong></a>
+  ·
+  <a href="examples/japanese_troubleshooting_agent/README.md"><strong>Reference deployment</strong></a>
+  ·
+  <a href="docs/evaluation/benchmark-report-v0.2.md"><strong>Benchmark evidence</strong></a>
+</p>
 
-- Load a versioned evaluation scenario from JSON.
-- Score citations, groundedness, latency, and estimated cost.
-- Run deterministic red-team checks for secret leakage and unsafe autonomy.
-- Produce a JSON report and a release-gate decision.
-- Expose the same workflow through Python, CLI, and an optional FastAPI app.
-- Compare candidate responses against a baseline and block regressions.
-- Export a PR-ready Markdown comparison report.
-- Publish JSON Schemas for portable scenario and report contracts.
-- Import portable JSONL traces and extend scoring through evaluator plugins.
-- Save experiment history locally with SQLite.
-- Run an optional API and browser workbench in a hardened container baseline.
+## What RAGOps does
+
+- Evaluates citations, groundedness, retrieval, latency, cost, and custom metrics.
+- Runs deterministic red-team checks before optional model-based judges.
+- Compares a candidate with an accepted baseline and blocks regressions.
+- Exports JSON, Markdown, and standalone HTML evidence for review and CI.
+- Supports Python, CLI, an optional FastAPI adapter, and portable JSONL traces.
+- Keeps scenarios, policies, and reports versioned and provider-independent.
+
+## Evidence, not demo claims
+
+The included Japanese enterprise reference deployment compares an ACL-first,
+graph-assisted retrieval baseline with a lexical-only candidate under the same
+questions and release contract.
+
+| Recorded metric | Graph + ACL | Lexical only | Delta |
+| --- | ---: | ---: | ---: |
+| Citation coverage | 100% | 75% | -25.00% |
+| Citation precision | 100% | 75% | -25.00% |
+| Lexical groundedness | 100% | 78.12% | -21.88% |
+| Release decision | Pass | **Block** | Hold release |
+
+The benchmark contains 30 Japanese cases across nine failure families,
+including stale evidence, model disambiguation, permission leakage, prompt
+injection, abstention, and consequential actions. These synthetic results
+validate the harness and architecture comparison; they do not claim customer
+adoption or production ROI.
 
 ## Quick start
 
@@ -32,107 +57,76 @@ Requires Python 3.11+.
 python -m venv .venv
 source .venv/bin/activate
 pip install -e '.[dev,api]'
-pytest
+
 ragops evaluate \
-  --scenario scenarios/japanese_troubleshooting/scenario.json \
-  --responses scenarios/japanese_troubleshooting/sample_responses.json \
+  --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json \
+  --responses scenarios/japanese_troubleshooting/benchmark-baseline.json \
   --evaluator citation_correctness \
   --evaluator claim_support
-ragops compare \
-  --scenario scenarios/japanese_troubleshooting/scenario.json \
-  --baseline scenarios/japanese_troubleshooting/sample_responses.json \
-  --candidate scenarios/japanese_troubleshooting/regressed_responses.json \
-  --format markdown
-ragops inspect \
-  --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json
-uvicorn apps.api.main:app --reload
 ```
 
-## Repository map
-
-```text
-apps/api/                  Optional HTTP interface
-src/ragops/                Evaluation and red-team engine
-scenarios/                 Versioned datasets and policies
-schemas/                   Portable JSON Schema contracts
-tests/                     Contract and behavior tests
-docs/product/              Product thesis and requirements
-docs/project/              Scope, milestones, and acceptance
-docs/architecture/         System design and ADRs
-```
-
-## Product principles
-
-1. Evaluation is a release contract, not a dashboard decoration.
-2. Deterministic checks run before model-based judges.
-3. Every score is traceable to a case, evidence, and policy version.
-4. Scenario data is portable; hosted services are optional.
-5. The open-source core must remain useful without a commercial control plane.
-
-See [Product thesis](docs/product/product_thesis.md),
-[v0.1 requirements](docs/product/requirements-v0.1.md), and
-[architecture](docs/architecture/system-overview.md).
-
-For the longer-term product and delivery plan, see the
-[roadmap](docs/product/roadmap.md), [work breakdown](docs/project/work-breakdown.md),
-[evaluation strategy](docs/evaluation/strategy.md), and
-[presentation outline](docs/demo/presentation-outline.md).
-The implementation queue is maintained in the
-[prioritized backlog](docs/project/backlog.md).
-
-The reference Japanese enterprise benchmark contains 30 cases across direct
-procedures, escalation, synthesis, abstention, stale evidence, model
-disambiguation, permission leakage, prompt injection, and consequential action.
-Its passing baseline is validated in CI.
-See the reproducible [benchmark report](docs/evaluation/benchmark-report-v0.2.md)
-for baseline, regressed, and adversarial results and limitations.
-
-## Reference deployment
-
-The [Japanese troubleshooting reference agent](examples/japanese_troubleshooting_agent/README.md)
-demonstrates ACL-first lexical + graph retrieval, approval-aware workflow
-decisions, portable trace 0.4 export, and an end-to-end RAGOps release gate.
-The recorded experiment blocks a lexical-only candidate that regresses against
-the accepted graph-assisted baseline.
-
-The presentation-oriented case study source lives in `site/`. The portfolio
-version is live at https://thangldw.github.io/projects/ragops/. The repository
-Pages workflow remains ready if project Pages is enabled later.
-
-## Team workflow
-
-Saved runs can be reviewed and trended locally:
+Run the credential-free reference deployment:
 
 ```bash
-ragops history --store reports/runs.db
-ragops review --store reports/runs.db --run-id RUN_ID \
-  --status accepted --reviewer thang --note "accepted baseline"
-ragops trend --store reports/runs.db \
-  --scenario-id jp-troubleshooting-v1 --metric citation_coverage
+PYTHONPATH=src:. python -m examples.japanese_troubleshooting_agent.cli \
+  --suite examples/japanese_troubleshooting_agent/suite.json \
+  --retriever graph \
+  --output /tmp/graph-traces.jsonl
+
+ragops evaluate \
+  --scenario examples/japanese_troubleshooting_agent/scenario.json \
+  --traces /tmp/graph-traces.jsonl \
+  --evaluator citation_correctness \
+  --evaluator claim_support
 ```
 
-Set `RAGOPS_STORE` for the optional API/workbench run explorer. This is a
-single-workspace collaboration layer, not a multi-tenant hosted service.
+## Architecture
 
-Optional provider integrations live outside the core. The dependency-free
-OpenAI Responses API adapter requires an explicit model and is tested with an
-injected transport, so public CI never needs an API key.
+```text
+RAG / agent application
+        │ portable traces
+        ▼
+Scenario loader → deterministic checks → evaluator plugins
+        │                                      │
+        └──────── evidence + policy ────────────┘
+                           │
+                           ▼
+             report → baseline comparison → release gate
+```
 
-## Design partners
+```text
+src/ragops/    Dependency-free evaluation core
+apps/          Optional API and browser adapters
+scenarios/     Portable fixtures, policies, and expected evidence
+examples/      Reference deployments outside the core
+schemas/       Public JSON Schema contracts
+docs/          Product, architecture, evaluation, and project evidence
+```
 
-Teams with an existing RAG or agent pilot can open the **Design-partner
-interest** issue template. The first engagement uses synthetic or redacted
-fixtures only and produces a versioned scenario, regression report, and rollout
-recommendation. Never put customer-confidential data in a public issue.
+## Design principles
 
-## Control-plane alpha
+1. Evaluation is a release contract, not dashboard decoration.
+2. Deterministic checks run before model-based judges.
+3. Every score traces back to a case, evidence set, and policy version.
+4. The open-source core remains valuable without a hosted service.
+5. Agents recommend consequential actions; humans approve them.
 
-`ragops workspace-create`, `workspace-rotate-key`, and `workspace-audit`
-exercise a local workspace-isolation boundary. When `RAGOPS_CONTROL_PLANE` is
-set, API run/history/review endpoints require `X-Workspace-Id` and
-`X-Workspace-Key`. See the [alpha architecture](docs/architecture/control-plane-alpha.md)
-and its explicit production limitations.
+## Documentation
 
-Start with [Getting started](docs/getting-started.md). Release history is in
-[CHANGELOG.md](CHANGELOG.md); security and contribution policies are documented
-in [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+- [Getting started](docs/getting-started.md)
+- [Product thesis](docs/product/product_thesis.md)
+- [System architecture](docs/architecture/system-overview.md)
+- [Evaluation strategy](docs/evaluation/strategy.md)
+- [Reference benchmark report](docs/evaluation/benchmark-report-v0.2.md)
+- [Roadmap](docs/product/roadmap.md)
+- [Contributing](CONTRIBUTING.md) and [security policy](SECURITY.md)
+
+Optional provider integrations live outside the core. Local history and the
+control-plane alpha are single-workspace development tools, not a production
+multi-tenant service. See the
+[control-plane limitations](docs/architecture/control-plane-alpha.md) before
+adapting them for deployment.
+
+## License
+
+Apache-2.0. See [LICENSE](LICENSE).
