@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from ragops import __version__
+from ragops.control_plane import ControlPlane
 from ragops.engine import compare, evaluate
 from ragops.loader import ContractError, responses_from_data, scenario_from_dict
 from ragops.store import ExperimentStore
@@ -19,6 +20,10 @@ app = FastAPI(title="RAGOps API", version=__version__)
 class EvaluateRequest(BaseModel):
     scenario: dict
     responses: list[dict]
+
+
+class SavedEvaluateRequest(EvaluateRequest):
+    label: str = ""
 
 
 class CompareRequest(BaseModel):
@@ -33,7 +38,18 @@ class ReviewRequest(BaseModel):
     note: str = ""
 
 
-def configured_store() -> ExperimentStore:
+def configured_store(
+    x_workspace_id: str | None = Header(default=None),
+    x_workspace_key: str | None = Header(default=None),
+) -> ExperimentStore:
+    control_root = os.getenv("RAGOPS_CONTROL_PLANE")
+    if control_root:
+        if not x_workspace_id or not x_workspace_key:
+            raise HTTPException(status_code=401, detail="Workspace credentials are required")
+        try:
+            return ControlPlane(control_root).workspace_store(x_workspace_id, x_workspace_key)
+        except PermissionError as exc:
+            raise HTTPException(status_code=401, detail=str(exc)) from exc
     path = os.getenv("RAGOPS_STORE")
     if not path:
         raise HTTPException(status_code=503, detail="RAGOPS_STORE is not configured")
@@ -116,3 +132,18 @@ def review_run(
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     return {"run_id": run_id, "review_status": payload.status}
+
+
+@app.post("/v1/runs/evaluate", dependencies=[Depends(require_api_key)])
+def evaluate_and_save(
+    payload: SavedEvaluateRequest,
+    store: ExperimentStore = Depends(configured_store),
+) -> dict:
+    try:
+        scenario = scenario_from_dict(payload.scenario)
+        responses = responses_from_data(payload.responses)
+        report = evaluate(scenario, responses)
+    except (ContractError, KeyError, TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    run_id = store.save(report, label=payload.label)
+    return {"run_id": run_id, "report": report.to_dict()}

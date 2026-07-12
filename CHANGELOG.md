@@ -4,6 +4,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-07-12
+
 ### Added
 
 - Product personas, jobs to be done, success metrics, competitive positioning,
@@ -30,6 +32,9 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 - Local team review metadata and metric trends across SQLite, CLI, API, and the
   browser workbench, plus nightly benchmark/reference-deployment gates and M4
   acceptance evidence.
+- A local commercial control-plane alpha with workspace-isolated stores,
+  generated/digested API keys, rotation, audit events, CLI management, API
+  workspace selection, persisted evaluation, and explicit production limits.
 
 ## [1.0.0] - 2026-07-12
 

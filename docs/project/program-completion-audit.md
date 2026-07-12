@@ -1,0 +1,62 @@
+# RAGOps FDE program completion audit
+
+## Outcome
+
+The repository now implements the complete locally executable program defined
+in the FDE blueprint: product strategy, open-source evaluation core, Japanese
+enterprise benchmark, red-team contracts, reference GraphRAG-style deployment,
+portable observability evidence, team review workflow, control-plane alpha, and
+public presentation assets.
+
+## Milestone evidence
+
+| Milestone | Status | Acceptance |
+| --- | --- | --- |
+| M0 stable local core | Complete | `docs/project/v1-acceptance.md` |
+| M1 benchmark credibility | Complete | `docs/project/m1-acceptance.md` |
+| M2 reference deployment | Complete | `docs/project/m2-acceptance.md` |
+| M3 FDE showcase | Complete | `docs/project/m3-acceptance.md` |
+| M4 local team workflow | Complete | `docs/project/m4-acceptance.md` |
+| M5 commercial alpha boundary | Complete as local alpha | `docs/project/m5-acceptance.md` |
+
+## FDE competency coverage
+
+- **Discover:** ambiguous request, users, constraints, KPI hypothesis, scope.
+- **Build:** ACL-first lexical+graph retrieval and controlled workflow agent.
+- **Evaluate:** 30-case benchmark, baseline/regression/adversarial candidates,
+  citations, claim support, latency, cost, and critical policy gates.
+- **Deploy:** Docker/API/CLI, CI/nightly workflows, portable traces, rollout plan.
+- **Measure:** experiment history, trends, review decisions, release evidence.
+- **Communicate:** ADRs, threat model, executive report, case-study site, demo and
+  video scripts, honest go/no-go recommendation.
+- **Productize:** open-core boundary, commercialization hypothesis, workspace
+  alpha, contribution/security guidance, and GitHub release process.
+
+## Verification baseline
+
+- Python 3.11+ dependency-free core.
+- Forty-seven automated tests at completion-audit time.
+- Ruff and diff checks pass.
+- Baseline and reference deployment pass; regressed/adversarial builds return
+  expected release-blocking exit codes.
+- Desktop and 390px mobile showcase layouts were browser-reviewed without
+  horizontal overflow.
+
+## Work that cannot be completed from source code alone
+
+The following require owner authority, external systems, or real users and are
+therefore launch activities rather than missing repository implementation:
+
+1. Enable/approve the GitHub Pages environment if repository settings block it.
+2. Link the project card from the separate `thangldw.github.io` repository.
+3. Recruit design partners and replace synthetic fixtures with reviewed data.
+4. Measure adoption, time-to-answer, escalation precision, and willingness to pay.
+5. Establish legal/cloud/identity/billing/support/incident-response operations.
+6. Complete independent security review before processing customer data.
+
+## Final recommendation
+
+Use release 1.4.0 for FDE interviews, OSS feedback, and customer discovery.
+Proceed to a real offline design-partner pilot; do not market the control-plane
+alpha as production SaaS or claim measured ROI until external evidence exists.
+

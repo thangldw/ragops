@@ -27,9 +27,13 @@ history, CLI/API/workbench, CI, and container baseline.
 
 PR comment integration and notifications remain hosted/integration work.
 
-## 2.0 — hosted control plane
+## 2.0 — hosted control plane (local alpha boundary implemented)
 
 - Workspace isolation, SSO/RBAC, audit retention, managed ingestion, and
   enterprise deployment options.
+
+The repository implements workspace-isolated local stores, generated/digested
+keys, rotation, and audit events. A real hosted launch remains dependent on
+external cloud, identity, legal, security, operations, and design-partner work.
 
 Roadmap order follows validated user value. It is not a delivery-date promise.

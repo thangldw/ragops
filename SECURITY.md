@@ -21,9 +21,12 @@ and retention. Never put production secrets or personal data in public fixtures.
 - Treat reports as sensitive because answers and evidence may be embedded.
 - Apply request-size and rate limits at the ingress for internet-facing use.
 
-## Known v1.0 limitations
+## Known limitations
 
-- API-key authentication is single-tenant and is not an identity system.
+- Single-workspace API-key authentication is not an identity system.
+- The control-plane alpha uses isolated SQLite paths and generated-key digests;
+  it is not a production multi-tenant security boundary.
+- There is no SSO/RBAC, immutable audit export, managed secrets, rate limiting,
+  regional residency, HA, backup policy, or independent penetration test.
 - Lexical groundedness is a transparent baseline, not semantic verification.
 - The bundled dashboard is an operator workbench, not a hardened multi-user UI.
-

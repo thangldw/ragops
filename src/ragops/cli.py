@@ -6,6 +6,7 @@ from pathlib import Path
 
 from ragops.benchmarks import scenario_summary
 from ragops.config import load_regression_policy
+from ragops.control_plane import ControlPlane
 from ragops.engine import compare, evaluate
 from ragops.loader import ContractError, load_responses, load_scenario
 from ragops.plugins import (
@@ -68,6 +69,18 @@ def build_parser() -> argparse.ArgumentParser:
     trend_parser.add_argument("--limit", type=int, default=50)
     inspect_parser = commands.add_parser("inspect", help="Inspect scenario benchmark coverage")
     inspect_parser.add_argument("--scenario", required=True)
+    workspace_create = commands.add_parser("workspace-create", help="Create an alpha workspace")
+    workspace_create.add_argument("--root", required=True)
+    workspace_create.add_argument("--workspace-id", required=True)
+    workspace_create.add_argument("--name", required=True)
+    workspace_rotate = commands.add_parser("workspace-rotate-key", help="Rotate a workspace key")
+    workspace_rotate.add_argument("--root", required=True)
+    workspace_rotate.add_argument("--workspace-id", required=True)
+    workspace_rotate.add_argument("--current-key", required=True)
+    workspace_audit = commands.add_parser("workspace-audit", help="Read workspace audit events")
+    workspace_audit.add_argument("--root", required=True)
+    workspace_audit.add_argument("--workspace-id", required=True)
+    workspace_audit.add_argument("--limit", type=int, default=100)
     return parser
 
 
@@ -79,6 +92,24 @@ def main() -> int:
         except ContractError as exc:
             raise SystemExit(f"contract error: {exc}") from exc
         print(json.dumps(summary, ensure_ascii=False, indent=2))
+        return 0
+    if args.command == "workspace-create":
+        try:
+            key = ControlPlane(args.root).create_workspace(args.workspace_id, args.name)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
+        print(json.dumps({"workspace_id": args.workspace_id, "api_key": key}))
+        return 0
+    if args.command == "workspace-rotate-key":
+        try:
+            key = ControlPlane(args.root).rotate_key(args.workspace_id, args.current_key)
+        except (PermissionError, ValueError) as exc:
+            raise SystemExit(str(exc)) from exc
+        print(json.dumps({"workspace_id": args.workspace_id, "api_key": key}))
+        return 0
+    if args.command == "workspace-audit":
+        events = ControlPlane(args.root).audit_events(args.workspace_id, limit=args.limit)
+        print(json.dumps(events, ensure_ascii=False, indent=2))
         return 0
     if args.command == "history":
         runs = ExperimentStore(args.store).list_runs(limit=args.limit)

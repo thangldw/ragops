@@ -1,4 +1,4 @@
-# RAGOps 1.0
+# RAGOps 1.4
 
 RAGOps is an open evaluation and red-team harness for production RAG and agent
 systems. It turns product quality requirements into versioned scenarios,
@@ -8,7 +8,7 @@ This repository is intentionally product-first: the reference scenario is a
 Japanese enterprise troubleshooting assistant, while the evaluation engine is
 domain-independent.
 
-## Stable v1.0 capabilities
+## Stable open-source capabilities
 
 - Load a versioned evaluation scenario from JSON.
 - Score citations, groundedness, latency, and estimated cost.
@@ -111,6 +111,14 @@ ragops trend --store reports/runs.db \
 
 Set `RAGOPS_STORE` for the optional API/workbench run explorer. This is a
 single-workspace collaboration layer, not a multi-tenant hosted service.
+
+## Control-plane alpha
+
+`ragops workspace-create`, `workspace-rotate-key`, and `workspace-audit`
+exercise a local workspace-isolation boundary. When `RAGOPS_CONTROL_PLANE` is
+set, API run/history/review endpoints require `X-Workspace-Id` and
+`X-Workspace-Key`. See the [alpha architecture](docs/architecture/control-plane-alpha.md)
+and its explicit production limitations.
 
 Start with [Getting started](docs/getting-started.md). Release history is in
 [CHANGELOG.md](CHANGELOG.md); security and contribution policies are documented
