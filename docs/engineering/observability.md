@@ -17,9 +17,12 @@ RAGOps distinguishes application telemetry from evaluation evidence.
 - Token usage and step-level latency.
 - Tool calls, authorization decision, and execution outcome.
 
+Portable trace 0.4 now records application, build, retriever, generator, and
+role metadata. Provider token usage and step-level/tool-call spans remain
+planned extensions.
+
 ## Privacy
 
 Trace exporters should support field allow-lists and redaction before data
 leaves the evaluated application. Raw prompts, evidence, or user identifiers
 must not be assumed safe to retain.
-

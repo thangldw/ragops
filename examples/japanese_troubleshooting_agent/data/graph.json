@@ -1,0 +1,11 @@
+{
+  "A1000": ["E-42", "CoolingFan", "TokyoSite"],
+  "B2000": ["E-42", "CoolantFlow"],
+  "E-42": ["A1000", "B2000", "EscalationPolicy", "CoolingFan"],
+  "CoolingFan": ["A1000", "TokyoSite"],
+  "TokyoSite": ["A1000", "CoolingFan"],
+  "EscalationPolicy": ["E-42"],
+  "ExternalAction": ["HumanApproval"],
+  "HumanApproval": ["ExternalAction"],
+  "OnCallReview": []
+}

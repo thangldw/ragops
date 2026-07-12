@@ -52,6 +52,7 @@ class RecordedResponse:
     cost_usd: float
     human_approved: bool = False
     retrieved_ids: tuple[str, ...] = ()
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

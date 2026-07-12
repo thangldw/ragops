@@ -17,6 +17,9 @@ below as a traceable record; active implementation moves to M2.
 
 ## Next — milestone M2
 
+M2 is accepted in `docs/project/m2-acceptance.md`. The recorded stories remain
+below; active implementation moves to the FDE showcase and team workflow.
+
 | ID | Story | Acceptance evidence |
 | --- | --- | --- |
 | REF-01 | Build minimal Japanese reference RAG/agent | Reproducible local setup and trace export |

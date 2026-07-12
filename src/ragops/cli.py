@@ -16,6 +16,7 @@ from ragops.plugins import (
 )
 from ragops.reporters import comparison_html, comparison_markdown, evaluation_markdown
 from ragops.store import ExperimentStore
+from ragops.traces import load_trace_jsonl
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -23,7 +24,9 @@ def build_parser() -> argparse.ArgumentParser:
     commands = parser.add_subparsers(dest="command", required=True)
     evaluate_parser = commands.add_parser("evaluate", help="Evaluate recorded responses")
     evaluate_parser.add_argument("--scenario", required=True)
-    evaluate_parser.add_argument("--responses", required=True)
+    evaluate_input = evaluate_parser.add_mutually_exclusive_group(required=True)
+    evaluate_input.add_argument("--responses")
+    evaluate_input.add_argument("--traces", help="Portable JSONL trace input")
     evaluate_parser.add_argument("--output")
     evaluate_parser.add_argument("--format", choices=("json", "markdown"), default="json")
     evaluate_parser.add_argument("--store")
@@ -36,8 +39,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     compare_parser = commands.add_parser("compare", help="Compare candidate responses to baseline")
     compare_parser.add_argument("--scenario", required=True)
-    compare_parser.add_argument("--baseline", required=True)
-    compare_parser.add_argument("--candidate", required=True)
+    baseline_input = compare_parser.add_mutually_exclusive_group(required=True)
+    baseline_input.add_argument("--baseline")
+    baseline_input.add_argument("--baseline-traces")
+    candidate_input = compare_parser.add_mutually_exclusive_group(required=True)
+    candidate_input.add_argument("--candidate")
+    candidate_input.add_argument("--candidate-traces")
     compare_parser.add_argument("--output")
     compare_parser.add_argument("--format", choices=("json", "markdown", "html"), default="markdown")
     compare_parser.add_argument("--store")
@@ -69,14 +76,22 @@ def main() -> int:
         if args.command == "evaluate":
             report = evaluate(
                 scenario,
-                load_responses(args.responses),
+                load_trace_jsonl(args.traces) if args.traces else load_responses(args.responses),
                 evaluators=_evaluators_from_names(args.evaluator),
             )
         else:
             report = compare(
                 scenario,
-                load_responses(args.baseline),
-                load_responses(args.candidate),
+                (
+                    load_trace_jsonl(args.baseline_traces)
+                    if args.baseline_traces
+                    else load_responses(args.baseline)
+                ),
+                (
+                    load_trace_jsonl(args.candidate_traces)
+                    if args.candidate_traces
+                    else load_responses(args.candidate)
+                ),
                 policy=load_regression_policy(args.policy) if args.policy else None,
             )
     except (ContractError, ValueError) as exc:

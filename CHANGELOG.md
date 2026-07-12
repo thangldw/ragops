@@ -22,6 +22,9 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
   expected-failure CI checks, and a reproducible benchmark report.
 - Optional claim-support and citation-correctness evaluators with aggregate
   plugin metrics, calibration tests, CLI selection, and M1 acceptance evidence.
+- A credential-free Japanese GraphRAG-style reference agent with ACL filtering,
+  workflow decisions, trace 0.4 metadata, JSONL CLI evaluation/comparison,
+  generic HTTP adapter, recorded regression experiment, and M2 acceptance.
 
 ## [1.0.0] - 2026-07-12
 

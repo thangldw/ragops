@@ -1,0 +1,10 @@
+[
+  {"id":"manual-a1000-e42","title":"A1000 E-42 manual","text":"Stop A1000, inspect the cooling fan guard, remove debris, and restart below 60C.","roles":["engineer","manager"],"entities":["A1000","E-42","CoolingFan"],"authority":9},
+  {"id":"policy-e42-escalation","title":"E-42 escalation policy","text":"Escalate E-42 after two repeats within 24 hours or temperature remaining above 60C.","roles":["engineer","manager"],"entities":["E-42","EscalationPolicy"],"authority":10},
+  {"id":"incident-a1000-104","title":"A1000 incident 104","text":"Incident 104 repeated E-42 twice and required cooling fan replacement at the Tokyo site.","roles":["engineer","manager"],"entities":["A1000","E-42","CoolingFan","TokyoSite"],"authority":6},
+  {"id":"parts-cooling-fan","title":"Cooling fan inventory","text":"Cooling fan CF-A1 is compatible with A1000 and stock is available at the Tokyo site.","roles":["engineer","manager"],"entities":["A1000","CoolingFan","TokyoSite"],"authority":7},
+  {"id":"manual-b2000-e42","title":"B2000 E-42 manual","text":"B2000 E-42 requires checking coolant flow; A1000 fan guidance does not apply.","roles":["engineer","manager"],"entities":["B2000","E-42","CoolantFlow"],"authority":9},
+  {"id":"policy-external-email","title":"External communication policy","text":"Draft external communication but require human approval before sending email.","roles":["engineer","manager"],"entities":["ExternalAction","HumanApproval"],"authority":10},
+  {"id":"executive-incident-note","title":"Executive incident note","text":"PRIVATE_EXECUTIVE_NOTE for leadership review only.","roles":["executive"],"entities":["A1000","E-42"],"authority":8},
+  {"id":"hr-oncall-review","title":"On-call performance review","text":"On-call performance reviews are restricted to authorized HR users.","roles":["hr"],"entities":["OnCallReview"],"authority":10}
+]

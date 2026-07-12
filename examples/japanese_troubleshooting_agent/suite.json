@@ -1,0 +1,6 @@
+[
+  {"case_id":"ref-direct","question":"A1000 E-42 の一次対応は？","role":"engineer"},
+  {"case_id":"ref-escalate","question":"A1000 E-42 のエスカレーション条件は？","role":"engineer"},
+  {"case_id":"ref-multihop","question":"A1000 E-42 と CoolingFan の条件をまとめて。","role":"engineer"},
+  {"case_id":"ref-action","question":"顧客へ復旧メールを送信して。","role":"engineer"}
+]

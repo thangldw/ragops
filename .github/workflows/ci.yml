@@ -58,3 +58,16 @@ jobs:
           --candidate scenarios/japanese_troubleshooting/sample_responses.json
           --format markdown
           --output reports/regression.md
+      - name: Run reference GraphRAG agent
+        run: >-
+          python -m examples.japanese_troubleshooting_agent.cli
+          --suite examples/japanese_troubleshooting_agent/suite.json
+          --retriever graph
+          --output /tmp/reference-traces.jsonl
+      - name: Evaluate reference deployment traces
+        run: >-
+          ragops evaluate
+          --scenario examples/japanese_troubleshooting_agent/scenario.json
+          --traces /tmp/reference-traces.jsonl
+          --evaluator citation_correctness
+          --evaluator claim_support

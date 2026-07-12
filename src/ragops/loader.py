@@ -125,6 +125,7 @@ def _apply_response_override(
         "cost_usd",
         "human_approved",
         "retrieved_ids",
+        "metadata",
     }
     unknown = set(override) - allowed
     if unknown:
@@ -137,6 +138,7 @@ def _apply_response_override(
         cost_usd=override.get("cost_usd", response.cost_usd),
         human_approved=override.get("human_approved", response.human_approved),
         retrieved_ids=tuple(override.get("retrieved_ids", response.retrieved_ids)),
+        metadata=override.get("metadata", response.metadata),
     )
 
 
@@ -183,6 +185,7 @@ def responses_from_data(data: list[dict[str, Any]]) -> tuple[RecordedResponse, .
                 cost_usd=item["cost_usd"],
                 human_approved=item.get("human_approved", False),
                 retrieved_ids=tuple(item.get("retrieved_ids", [])),
+                metadata=item.get("metadata", {}),
             )
             for item in data
         )

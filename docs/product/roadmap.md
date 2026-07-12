@@ -12,7 +12,7 @@ history, CLI/API/workbench, CI, and container baseline.
 - Add attack-pack contracts for prompt injection and permission leakage.
 - Improve failure drill-down in HTML reports.
 
-## 1.2 — real application adapters
+## 1.2 — real application adapters (accepted)
 
 - Reference RAG/agent application producing portable traces.
 - OpenTelemetry and generic HTTP/provider adapters.
@@ -31,4 +31,3 @@ history, CLI/API/workbench, CI, and container baseline.
   enterprise deployment options.
 
 Roadmap order follows validated user value. It is not a delivery-date promise.
-

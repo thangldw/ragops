@@ -85,6 +85,14 @@ Its passing baseline is validated in CI.
 See the reproducible [benchmark report](docs/evaluation/benchmark-report-v0.2.md)
 for baseline, regressed, and adversarial results and limitations.
 
+## Reference deployment
+
+The [Japanese troubleshooting reference agent](examples/japanese_troubleshooting_agent/README.md)
+demonstrates ACL-first lexical + graph retrieval, approval-aware workflow
+decisions, portable trace 0.4 export, and an end-to-end RAGOps release gate.
+The recorded experiment blocks a lexical-only candidate that regresses against
+the accepted graph-assisted baseline.
+
 Start with [Getting started](docs/getting-started.md). Release history is in
 [CHANGELOG.md](CHANGELOG.md); security and contribution policies are documented
 in [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md).

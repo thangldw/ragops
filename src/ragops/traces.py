@@ -30,6 +30,10 @@ def load_trace_jsonl(path: str | Path) -> tuple[RecordedResponse, ...]:
                     latency_ms=item["latency_ms"],
                     cost_usd=usage.get("cost_usd", 0.0),
                     human_approved=item.get("human_approved", False),
+                    metadata={
+                        "trace_schema_version": item.get("schema_version", "0.3"),
+                        **item.get("metadata", {}),
+                    },
                 )
             )
         except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
