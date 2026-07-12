@@ -34,6 +34,21 @@ below; active implementation moves to the FDE showcase and team workflow.
 - Design-partner discovery and observed workflow validation.
 - Shared hosted workspace only after collaboration demand is demonstrated.
 
+## Adoption backlog — v1.5 and beyond
+
+These are suitable seeds for real GitHub issues. Apply `good first issue` only
+when the acceptance criteria are small enough for a first-time contributor.
+
+| ID | Suggested labels | Story | Acceptance evidence |
+| --- | --- | --- | --- |
+| DX-01 | good first issue, documentation | Add a second `ragops demo` scenario for support triage | Credential-free bundle, test, README example |
+| EVAL-03 | good first issue, evaluator | Add a deterministic answer-length budget evaluator | Unit/negative tests and plugin documentation |
+| REPORT-02 | help wanted, reporting | Add accessible print styles to the standalone HTML report | Browser capture and HTML regression test |
+| INTEG-01 | help wanted, integration | Publish a copyable GitHub Actions release-gate recipe | Passing/failing fixture example and setup guide |
+| TRACE-02 | help wanted, integration | Add an OpenTelemetry span-to-trace example | Synthetic exporter fixture and compatibility test |
+| DOCS-02 | good first issue, documentation | Add a framework-neutral “export your first trace” tutorial | Five-minute walkthrough with synthetic data |
+| DIST-01 | release | Configure PyPI Trusted Publishing and publish synchronized release | Owner-configured environment, CI, release notes, install verification |
+
 ## Work assignment convention
 
 - Claude Code or Codex implements one issue-sized story at a time.

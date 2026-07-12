@@ -1,0 +1,41 @@
+name: Bug report
+description: Report a reproducible defect without private data
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Never include secrets, customer-confidential data, or private traces.
+  - type: input
+    id: version
+    attributes:
+      label: RAGOps version or commit
+      placeholder: v1.4.0 or commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include the command and a synthetic or redacted fixture.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Python 3.12, macOS 15
+    validations:
+      required: true

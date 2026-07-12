@@ -8,7 +8,7 @@ version = "1.4.0"
 description = "Evaluation and red-team release gates for RAG and agent systems"
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "Apache-2.0" }
+license = { text = "MIT" }
 authors = [{ name = "Thang Luu" }]
 dependencies = []
 

@@ -1,6 +1,6 @@
 # Product roadmap
 
-## 1.0 — stable local core (current)
+## 1.0 — stable local core
 
 Portable contracts, deterministic gates, baseline comparison, plugins, local
 history, CLI/API/workbench, CI, and container baseline.
@@ -26,6 +26,21 @@ history, CLI/API/workbench, CI, and container baseline.
 - Scheduled benchmark/reference suite.
 
 PR comment integration and notifications remain hosted/integration work.
+
+## 1.4 — complete reference program (current)
+
+- Japanese Graph+ACL reference deployment with portable trace 0.4 output.
+- Thirty-case synthetic benchmark, attack metadata, and separated evidence.
+- Local team review/trend workflow and control-plane alpha boundary.
+- Optional HTTP and OpenAI Responses API adapters outside the core.
+
+## 1.5 — adoption-first developer experience (in progress)
+
+- Credential-free `ragops demo` command and reviewable report bundle.
+- Problem/solution/demo/evidence/limitations product showcase.
+- MIT licensing, contributor onboarding, and repository discovery assets.
+- Next gates: PyPI publishing, PR-native GitHub Action, starter issues, and
+  design-partner feedback.
 
 ## 2.0 — hosted control plane (local alpha boundary implemented)
 

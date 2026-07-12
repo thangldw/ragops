@@ -7,6 +7,7 @@ from pathlib import Path
 from ragops.benchmarks import scenario_summary
 from ragops.config import load_regression_policy
 from ragops.control_plane import ControlPlane
+from ragops.demo import write_demo
 from ragops.engine import compare, evaluate
 from ragops.loader import ContractError, load_responses, load_scenario
 from ragops.plugins import (
@@ -23,6 +24,13 @@ from ragops.traces import load_trace_jsonl
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ragops")
     commands = parser.add_subparsers(dest="command", required=True)
+    demo_parser = commands.add_parser("demo", help="Generate a credential-free release-gate demo")
+    demo_parser.add_argument("--output", default="ragops-demo")
+    demo_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Replace regular demo files in an existing non-symlink directory",
+    )
     evaluate_parser = commands.add_parser("evaluate", help="Evaluate recorded responses")
     evaluate_parser.add_argument("--scenario", required=True)
     evaluate_input = evaluate_parser.add_mutually_exclusive_group(required=True)
@@ -86,6 +94,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = build_parser().parse_args()
+    if args.command == "demo":
+        try:
+            summary = write_demo(args.output, force=args.force)
+        except OSError as exc:
+            raise SystemExit(f"demo output error: {exc}") from exc
+        print(json.dumps(summary, ensure_ascii=False, indent=2))
+        return 0
     if args.command == "inspect":
         try:
             summary = scenario_summary(load_scenario(args.scenario))

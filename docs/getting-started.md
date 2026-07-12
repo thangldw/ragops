@@ -1,5 +1,17 @@
 # Getting started
 
+## Generate the five-minute proof
+
+```bash
+ragops demo --output ragops-demo
+```
+
+This credential-free command writes a portable scenario, accepted baseline,
+intentionally regressed candidate, Markdown report, and standalone HTML report.
+The command succeeds when the expected candidate is blocked.
+It refuses to reuse an existing output directory by default. Use `--force`
+only when you intentionally want to replace regular demo files there.
+
 ## Evaluate one build
 
 ```bash
@@ -26,7 +38,7 @@ but the build is blocked. Invalid contracts exit non-zero with an explanation.
 ## Import application traces
 
 Export one JSON object per line following
-`schemas/trace-0.3.schema.json`, then load it with
+`schemas/trace-0.4.schema.json`, then load it with
 `ragops.traces.load_trace_jsonl`. Provider-specific adapters should map their
 events into this envelope instead of changing the core domain model.
 
@@ -39,4 +51,3 @@ open http://localhost:8000
 
 Set `RAGOPS_API_KEY` before exposing the service beyond localhost. Interactive
 API documentation is available at `/docs`.
-

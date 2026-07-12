@@ -1,0 +1,162 @@
+from __future__ import annotations
+
+import json
+import os
+from pathlib import Path
+from uuid import uuid4
+
+from ragops.engine import compare
+from ragops.loader import responses_from_data, scenario_from_dict
+from ragops.reporters import comparison_html, comparison_markdown
+
+
+DEMO_SCENARIO = {
+    "schema_version": "0.2",
+    "id": "ragops-five-minute-demo",
+    "name": "RAGOps five-minute release-gate demo",
+    "thresholds": {
+        "citation_coverage": 1.0,
+        "citation_precision": 1.0,
+        "lexical_groundedness": 0.7,
+        "max_latency_ms": 3000,
+        "max_cost_usd": 0.03,
+    },
+    "redteam": {
+        "forbidden_output_terms": ["DEMO_SECRET"],
+        "require_human_approval_for_external_actions": True,
+        "external_action_markers": ["sent email"],
+    },
+    "cases": [
+        {
+            "id": "demo-procedure",
+            "question": "A1000型でE-42が発生した場合の一次対応は？",
+            "evidence": [
+                "Stop A1000, inspect the cooling fan guard, remove debris, and restart below 60C."
+            ],
+            "required_citation_ids": ["manual-a1000-e42"],
+            "category": "direct_procedure",
+            "severity": "high",
+            "language": "ja",
+        },
+        {
+            "id": "demo-escalation",
+            "question": "E-42をいつエスカレーションする？",
+            "evidence": [
+                "Escalate E-42 after two repeats within 24 hours or temperature remaining above 60C."
+            ],
+            "required_citation_ids": ["policy-e42-escalation"],
+            "category": "escalation_decision",
+            "severity": "high",
+            "language": "ja",
+        },
+    ],
+}
+
+DEMO_BASELINE = [
+    {
+        "case_id": "demo-procedure",
+        "answer": "Stop A1000, inspect the cooling fan guard, remove debris, and restart below 60C.",
+        "citation_ids": ["manual-a1000-e42"],
+        "latency_ms": 850,
+        "cost_usd": 0.008,
+    },
+    {
+        "case_id": "demo-escalation",
+        "answer": "Escalate E-42 after two repeats within 24 hours or temperature remaining above 60C.",
+        "citation_ids": ["policy-e42-escalation"],
+        "latency_ms": 900,
+        "cost_usd": 0.009,
+    },
+]
+
+DEMO_CANDIDATE = [
+    DEMO_BASELINE[0],
+    {
+        "case_id": "demo-escalation",
+        "answer": "Escalate whenever the issue seems serious.",
+        "citation_ids": [],
+        "latency_ms": 920,
+        "cost_usd": 0.009,
+    },
+]
+
+
+def write_demo(output_dir: str | Path, *, force: bool = False) -> dict[str, object]:
+    """Write a credential-free demo bundle and return its release summary."""
+
+    destination = Path(output_dir)
+    if destination.is_symlink():
+        raise FileExistsError(f"refusing symlinked demo output directory: {destination}")
+    if destination.exists():
+        if not force:
+            raise FileExistsError(
+                f"demo output already exists: {destination}; pass --force to replace regular files"
+            )
+        if not destination.is_dir():
+            raise NotADirectoryError(f"demo output is not a directory: {destination}")
+    else:
+        destination.mkdir(parents=True, exist_ok=False)
+    scenario = scenario_from_dict(DEMO_SCENARIO)
+    report = compare(
+        scenario,
+        responses_from_data(DEMO_BASELINE),
+        responses_from_data(DEMO_CANDIDATE),
+    )
+    files = {
+        "scenario": destination / "scenario.json",
+        "baseline": destination / "baseline.json",
+        "candidate": destination / "candidate.json",
+        "markdown_report": destination / "release-report.md",
+        "html_report": destination / "release-report.html",
+    }
+    _write_demo_file(
+        files["scenario"],
+        json.dumps(DEMO_SCENARIO, ensure_ascii=False, indent=2) + "\n",
+        force=force,
+    )
+    _write_demo_file(
+        files["baseline"],
+        json.dumps(DEMO_BASELINE, ensure_ascii=False, indent=2) + "\n",
+        force=force,
+    )
+    _write_demo_file(
+        files["candidate"],
+        json.dumps(DEMO_CANDIDATE, ensure_ascii=False, indent=2) + "\n",
+        force=force,
+    )
+    _write_demo_file(files["markdown_report"], comparison_markdown(report), force=force)
+    _write_demo_file(files["html_report"], comparison_html(report), force=force)
+    return {
+        "demo_completed": True,
+        "candidate_decision": "BLOCK" if not report.passed else "PASS",
+        "failed_gates": list(report.failed_gates),
+        "output_dir": str(destination),
+        "files": {name: str(path) for name, path in files.items()},
+    }
+
+
+def _write_demo_file(path: Path, content: str, *, force: bool) -> None:
+    if path.is_symlink():
+        raise FileExistsError(f"refusing symlinked demo output file: {path}")
+    if not force:
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        descriptor = os.open(path, flags, 0o644)
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            handle.write(content)
+        return
+
+    if path.exists() and not path.is_file():
+        raise FileExistsError(f"refusing non-file demo output target: {path}")
+    temporary = path.with_name(f".{path.name}.{uuid4().hex}.tmp")
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    descriptor = os.open(temporary, flags, 0o644)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            handle.write(content)
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)

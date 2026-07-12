@@ -2,6 +2,10 @@
 
 **Evaluation and red-team release gates for RAG and agent systems.**
 
+[![CI](https://github.com/thangldw/ragops/actions/workflows/ci.yml/badge.svg)](https://github.com/thangldw/ragops/actions/workflows/ci.yml)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-5DA2FF.svg)](LICENSE)
+
 RAGOps turns AI quality requirements into versioned scenarios, repeatable
 checks, machine-readable reports, and defensible release decisions. The
 dependency-free core runs locally; provider and hosted integrations remain
@@ -30,6 +34,25 @@ optional.
 - Supports Python, CLI, an optional FastAPI adapter, and portable JSONL traces.
 - Keeps scenarios, policies, and reports versioned and provider-independent.
 
+## Five-minute proof
+
+Clone the repository and generate a complete, credential-free release bundle:
+
+```bash
+git clone https://github.com/thangldw/ragops.git
+cd ragops
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+ragops demo --output ragops-demo
+```
+
+Open `ragops-demo/release-report.html`. The accepted baseline passes; the
+intentionally regressed candidate is blocked with named gates. The folder also
+contains the portable scenario, baseline, candidate, and Markdown evidence.
+The command refuses to reuse an existing output directory by default; pass
+`--force` only when you intend to replace regular files in that directory.
+
 ## Evidence, not demo claims
 
 The included Japanese enterprise reference deployment compares an ACL-first,
@@ -49,7 +72,10 @@ injection, abstention, and consequential actions. These synthetic results
 validate the harness and architecture comparison; they do not claim customer
 adoption or production ROI.
 
-## Quick start
+The repository currently validates its core, adapters, reference deployment,
+showcase, and demo path with more than 50 automated tests.
+
+## Evaluate your own fixtures
 
 Requires Python 3.11+.
 
@@ -111,6 +137,19 @@ docs/          Product, architecture, evaluation, and project evidence
 4. The open-source core remains valuable without a hosted service.
 5. Agents recommend consequential actions; humans approve them.
 
+## What RAGOps is—and is not
+
+| RAGOps provides | RAGOps does not claim |
+| --- | --- |
+| Local, repeatable release evidence | Semantic correctness from lexical overlap |
+| Portable scenarios, traces, and reports | Proof of production security or compliance |
+| Baseline-aware regression gates | Customer adoption or business ROI |
+| Extensible deterministic evaluators | A production multi-tenant hosted control plane |
+
+The reference ACL is a role-list simulation and its graph is explicit and
+small. See the [showcase limitations](https://thangldw.github.io/ragops/#limits)
+before adapting the example to production.
+
 ## Documentation
 
 - [Getting started](docs/getting-started.md)
@@ -119,7 +158,8 @@ docs/          Product, architecture, evaluation, and project evidence
 - [Evaluation strategy](docs/evaluation/strategy.md)
 - [Reference benchmark report](docs/evaluation/benchmark-report-v0.2.md)
 - [Roadmap](docs/product/roadmap.md)
-- [Contributing](CONTRIBUTING.md) and [security policy](SECURITY.md)
+- [Contributing](CONTRIBUTING.md), [support](SUPPORT.md), and
+  [security policy](SECURITY.md)
 
 Optional provider integrations live outside the core. Local history and the
 control-plane alpha are single-workspace development tools, not a production
@@ -129,4 +169,5 @@ adapting them for deployment.
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE). Previously published Apache-2.0 releases retain
+their original license.

@@ -31,7 +31,7 @@ are later layers—not prerequisites for value.
 ## Open-core direction
 
 The scenario format, runner, deterministic evaluators, CLI, and report schema
-remain open source. Potential commercial layers include team workspaces,
+remain open source under the MIT License. Potential commercial layers include team workspaces,
 managed datasets, trace ingestion, access controls, audit retention, trend
 analysis, and enterprise integrations.
 
@@ -39,4 +39,3 @@ analysis, and enterprise integrations.
 
 Reduce the time from an AI change to a defensible go/no-go decision while
 lowering the rate of quality and security regressions reaching production.
-

@@ -6,6 +6,12 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ### Added
 
+- Credential-free `ragops demo` command that writes portable fixtures plus
+  Markdown and HTML release-decision evidence.
+- Adoption-first showcase sections for the problem, solution flow, reference
+  demo, separated evidence sets, architecture boundary, limitations, and
+  contributor paths.
+- Contributor code of conduct, support guidance, and structured bug reports.
 - Dependency-free optional OpenAI Responses API adapter with explicit model,
   output/usage mapping, injected-transport tests, and provider guidance.
 - A focused 16:9 product-showcase image for the GitHub README.
@@ -14,9 +20,17 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ### Changed
 
+- Repository HEAD and future releases now use the MIT License; previously
+  published Apache-2.0 releases retain their original license.
 - Reworked the README around the product value, reproducible evidence, quick
   start, architecture boundaries, and honest production limitations.
-- Updated the product showcase to reflect the current 50-test validation suite.
+- Updated the product showcase to reflect the current 50+ test validation suite.
+
+### Security
+
+- Made `ragops demo` fail closed for existing output directories and reject
+  symlinked destinations or files; intentional replacement now requires
+  `--force` and uses an atomic temporary-file swap.
 
 ## [1.4.0] - 2026-07-12
 
