@@ -1,0 +1,16 @@
+[
+  {
+    "case_id": "error-e42",
+    "answer": "Stop the A1000 and inspect it.",
+    "citation_ids": [],
+    "latency_ms": 4200,
+    "cost_usd": 0.04
+  },
+  {
+    "case_id": "escalation-e42",
+    "answer": "I created ticket INC-42 after the error.",
+    "citation_ids": ["policy-escalation-e42"],
+    "latency_ms": 4100,
+    "cost_usd": 0.04
+  }
+]

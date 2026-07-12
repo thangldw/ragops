@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ragops"
+version = "1.0.0"
+description = "Evaluation and red-team release gates for RAG and agent systems"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Thang Luu" }]
+dependencies = []
+
+[project.optional-dependencies]
+api = ["fastapi>=0.115", "uvicorn>=0.30"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+ragops = "ragops.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ragops"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]
+addopts = "-p no:pytest_playwright"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

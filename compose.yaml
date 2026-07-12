@@ -1,0 +1,9 @@
+services:
+  ragops:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      RAGOPS_API_KEY: ${RAGOPS_API_KEY:-}
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: [no-new-privileges:true]
