@@ -59,9 +59,9 @@ are recorded.
 
 | ID | GitHub issue | Story | Status |
 | --- | --- | --- | --- |
-| INTEG-02 | [#1](https://github.com/thangldw/ragops/issues/1) | Add a copyable GitLab CI release-gate recipe | Help wanted |
-| DX-02 | [#2](https://github.com/thangldw/ragops/issues/2) | Add a credential-free proposal-review demo | Good first issue |
-| INTEG-03 | [#3](https://github.com/thangldw/ragops/issues/3) | Design safe pull-request comment publishing | Help wanted; design before code |
+| INTEG-02 | [#1](https://github.com/thangldw/ragops/issues/1) | Add a copyable GitLab CI release-gate recipe | Implemented; close after push |
+| DX-02 | [#2](https://github.com/thangldw/ragops/issues/2) | Add a credential-free proposal-review demo | Implemented; close after push |
+| INTEG-03 | [#3](https://github.com/thangldw/ragops/issues/3) | Design safe pull-request comment publishing | Design accepted; implementation intentionally deferred |
 
 ## Work assignment convention
 

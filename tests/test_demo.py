@@ -53,6 +53,29 @@ def test_demo_cli_selects_support_triage(monkeypatch, capsys, tmp_path: Path) ->
     assert summary["scenario_id"] == "support-triage"
 
 
+def test_proposal_review_demo_blocks_unsupported_requirement(tmp_path: Path) -> None:
+    summary = write_demo(tmp_path / "proposal", scenario_id="proposal-review")
+
+    assert summary["scenario_id"] == "proposal-review"
+    assert summary["candidate_decision"] == "BLOCK"
+    assert "citation_coverage_regression" in summary["failed_gates"]
+    candidate = json.loads((tmp_path / "proposal" / "candidate.json").read_text())
+    assert candidate[1]["case_id"] == "proposal-residency"
+    assert candidate[1]["citation_ids"] == []
+
+
+def test_demo_cli_selects_proposal_review(monkeypatch, capsys, tmp_path: Path) -> None:
+    output = tmp_path / "proposal-cli"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["ragops", "demo", "--scenario", "proposal-review", "--output", str(output)],
+    )
+
+    assert main() == 0
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["scenario_id"] == "proposal-review"
+
+
 def test_demo_rejects_unknown_scenario_before_writing(tmp_path: Path) -> None:
     output = tmp_path / "unknown"
     with pytest.raises(ValueError, match="unknown demo scenario"):

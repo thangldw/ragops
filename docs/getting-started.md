@@ -18,6 +18,12 @@ Choose a second credential-free workflow with:
 ragops demo --scenario support-triage --output support-triage-demo
 ```
 
+For a presales workflow:
+
+```bash
+ragops demo --scenario proposal-review --output proposal-review-demo
+```
+
 ## Evaluate one build
 
 ```bash

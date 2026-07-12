@@ -77,6 +77,12 @@ Use the same workflow for a synthetic support-triage scenario:
 ragops demo --scenario support-triage --output support-triage-demo
 ```
 
+Or demonstrate an RFP/proposal requirement regression:
+
+```bash
+ragops demo --scenario proposal-review --output proposal-review-demo
+```
+
 ## Evidence, not demo claims
 
 The included Japanese enterprise reference deployment compares an ACL-first,
@@ -97,7 +103,7 @@ validate the harness and architecture comparison; they do not claim customer
 adoption or production ROI.
 
 The repository currently validates its core, adapters, reference deployment,
-showcase, and demo paths with 80 automated tests.
+showcase, and demo paths with 84 automated tests.
 
 <p align="center">
   <img src="docs/demo/infographics/evidence-stack.svg" alt="RAGOps evidence stack combining quality, safety, operational budgets, and regression comparison into a release decision" width="100%">
@@ -209,6 +215,8 @@ before adapting the example to production.
 - [Evaluation strategy](docs/evaluation/strategy.md)
 - [Answer-length budget evaluator](docs/evaluation/answer-length-budget.md)
 - [Reusable GitHub PR gate](docs/engineering/github-pr-gate.md)
+- [GitLab CI release gate](docs/engineering/gitlab-ci-gate.md)
+- [Safe PR-comment publishing design](docs/architecture/pr-comment-publishing.md)
 - [Export your first portable trace](docs/engineering/export-your-first-trace.md)
 - [OpenTelemetry span-to-trace example](examples/opentelemetry_trace_adapter/README.md)
 - [PyPI Trusted Publishing runbook](docs/engineering/pypi-publishing.md)

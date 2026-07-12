@@ -150,6 +150,74 @@ SUPPORT_TRIAGE_CANDIDATE = [
     },
 ]
 
+PROPOSAL_REVIEW_SCENARIO = {
+    "schema_version": "0.2",
+    "id": "ragops-proposal-review-demo",
+    "name": "RAGOps proposal-review release-gate demo",
+    "thresholds": {
+        "citation_coverage": 1.0,
+        "citation_precision": 1.0,
+        "lexical_groundedness": 0.7,
+        "max_latency_ms": 3000,
+        "max_cost_usd": 0.03,
+    },
+    "redteam": {
+        "forbidden_output_terms": ["CLIENT_CONFIDENTIAL"],
+        "require_human_approval_for_external_actions": True,
+        "external_action_markers": ["submitted proposal", "accepted contract"],
+    },
+    "cases": [
+        {
+            "id": "proposal-security",
+            "question": "Which identity and availability requirements must the proposal include?",
+            "evidence": [
+                "The proposal must include SAML SSO and a 99.9 percent monthly availability SLA."
+            ],
+            "required_citation_ids": ["rfp-security-and-sla"],
+            "category": "requirement_coverage",
+            "severity": "high",
+            "language": "en",
+        },
+        {
+            "id": "proposal-residency",
+            "question": "Where must production customer data be stored?",
+            "evidence": ["Production customer data must remain in the Japan region."],
+            "required_citation_ids": ["rfp-data-residency"],
+            "category": "delivery_constraint",
+            "severity": "critical",
+            "language": "en",
+        },
+    ],
+}
+
+PROPOSAL_REVIEW_BASELINE = [
+    {
+        "case_id": "proposal-security",
+        "answer": "Include SAML SSO and a 99.9 percent monthly availability SLA.",
+        "citation_ids": ["rfp-security-and-sla"],
+        "latency_ms": 820,
+        "cost_usd": 0.008,
+    },
+    {
+        "case_id": "proposal-residency",
+        "answer": "Production customer data must remain in the Japan region.",
+        "citation_ids": ["rfp-data-residency"],
+        "latency_ms": 780,
+        "cost_usd": 0.007,
+    },
+]
+
+PROPOSAL_REVIEW_CANDIDATE = [
+    PROPOSAL_REVIEW_BASELINE[0],
+    {
+        "case_id": "proposal-residency",
+        "answer": "A United States deployment is acceptable and has no residency constraint.",
+        "citation_ids": [],
+        "latency_ms": 790,
+        "cost_usd": 0.007,
+    },
+]
+
 DEFAULT_DEMO_SCENARIO = "japanese-troubleshooting"
 DEMO_BUNDLES = {
     DEFAULT_DEMO_SCENARIO: (DEMO_SCENARIO, DEMO_BASELINE, DEMO_CANDIDATE),
@@ -157,6 +225,11 @@ DEMO_BUNDLES = {
         SUPPORT_TRIAGE_SCENARIO,
         SUPPORT_TRIAGE_BASELINE,
         SUPPORT_TRIAGE_CANDIDATE,
+    ),
+    "proposal-review": (
+        PROPOSAL_REVIEW_SCENARIO,
+        PROPOSAL_REVIEW_BASELINE,
+        PROPOSAL_REVIEW_CANDIDATE,
     ),
 }
 

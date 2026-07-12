@@ -54,8 +54,10 @@ PR comment integration and notifications remain hosted/integration work.
 ## 1.7 — broader adoption proof (complete on main, unreleased)
 
 - Second credential-free support-triage demo scenario.
+- Third credential-free proposal-review demo scenario.
 - Deterministic, configurable Unicode code-point answer-length evaluator.
 - GitHub discovery metadata, Discussions, and real starter issues.
+- GitLab CI release-gate recipe and reviewed least-privilege PR-comment design.
 
 ## 2.0 — hosted control plane (local alpha boundary implemented)
 

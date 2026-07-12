@@ -10,6 +10,12 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
   blocked unsafe candidate.
 - Configurable `answer_length_budget` evaluator using deterministic Unicode
   code-point counts, CLI support, diagnostics, and documented limitations.
+- Credential-free `proposal-review` demo with an intentionally unsupported,
+  uncited requirement candidate.
+- Copyable GitLab merge-request release-gate recipe with always-on evidence
+  artifacts.
+- Least-privilege PR-comment publishing ADR and trust-boundary design; the
+  current GitHub workflow remains read-only.
 
 ### Changed
 
