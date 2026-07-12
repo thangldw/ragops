@@ -49,7 +49,8 @@ when the acceptance criteria are small enough for a first-time contributor.
 | DOCS-02 | good first issue, documentation | Add a framework-neutral “export your first trace” tutorial | Five-minute walkthrough with synthetic data |
 | DIST-01 | release | Configure PyPI Trusted Publishing and publish synchronized release | Owner-configured environment, CI, release notes, install verification |
 
-Completed on `main` after v1.5.0: `REPORT-02`, `INTEG-01`, and `DOCS-02`.
+Completed on `main` after v1.5.0: `REPORT-02`, `INTEG-01`, `TRACE-02`, and
+`DOCS-02`.
 `DIST-01` is code-ready through a manual Trusted Publishing workflow and remains
 externally blocked on PyPI project/environment ownership.
 

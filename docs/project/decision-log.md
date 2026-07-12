@@ -10,6 +10,7 @@
 | 2026-07-12 | License repository HEAD and future releases under MIT | Lower adoption and contribution friction without weakening the OSS core | Accepted |
 | 2026-07-12 | Repair trace 0.4 schema syntax without changing its fields or semantics | Restore the published schema as valid JSON before v1.5.0 | Accepted |
 | 2026-07-12 | Keep the reusable pull-request gate as a read-only adapter | Make CI adoption easy without moving evaluation semantics or write permissions into GitHub Actions | Accepted |
+| 2026-07-12 | Keep OpenTelemetry export as a dependency-free example adapter | Give existing telemetry users a copyable path without changing trace semantics or core dependencies | Accepted |
 
 Architecturally significant changes must be captured as ADRs; this table is
 the concise presentation-oriented index.

@@ -185,6 +185,7 @@ before adapting the example to production.
 - [Evaluation strategy](docs/evaluation/strategy.md)
 - [Reusable GitHub PR gate](docs/engineering/github-pr-gate.md)
 - [Export your first portable trace](docs/engineering/export-your-first-trace.md)
+- [OpenTelemetry span-to-trace example](examples/opentelemetry_trace_adapter/README.md)
 - [PyPI Trusted Publishing runbook](docs/engineering/pypi-publishing.md)
 - [Reference benchmark report](docs/evaluation/benchmark-report-v0.2.md)
 - [Roadmap](docs/product/roadmap.md)

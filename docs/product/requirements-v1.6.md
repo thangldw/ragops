@@ -27,6 +27,8 @@ the project into an existing repository without learning its internal modules.
 5. The trace tutorial runs against synthetic repository fixtures without a
    provider credential.
 6. Tests verify workflow structure, documentation links, and print CSS.
+7. A dependency-free OpenTelemetry example maps synthetic spans into valid
+   trace 0.4 JSONL without changing the core trace loader or schema.
 
 ## Non-goals
 
@@ -34,3 +36,4 @@ the project into an existing repository without learning its internal modules.
 - Publishing a new evaluator or changing metric meaning.
 - Publishing to PyPI before Trusted Publisher ownership is configured.
 - Claiming design-partner adoption or production ROI.
+- Shipping an OpenTelemetry SDK, collector, or telemetry backend integration.

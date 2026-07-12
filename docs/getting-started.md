@@ -47,6 +47,8 @@ Export one JSON object per line following
 events into this envelope instead of changing the core domain model.
 See [Export your first portable trace](engineering/export-your-first-trace.md)
 for a complete credential-free walkthrough.
+If the application already exports OpenTelemetry spans, start with the
+[dependency-free span adapter](../examples/opentelemetry_trace_adapter/README.md).
 
 ## Run the workbench
 

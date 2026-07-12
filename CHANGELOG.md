@@ -10,6 +10,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
   evidence artifact output.
 - Credential-free portable trace tutorial and a manual, OIDC-based PyPI Trusted
   Publishing workflow with tag/version verification.
+- Dependency-free OpenTelemetry span-to-trace example with synthetic fixtures,
+  strict contract errors, and trace 0.4 compatibility coverage.
 
 ### Changed
 

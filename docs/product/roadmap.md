@@ -42,11 +42,12 @@ PR comment integration and notifications remain hosted/integration work.
 - Remaining launch gates: PyPI publishing, PR-native GitHub Action, starter
   issues, and design-partner feedback.
 
-## 1.6 — pull-request adoption path (in progress)
+## 1.6 — pull-request adoption path (complete on main, unreleased)
 
 - Reusable read-only GitHub PR gate with evidence summary and artifact.
 - Print-ready standalone HTML comparison report.
 - Framework-neutral first-trace tutorial.
+- Dependency-free OpenTelemetry span-to-trace example.
 - Manual PyPI Trusted Publishing workflow; registry ownership remains an owner
   setup gate.
 
