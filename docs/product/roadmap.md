@@ -51,7 +51,7 @@ PR comment integration and notifications remain hosted/integration work.
 - Manual PyPI Trusted Publishing workflow with release 1.6.0 published through
   GitHub OIDC.
 
-## 1.7 — broader adoption proof (complete on main, unreleased)
+## 1.7 — broader adoption proof (released)
 
 - Second credential-free support-triage demo scenario.
 - Third credential-free proposal-review demo scenario.

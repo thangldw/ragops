@@ -4,6 +4,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-07-13
+
 ### Added
 
 - Second credential-free `support-triage` demo scenario with an intentionally
@@ -19,8 +21,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ### Changed
 
-- PyPI distribution is active through OIDC Trusted Publishing; release 1.6.0
-  is available as a wheel and source distribution without stored API tokens.
+- PyPI distribution is active through OIDC Trusted Publishing and requires no
+  stored API token.
 
 ## [1.6.0] - 2026-07-13
 

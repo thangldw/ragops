@@ -9,6 +9,7 @@ PyPI API token and publishes only an existing tag whose `vX.Y.Z` value matches
 
 - Project: [ragops on PyPI](https://pypi.org/project/ragops/)
 - First Trusted Publishing release: `1.6.0`
+- Current accepted publication target: `1.7.0`
 - GitHub environment: `pypi`
 - Publisher: `thangldw/ragops`, workflow `publish-pypi.yml`
 - Verification: wheel and sdist present; clean install and credential-free demo pass
@@ -30,7 +31,7 @@ GitHub's current OIDC guidance is linked from the
 ## Publish an accepted tag
 
 1. Open **Actions → Publish package to PyPI → Run workflow**.
-2. Enter an existing tag such as `v1.6.0`.
+2. Enter an existing tag such as `v1.7.0`.
 3. Approve the `pypi` environment when protection rules require it.
 4. After success, install in a clean environment and compare the installed
    version and wheel hash with the GitHub Release asset.

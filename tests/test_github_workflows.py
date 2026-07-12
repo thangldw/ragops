@@ -30,7 +30,7 @@ def test_repository_smoke_calls_the_reusable_gate() -> None:
     workflow = Path(".github/workflows/ragops-gate-smoke.yml").read_text(encoding="utf-8")
 
     assert "uses: ./.github/workflows/ragops-gate.yml" in workflow
-    assert "ragops-version: v1.6.0" in workflow
+    assert "ragops-version: v1.7.0" in workflow
     assert "benchmark-baseline.json" in workflow
 
 

@@ -18,7 +18,7 @@ jobs:
   passing-reference:
     uses: ./.github/workflows/ragops-gate.yml
     with:
-      ragops-version: v1.6.0
+      ragops-version: v1.7.0
       scenario: scenarios/japanese_troubleshooting/benchmark-v0.2.json
       baseline: scenarios/japanese_troubleshooting/benchmark-baseline.json
       candidate: scenarios/japanese_troubleshooting/benchmark-baseline.json

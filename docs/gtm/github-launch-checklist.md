@@ -30,8 +30,8 @@ v1.7 slice rather than opened as already-completed issues.
 ## Owner-only external gates
 
 - PyPI project, `pypi` GitHub environment, and active Trusted Publisher are
-  configured; release 1.6.0 is publicly verified.
-- Choose a v1.7 release boundary after reviewing the changes on `main`.
+  configured; release 1.7.0 is the accepted publication target.
+- Verify the v1.7 GitHub Release and PyPI artifacts after publication.
 - Recruit a design partner and record observed adoption/ROI separately from
   synthetic benchmark results.
 - Configure branch protection and security settings under the owner's chosen

@@ -6,13 +6,13 @@ evidence without a model API, telemetry backend, or provider SDK.
 ## 1. Install the released CLI
 
 Download the wheel from the
-[v1.6.0 GitHub Release](https://github.com/thangldw/ragops/releases/tag/v1.6.0),
+[v1.7.0 GitHub Release](https://github.com/thangldw/ragops/releases/tag/v1.7.0),
 then install it:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install ./ragops-1.6.0-py3-none-any.whl
+pip install ./ragops-1.7.0-py3-none-any.whl
 ```
 
 For repository development, `pip install -e .` is equivalent.

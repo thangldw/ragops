@@ -61,7 +61,7 @@ ragops demo --output ragops-demo
 For the latest published stable CLI without cloning the repository:
 
 ```bash
-pip install ragops==1.6.0
+pip install ragops==1.7.0
 ragops demo --output ragops-demo
 ```
 

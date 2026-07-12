@@ -20,7 +20,7 @@ public presentation assets.
 | M5 commercial alpha boundary | Complete as local alpha | `docs/project/m5-acceptance.md` |
 | v1.5 adoption-first experience | Released | `docs/project/v1.5-acceptance.md` |
 | v1.6 pull-request adoption path | Released | `docs/project/v1.6-acceptance.md` |
-| v1.7 broader adoption proof | Complete on main, unreleased | `docs/project/v1.7-acceptance.md` |
+| v1.7 broader adoption proof | Released | `docs/project/v1.7-acceptance.md` |
 
 ## FDE competency coverage
 
@@ -58,6 +58,6 @@ therefore launch activities rather than missing repository implementation:
 
 ## Final recommendation
 
-Use release 1.6.0 for FDE interviews, OSS feedback, and customer discovery.
+Use release 1.7.0 for FDE interviews, OSS feedback, and customer discovery.
 Proceed to a real offline design-partner pilot; do not market the control-plane
 alpha as production SaaS or claim measured ROI until external evidence exists.
