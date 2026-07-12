@@ -11,6 +11,11 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 - Configurable `answer_length_budget` evaluator using deterministic Unicode
   code-point counts, CLI support, diagnostics, and documented limitations.
 
+### Changed
+
+- PyPI distribution is active through OIDC Trusted Publishing; release 1.6.0
+  is available as a wheel and source distribution without stored API tokens.
+
 ## [1.6.0] - 2026-07-13
 
 ### Added

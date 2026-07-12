@@ -51,8 +51,9 @@ when the acceptance criteria are small enough for a first-time contributor.
 
 Completed on `main` after v1.5.0: `DX-01`, `EVAL-03`, `REPORT-02`, `INTEG-01`,
 `TRACE-02`, and `DOCS-02`.
-`DIST-01` is code-ready through a manual Trusted Publishing workflow and remains
-externally blocked on PyPI project/environment ownership.
+`DIST-01` is complete: PyPI project ownership, the `pypi` environment, active
+Trusted Publisher, synchronized 1.6.0 artifacts, and clean-install verification
+are recorded.
 
 ## Contributor backlog — after v1.7 implementation
 

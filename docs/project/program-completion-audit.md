@@ -33,7 +33,8 @@ public presentation assets.
 - **Communicate:** ADRs, threat model, executive report, case-study site, demo and
   video scripts, honest go/no-go recommendation.
 - **Productize:** open-core boundary, commercialization hypothesis, workspace
-  alpha, contribution/security guidance, and GitHub release process.
+  alpha, contribution/security guidance, GitHub release process, and PyPI OIDC
+  distribution.
 
 ## Verification baseline
 

@@ -5,9 +5,17 @@ RAGOps includes a manual, fail-closed publishing workflow at
 PyPI API token and publishes only an existing tag whose `vX.Y.Z` value matches
 `pyproject.toml`.
 
+## Current status
+
+- Project: [ragops on PyPI](https://pypi.org/project/ragops/)
+- First Trusted Publishing release: `1.6.0`
+- GitHub environment: `pypi`
+- Publisher: `thangldw/ragops`, workflow `publish-pypi.yml`
+- Verification: wheel and sdist present; clean install and credential-free demo pass
+
 ## One-time owner setup
 
-1. Confirm ownership of the `ragops` project name on PyPI.
+1. Confirm ownership of the `ragops` project on PyPI.
 2. Create a GitHub environment named `pypi`. Add required reviewers if desired.
 3. In PyPI Trusted Publishers, configure:
    - Owner: `thangldw`

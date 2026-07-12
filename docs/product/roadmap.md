@@ -48,8 +48,8 @@ PR comment integration and notifications remain hosted/integration work.
 - Print-ready standalone HTML comparison report.
 - Framework-neutral first-trace tutorial.
 - Dependency-free OpenTelemetry span-to-trace example.
-- Manual PyPI Trusted Publishing workflow; registry ownership remains an owner
-  setup gate.
+- Manual PyPI Trusted Publishing workflow with release 1.6.0 published through
+  GitHub OIDC.
 
 ## 1.7 — broader adoption proof (complete on main, unreleased)
 

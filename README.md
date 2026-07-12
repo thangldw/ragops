@@ -3,6 +3,7 @@
 **Evaluation and red-team release gates for RAG and agent systems.**
 
 [![CI](https://github.com/thangldw/ragops/actions/workflows/ci.yml/badge.svg)](https://github.com/thangldw/ragops/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/ragops.svg)](https://pypi.org/project/ragops/)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-5DA2FF.svg)](LICENSE)
 
@@ -54,6 +55,13 @@ cd ragops
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
+ragops demo --output ragops-demo
+```
+
+For the latest published stable CLI without cloning the repository:
+
+```bash
+pip install ragops==1.6.0
 ragops demo --output ragops-demo
 ```
 

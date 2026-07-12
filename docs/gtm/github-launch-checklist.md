@@ -29,9 +29,8 @@ v1.7 slice rather than opened as already-completed issues.
 
 ## Owner-only external gates
 
-- Create/configure the PyPI project and Trusted Publisher described in
-  `docs/engineering/pypi-publishing.md`; PyPI login is not available in the
-  current automation session.
+- PyPI project, `pypi` GitHub environment, and active Trusted Publisher are
+  configured; release 1.6.0 is publicly verified.
 - Choose a v1.7 release boundary after reviewing the changes on `main`.
 - Recruit a design partner and record observed adoption/ROI separately from
   synthetic benchmark results.
