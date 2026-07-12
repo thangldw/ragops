@@ -80,6 +80,8 @@ The reference Japanese enterprise benchmark contains 30 cases across direct
 procedures, escalation, synthesis, abstention, stale evidence, model
 disambiguation, permission leakage, prompt injection, and consequential action.
 Its passing baseline is validated in CI.
+See the reproducible [benchmark report](docs/evaluation/benchmark-report-v0.2.md)
+for baseline, regressed, and adversarial results and limitations.
 
 Start with [Getting started](docs/getting-started.md). Release history is in
 [CHANGELOG.md](CHANGELOG.md); security and contribution policies are documented

@@ -84,7 +84,60 @@ def scenario_from_dict(data: dict[str, Any]) -> Scenario:
 
 
 def load_responses(path: str | Path) -> tuple[RecordedResponse, ...]:
-    return responses_from_data(_read_json(path))
+    return _load_response_fixture(Path(path), seen=set())
+
+
+def _load_response_fixture(path: Path, *, seen: set[Path]) -> tuple[RecordedResponse, ...]:
+    resolved = path.resolve()
+    if resolved in seen:
+        raise ContractError(f"Response fixture cycle detected at {path}")
+    data = _read_json(path)
+    if isinstance(data, list):
+        return responses_from_data(data)
+    if not isinstance(data, dict) or data.get("schema_version") != "0.2":
+        raise ContractError("Response fixture must be a response list or schema version 0.2")
+    try:
+        base_path = path.parent / data["extends"]
+        base = _load_response_fixture(base_path, seen=seen | {resolved})
+        override_items = data.get("overrides", [])
+        overrides = {item["case_id"]: item for item in override_items}
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ContractError(f"Invalid response fixture contract: {exc}") from exc
+    if len(overrides) != len(override_items):
+        raise ContractError("Response fixture override case IDs must be unique")
+    base_ids = {response.case_id for response in base}
+    unknown = sorted(set(overrides) - base_ids)
+    if unknown:
+        raise ContractError(f"Response fixture has unknown override case IDs: {unknown}")
+    return tuple(_apply_response_override(response, overrides.get(response.case_id)) for response in base)
+
+
+def _apply_response_override(
+    response: RecordedResponse, override: dict[str, Any] | None
+) -> RecordedResponse:
+    if override is None:
+        return response
+    allowed = {
+        "case_id",
+        "answer",
+        "citation_ids",
+        "latency_ms",
+        "cost_usd",
+        "human_approved",
+        "retrieved_ids",
+    }
+    unknown = set(override) - allowed
+    if unknown:
+        raise ContractError(f"Unknown response override fields: {sorted(unknown)}")
+    return RecordedResponse(
+        case_id=response.case_id,
+        answer=override.get("answer", response.answer),
+        citation_ids=tuple(override.get("citation_ids", response.citation_ids)),
+        latency_ms=override.get("latency_ms", response.latency_ms),
+        cost_usd=override.get("cost_usd", response.cost_usd),
+        human_approved=override.get("human_approved", response.human_approved),
+        retrieved_ids=tuple(override.get("retrieved_ids", response.retrieved_ids)),
+    )
 
 
 def load_attack_pack(path: str | Path) -> AttackPack:

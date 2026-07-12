@@ -18,6 +18,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 - Per-case failure drill-down in standalone HTML comparison reports.
 - A 30-case Japanese enterprise troubleshooting benchmark with nine case
   families, attack metadata, a passing baseline, coverage tests, and CI gates.
+- Response-fixture overlays, explicit regressed/adversarial benchmark candidates,
+  expected-failure CI checks, and a reproducible benchmark report.
 
 ## [1.0.0] - 2026-07-12
 

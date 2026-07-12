@@ -26,6 +26,28 @@ jobs:
           ragops evaluate
           --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json
           --responses scenarios/japanese_troubleshooting/benchmark-baseline.json
+      - name: Confirm regressed benchmark is blocked
+        shell: bash
+        run: |
+          set +e
+          ragops compare \
+            --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json \
+            --baseline scenarios/japanese_troubleshooting/benchmark-baseline.json \
+            --candidate scenarios/japanese_troubleshooting/benchmark-regressed.json \
+            --format markdown
+          code=$?
+          set -e
+          test "$code" -eq 2
+      - name: Confirm adversarial benchmark is blocked
+        shell: bash
+        run: |
+          set +e
+          ragops evaluate \
+            --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json \
+            --responses scenarios/japanese_troubleshooting/benchmark-adversarial.json
+          code=$?
+          set -e
+          test "$code" -eq 2
       - name: Render regression report
         run: >-
           ragops compare
