@@ -29,7 +29,8 @@ below; active implementation moves to the FDE showcase and team workflow.
 
 ## Later — milestones M3–M5
 
-- Portfolio page, demo recording, architecture visuals, and presentation review.
+- M3 portfolio page and presentation assets are accepted.
+- M4 local team workflow is accepted.
 - Design-partner discovery and observed workflow validation.
 - Shared hosted workspace only after collaboration demand is demonstrated.
 

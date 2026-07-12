@@ -27,6 +27,9 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
   generic HTTP adapter, recorded regression experiment, and M2 acceptance.
 - A responsive FDE case-study site, GitHub Pages workflow, reproducible metrics,
   video script, personal-portfolio handoff, and M3 acceptance evidence.
+- Local team review metadata and metric trends across SQLite, CLI, API, and the
+  browser workbench, plus nightly benchmark/reference-deployment gates and M4
+  acceptance evidence.
 
 ## [1.0.0] - 2026-07-12
 

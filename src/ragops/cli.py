@@ -53,6 +53,19 @@ def build_parser() -> argparse.ArgumentParser:
     history_parser = commands.add_parser("history", help="List saved experiment runs")
     history_parser.add_argument("--store", required=True)
     history_parser.add_argument("--limit", type=int, default=20)
+    review_parser = commands.add_parser("review", help="Review a saved experiment run")
+    review_parser.add_argument("--store", required=True)
+    review_parser.add_argument("--run-id", required=True)
+    review_parser.add_argument(
+        "--status", required=True, choices=("accepted", "rejected", "needs_changes")
+    )
+    review_parser.add_argument("--reviewer", required=True)
+    review_parser.add_argument("--note", default="")
+    trend_parser = commands.add_parser("trend", help="Read a saved metric trend")
+    trend_parser.add_argument("--store", required=True)
+    trend_parser.add_argument("--scenario-id", required=True)
+    trend_parser.add_argument("--metric", required=True)
+    trend_parser.add_argument("--limit", type=int, default=50)
     inspect_parser = commands.add_parser("inspect", help="Inspect scenario benchmark coverage")
     inspect_parser.add_argument("--scenario", required=True)
     return parser
@@ -70,6 +83,26 @@ def main() -> int:
     if args.command == "history":
         runs = ExperimentStore(args.store).list_runs(limit=args.limit)
         print(json.dumps(runs, ensure_ascii=False, indent=2))
+        return 0
+    if args.command == "review":
+        try:
+            ExperimentStore(args.store).review(
+                args.run_id,
+                status=args.status,
+                reviewer=args.reviewer,
+                note=args.note,
+            )
+        except (KeyError, ValueError) as exc:
+            raise SystemExit(str(exc)) from exc
+        print(json.dumps({"run_id": args.run_id, "review_status": args.status}))
+        return 0
+    if args.command == "trend":
+        points = ExperimentStore(args.store).metric_trend(
+            args.scenario_id,
+            args.metric,
+            limit=args.limit,
+        )
+        print(json.dumps(points, ensure_ascii=False, indent=2))
         return 0
     try:
         scenario = load_scenario(args.scenario)

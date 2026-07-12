@@ -1,0 +1,39 @@
+name: Nightly benchmark
+
+on:
+  schedule:
+    - cron: "17 18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e '.[dev]'
+      - name: Evaluate 30-case benchmark
+        run: >-
+          ragops evaluate
+          --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json
+          --responses scenarios/japanese_troubleshooting/benchmark-baseline.json
+          --evaluator citation_correctness
+          --evaluator claim_support
+      - name: Run reference deployment
+        run: >-
+          python -m examples.japanese_troubleshooting_agent.cli
+          --suite examples/japanese_troubleshooting_agent/suite.json
+          --retriever graph
+          --output /tmp/reference-traces.jsonl
+      - name: Gate reference traces
+        run: >-
+          ragops evaluate
+          --scenario examples/japanese_troubleshooting_agent/scenario.json
+          --traces /tmp/reference-traces.jsonl
+          --evaluator citation_correctness
+          --evaluator claim_support

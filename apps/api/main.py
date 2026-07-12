@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from ragops import __version__
 from ragops.engine import compare, evaluate
 from ragops.loader import ContractError, responses_from_data, scenario_from_dict
+from ragops.store import ExperimentStore
 
 app = FastAPI(title="RAGOps API", version=__version__)
 
@@ -24,6 +25,19 @@ class CompareRequest(BaseModel):
     scenario: dict
     baseline: list[dict]
     candidate: list[dict]
+
+
+class ReviewRequest(BaseModel):
+    status: str
+    reviewer: str
+    note: str = ""
+
+
+def configured_store() -> ExperimentStore:
+    path = os.getenv("RAGOPS_STORE")
+    if not path:
+        raise HTTPException(status_code=503, detail="RAGOPS_STORE is not configured")
+    return ExperimentStore(path)
 
 
 def require_api_key(x_api_key: str | None = Header(default=None)) -> None:
@@ -61,3 +75,44 @@ def compare_endpoint(payload: CompareRequest) -> dict:
         return compare(scenario, baseline, candidate).to_dict()
     except (ContractError, KeyError, TypeError, ValueError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/v1/runs", dependencies=[Depends(require_api_key)])
+def list_runs(limit: int = 20, store: ExperimentStore = Depends(configured_store)) -> list[dict]:
+    try:
+        return store.list_runs(limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/v1/trends/{scenario_id}/{metric}", dependencies=[Depends(require_api_key)])
+def metric_trend(
+    scenario_id: str,
+    metric: str,
+    limit: int = 50,
+    store: ExperimentStore = Depends(configured_store),
+) -> list[dict]:
+    try:
+        return store.metric_trend(scenario_id, metric, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/v1/runs/{run_id}/review", dependencies=[Depends(require_api_key)])
+def review_run(
+    run_id: str,
+    payload: ReviewRequest,
+    store: ExperimentStore = Depends(configured_store),
+) -> dict[str, str]:
+    try:
+        store.review(
+            run_id,
+            status=payload.status,
+            reviewer=payload.reviewer,
+            note=payload.note,
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return {"run_id": run_id, "review_status": payload.status}

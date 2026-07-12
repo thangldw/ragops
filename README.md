@@ -97,6 +97,21 @@ The presentation-oriented case study is published from `site/` through GitHub
 Pages and is designed to link from `thangldw.github.io` as a featured FDE
 deployment story.
 
+## Team workflow
+
+Saved runs can be reviewed and trended locally:
+
+```bash
+ragops history --store reports/runs.db
+ragops review --store reports/runs.db --run-id RUN_ID \
+  --status accepted --reviewer thang --note "accepted baseline"
+ragops trend --store reports/runs.db \
+  --scenario-id jp-troubleshooting-v1 --metric citation_coverage
+```
+
+Set `RAGOPS_STORE` for the optional API/workbench run explorer. This is a
+single-workspace collaboration layer, not a multi-tenant hosted service.
+
 Start with [Getting started](docs/getting-started.md). Release history is in
 [CHANGELOG.md](CHANGELOG.md); security and contribution policies are documented
 in [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md).

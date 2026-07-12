@@ -54,7 +54,8 @@ class ExperimentStore:
         with self._connect() as connection:
             rows = connection.execute(
                 """
-                SELECT id, created_at, scenario_id, report_type, passed, label, metadata
+                SELECT id, created_at, scenario_id, report_type, passed, label, metadata,
+                       review_status, reviewer, review_note
                 FROM runs ORDER BY created_at DESC LIMIT ?
                 """,
                 (limit,),
@@ -68,6 +69,9 @@ class ExperimentStore:
                 "passed": bool(row[4]),
                 "label": row[5],
                 "metadata": json.loads(row[6]),
+                "review_status": row[7],
+                "reviewer": row[8],
+                "review_note": row[9],
             }
             for row in rows
         ]
@@ -76,6 +80,59 @@ class ExperimentStore:
         with self._connect() as connection:
             row = connection.execute("SELECT report FROM runs WHERE id = ?", (run_id,)).fetchone()
         return json.loads(row[0]) if row else None
+
+    def review(
+        self,
+        run_id: str,
+        *,
+        status: str,
+        reviewer: str,
+        note: str = "",
+    ) -> None:
+        if status not in {"accepted", "rejected", "needs_changes"}:
+            raise ValueError("status must be accepted, rejected, or needs_changes")
+        if not reviewer.strip():
+            raise ValueError("reviewer is required")
+        with self._connect() as connection:
+            cursor = connection.execute(
+                "UPDATE runs SET review_status = ?, reviewer = ?, review_note = ? WHERE id = ?",
+                (status, reviewer, note, run_id),
+            )
+            if cursor.rowcount == 0:
+                raise KeyError(f"Unknown run: {run_id}")
+
+    def metric_trend(
+        self,
+        scenario_id: str,
+        metric: str,
+        *,
+        limit: int = 50,
+    ) -> list[dict[str, Any]]:
+        if limit < 1 or limit > 1000:
+            raise ValueError("limit must be between 1 and 1000")
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT id, created_at, label, report
+                FROM runs
+                WHERE scenario_id = ? AND report_type = 'evaluation'
+                ORDER BY created_at DESC LIMIT ?
+                """,
+                (scenario_id, limit),
+            ).fetchall()
+        points: list[dict[str, Any]] = []
+        for run_id, created_at, label, report_json in reversed(rows):
+            report = json.loads(report_json)
+            if metric in report.get("metrics", {}):
+                points.append(
+                    {
+                        "run_id": run_id,
+                        "created_at": created_at,
+                        "label": label,
+                        "value": report["metrics"][metric],
+                    }
+                )
+        return points
 
     def _connect(self) -> sqlite3.Connection:
         return sqlite3.connect(self.path)
@@ -96,6 +153,17 @@ class ExperimentStore:
                 )
                 """
             )
+            columns = {
+                row[1] for row in connection.execute("PRAGMA table_info(runs)").fetchall()
+            }
+            migrations = {
+                "review_status": "ALTER TABLE runs ADD COLUMN review_status TEXT NOT NULL DEFAULT 'unreviewed'",
+                "reviewer": "ALTER TABLE runs ADD COLUMN reviewer TEXT NOT NULL DEFAULT ''",
+                "review_note": "ALTER TABLE runs ADD COLUMN review_note TEXT NOT NULL DEFAULT ''",
+            }
+            for column, statement in migrations.items():
+                if column not in columns:
+                    connection.execute(statement)
             connection.execute(
                 "CREATE INDEX IF NOT EXISTS idx_runs_scenario_created "
                 "ON runs(scenario_id, created_at DESC)"

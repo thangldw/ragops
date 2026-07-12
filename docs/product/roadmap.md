@@ -19,11 +19,13 @@ history, CLI/API/workbench, CI, and container baseline.
 - Model, prompt, retriever, dataset, and build metadata.
 - Statistical summaries and evaluator calibration guidance.
 
-## 1.3 — team workflow
+## 1.3 — team workflow (accepted for local workspace)
 
-- Browser run explorer and trend comparison.
-- Review status, accepted baseline workflow, and CI comment integration.
-- Scheduled suites and notification adapters.
+- Browser run explorer and metric trends.
+- Review status and accepted baseline workflow.
+- Scheduled benchmark/reference suite.
+
+PR comment integration and notifications remain hosted/integration work.
 
 ## 2.0 — hosted control plane
 
