@@ -4,6 +4,13 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+### Added
+
+- Second credential-free `support-triage` demo scenario with an intentionally
+  blocked unsafe candidate.
+- Configurable `answer_length_budget` evaluator using deterministic Unicode
+  code-point counts, CLI support, diagnostics, and documented limitations.
+
 ## [1.6.0] - 2026-07-13
 
 ### Added

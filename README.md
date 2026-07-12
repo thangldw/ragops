@@ -63,6 +63,12 @@ contains the portable scenario, baseline, candidate, and Markdown evidence.
 The command refuses to reuse an existing output directory by default; pass
 `--force` only when you intend to replace regular files in that directory.
 
+Use the same workflow for a synthetic support-triage scenario:
+
+```bash
+ragops demo --scenario support-triage --output support-triage-demo
+```
+
 ## Evidence, not demo claims
 
 The included Japanese enterprise reference deployment compares an ACL-first,
@@ -83,7 +89,7 @@ validate the harness and architecture comparison; they do not claim customer
 adoption or production ROI.
 
 The repository currently validates its core, adapters, reference deployment,
-showcase, and demo path with more than 50 automated tests.
+showcase, and demo paths with 80 automated tests.
 
 <p align="center">
   <img src="docs/demo/infographics/evidence-stack.svg" alt="RAGOps evidence stack combining quality, safety, operational budgets, and regression comparison into a release decision" width="100%">
@@ -116,6 +122,16 @@ ragops evaluate \
   --responses scenarios/japanese_troubleshooting/benchmark-baseline.json \
   --evaluator citation_correctness \
   --evaluator claim_support
+```
+
+Add a deterministic Unicode code-point budget when response length matters:
+
+```bash
+ragops evaluate \
+  --scenario scenarios/japanese_troubleshooting/scenario.json \
+  --responses scenarios/japanese_troubleshooting/sample_responses.json \
+  --evaluator answer_length_budget \
+  --answer-length-limit 500
 ```
 
 Run the credential-free reference deployment:
@@ -183,6 +199,7 @@ before adapting the example to production.
 - [Product thesis](docs/product/product_thesis.md)
 - [System architecture](docs/architecture/system-overview.md)
 - [Evaluation strategy](docs/evaluation/strategy.md)
+- [Answer-length budget evaluator](docs/evaluation/answer-length-budget.md)
 - [Reusable GitHub PR gate](docs/engineering/github-pr-gate.md)
 - [Export your first portable trace](docs/engineering/export-your-first-trace.md)
 - [OpenTelemetry span-to-trace example](examples/opentelemetry_trace_adapter/README.md)

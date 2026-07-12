@@ -51,6 +51,12 @@ PR comment integration and notifications remain hosted/integration work.
 - Manual PyPI Trusted Publishing workflow; registry ownership remains an owner
   setup gate.
 
+## 1.7 — broader adoption proof (complete on main, unreleased)
+
+- Second credential-free support-triage demo scenario.
+- Deterministic, configurable Unicode code-point answer-length evaluator.
+- GitHub discovery metadata, Discussions, and real starter issues.
+
 ## 2.0 — hosted control plane (local alpha boundary implemented)
 
 - Workspace isolation, SSO/RBAC, audit retention, managed ingestion, and

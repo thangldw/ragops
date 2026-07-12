@@ -7,10 +7,11 @@ from pathlib import Path
 from ragops.benchmarks import scenario_summary
 from ragops.config import load_regression_policy
 from ragops.control_plane import ControlPlane
-from ragops.demo import write_demo
+from ragops.demo import DEFAULT_DEMO_SCENARIO, DEMO_BUNDLES, write_demo
 from ragops.engine import compare, evaluate
 from ragops.loader import ContractError, load_responses, load_scenario
 from ragops.plugins import (
+    AnswerLengthBudgetEvaluator,
     CaseEvaluator,
     CitationCorrectnessEvaluator,
     ClaimSupportEvaluator,
@@ -26,6 +27,12 @@ def build_parser() -> argparse.ArgumentParser:
     commands = parser.add_subparsers(dest="command", required=True)
     demo_parser = commands.add_parser("demo", help="Generate a credential-free release-gate demo")
     demo_parser.add_argument("--output", default="ragops-demo")
+    demo_parser.add_argument(
+        "--scenario",
+        choices=tuple(sorted(DEMO_BUNDLES)),
+        default=DEFAULT_DEMO_SCENARIO,
+        help="Credential-free workflow scenario to generate",
+    )
     demo_parser.add_argument(
         "--force",
         action="store_true",
@@ -43,8 +50,19 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate_parser.add_argument(
         "--evaluator",
         action="append",
-        choices=("retrieval_recall", "citation_correctness", "claim_support"),
+        choices=(
+            "retrieval_recall",
+            "citation_correctness",
+            "claim_support",
+            "answer_length_budget",
+        ),
         default=[],
+    )
+    evaluate_parser.add_argument(
+        "--answer-length-limit",
+        type=int,
+        default=500,
+        help="Unicode code-point limit for answer_length_budget (default: 500)",
     )
     compare_parser = commands.add_parser("compare", help="Compare candidate responses to baseline")
     compare_parser.add_argument("--scenario", required=True)
@@ -96,8 +114,8 @@ def main() -> int:
     args = build_parser().parse_args()
     if args.command == "demo":
         try:
-            summary = write_demo(args.output, force=args.force)
-        except OSError as exc:
+            summary = write_demo(args.output, force=args.force, scenario_id=args.scenario)
+        except (OSError, ValueError) as exc:
             raise SystemExit(f"demo output error: {exc}") from exc
         print(json.dumps(summary, ensure_ascii=False, indent=2))
         return 0
@@ -156,7 +174,10 @@ def main() -> int:
             report = evaluate(
                 scenario,
                 load_trace_jsonl(args.traces) if args.traces else load_responses(args.responses),
-                evaluators=_evaluators_from_names(args.evaluator),
+                evaluators=_evaluators_from_names(
+                    args.evaluator,
+                    answer_length_limit=args.answer_length_limit,
+                ),
             )
         else:
             report = compare(
@@ -194,11 +215,18 @@ def main() -> int:
     return 0 if report.passed else 2
 
 
-def _evaluators_from_names(names: list[str]) -> tuple[CaseEvaluator, ...]:
+def _evaluators_from_names(
+    names: list[str],
+    *,
+    answer_length_limit: int = 500,
+) -> tuple[CaseEvaluator, ...]:
     factories = {
         "retrieval_recall": RetrievalRecallEvaluator,
         "citation_correctness": CitationCorrectnessEvaluator,
         "claim_support": ClaimSupportEvaluator,
+        "answer_length_budget": lambda: AnswerLengthBudgetEvaluator(
+            max_characters=answer_length_limit
+        ),
     }
     return tuple(factories[name]() for name in names)
 

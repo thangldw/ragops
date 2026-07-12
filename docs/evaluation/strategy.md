@@ -26,6 +26,9 @@ The open-source core includes two transparent evaluator baselines:
   contract and reports unsupported citations.
 - `claim_support` splits answers into claims and measures lexical evidence
   support. It is explicitly not semantic entailment.
+- `answer_length_budget` counts Python Unicode code points and reports whether
+  each answer fits an application-owned limit. It is not token usage, display
+  width, grapheme count, semantic concision, or a core release threshold.
 
 Both expose aggregate and per-case plugin metrics. Production semantic judges
 must be separately calibrated against qualified human labels.

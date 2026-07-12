@@ -113,5 +113,41 @@ class ClaimSupportEvaluator:
         )
 
 
+class AnswerLengthBudgetEvaluator:
+    """Report a deterministic Unicode code-point answer-length budget."""
+
+    name = "answer_length_budget"
+
+    def __init__(self, *, max_characters: int = 500) -> None:
+        if isinstance(max_characters, bool) or not isinstance(max_characters, int):
+            raise TypeError("max_characters must be an integer")
+        if max_characters <= 0:
+            raise ValueError("max_characters must be positive")
+        self.max_characters = max_characters
+
+    def evaluate(self, case: EvalCase, response: RecordedResponse) -> PluginResult:
+        character_count = len(response.answer)
+        within_budget = character_count <= self.max_characters
+        findings = ()
+        if not within_budget:
+            findings = (
+                Finding(
+                    rule="answer_length_budget_exceeded",
+                    severity="medium",
+                    message=(
+                        f"Answer contains {character_count} Unicode code points; "
+                        f"configured budget is {self.max_characters}"
+                    ),
+                ),
+            )
+        return PluginResult(
+            metrics={
+                "character_count": float(character_count),
+                "within_budget": 1.0 if within_budget else 0.0,
+            },
+            findings=findings,
+        )
+
+
 def _meaningful_tokens(value: str) -> set[str]:
     return {token.casefold() for token in re.findall(r"[\w\-]+", value) if len(token) > 1}

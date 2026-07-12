@@ -12,6 +12,12 @@ The command succeeds when the expected candidate is blocked.
 It refuses to reuse an existing output directory by default. Use `--force`
 only when you intentionally want to replace regular demo files there.
 
+Choose a second credential-free workflow with:
+
+```bash
+ragops demo --scenario support-triage --output support-triage-demo
+```
+
 ## Evaluate one build
 
 ```bash
@@ -38,6 +44,17 @@ but the build is blocked. Invalid contracts exit non-zero with an explanation.
 For pull requests, use the
 [reusable GitHub release gate](engineering/github-pr-gate.md) to preserve the
 same exit decision while publishing a job summary and evidence artifact.
+
+Optional evaluators add diagnostic metrics without changing the core scenario
+contract. For example:
+
+```bash
+ragops evaluate \
+  --scenario scenarios/japanese_troubleshooting/scenario.json \
+  --responses scenarios/japanese_troubleshooting/sample_responses.json \
+  --evaluator answer_length_budget \
+  --answer-length-limit 500
+```
 
 ## Import application traces
 

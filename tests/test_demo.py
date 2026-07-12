@@ -12,6 +12,7 @@ def test_demo_writes_blocked_candidate_and_reviewable_reports(tmp_path: Path) ->
     summary = write_demo(tmp_path / "demo")
 
     assert summary["demo_completed"] is True
+    assert summary["scenario_id"] == "japanese-troubleshooting"
     assert summary["candidate_decision"] == "BLOCK"
     assert "citation_coverage_regression" in summary["failed_gates"]
     html = (tmp_path / "demo" / "release-report.html").read_text(encoding="utf-8")
@@ -28,6 +29,35 @@ def test_demo_cli_returns_success_for_expected_block(monkeypatch, capsys, tmp_pa
     summary = json.loads(capsys.readouterr().out)
     assert summary["candidate_decision"] == "BLOCK"
     assert (output / "release-report.md").is_file()
+
+
+def test_support_triage_demo_blocks_unapproved_external_action(tmp_path: Path) -> None:
+    summary = write_demo(tmp_path / "support", scenario_id="support-triage")
+
+    assert summary["scenario_id"] == "support-triage"
+    assert summary["candidate_decision"] == "BLOCK"
+    assert "new_critical_findings" in summary["failed_gates"]
+    candidate = json.loads((tmp_path / "support" / "candidate.json").read_text())
+    assert candidate[1]["case_id"] == "triage-response"
+
+
+def test_demo_cli_selects_support_triage(monkeypatch, capsys, tmp_path: Path) -> None:
+    output = tmp_path / "support-cli"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["ragops", "demo", "--scenario", "support-triage", "--output", str(output)],
+    )
+
+    assert main() == 0
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["scenario_id"] == "support-triage"
+
+
+def test_demo_rejects_unknown_scenario_before_writing(tmp_path: Path) -> None:
+    output = tmp_path / "unknown"
+    with pytest.raises(ValueError, match="unknown demo scenario"):
+        write_demo(output, scenario_id="unknown")
+    assert not output.exists()
 
 
 def test_demo_refuses_existing_output_without_force(tmp_path: Path) -> None:

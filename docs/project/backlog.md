@@ -49,10 +49,18 @@ when the acceptance criteria are small enough for a first-time contributor.
 | DOCS-02 | good first issue, documentation | Add a framework-neutral “export your first trace” tutorial | Five-minute walkthrough with synthetic data |
 | DIST-01 | release | Configure PyPI Trusted Publishing and publish synchronized release | Owner-configured environment, CI, release notes, install verification |
 
-Completed on `main` after v1.5.0: `REPORT-02`, `INTEG-01`, `TRACE-02`, and
-`DOCS-02`.
+Completed on `main` after v1.5.0: `DX-01`, `EVAL-03`, `REPORT-02`, `INTEG-01`,
+`TRACE-02`, and `DOCS-02`.
 `DIST-01` is code-ready through a manual Trusted Publishing workflow and remains
 externally blocked on PyPI project/environment ownership.
+
+## Contributor backlog — after v1.7 implementation
+
+| ID | GitHub issue | Story | Status |
+| --- | --- | --- | --- |
+| INTEG-02 | [#1](https://github.com/thangldw/ragops/issues/1) | Add a copyable GitLab CI release-gate recipe | Help wanted |
+| DX-02 | [#2](https://github.com/thangldw/ragops/issues/2) | Add a credential-free proposal-review demo | Good first issue |
+| INTEG-03 | [#3](https://github.com/thangldw/ragops/issues/3) | Design safe pull-request comment publishing | Help wanted; design before code |
 
 ## Work assignment convention
 
