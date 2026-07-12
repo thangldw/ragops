@@ -47,12 +47,10 @@ public presentation assets.
 The following require owner authority, external systems, or real users and are
 therefore launch activities rather than missing repository implementation:
 
-1. Optionally enable the separate project Pages environment; the main portfolio
-   case study is already live at `thangldw.github.io/projects/ragops/`.
-2. Recruit design partners and replace synthetic fixtures with reviewed data.
-3. Measure adoption, time-to-answer, escalation precision, and willingness to pay.
-4. Establish legal/cloud/identity/billing/support/incident-response operations.
-5. Complete independent security review before processing customer data.
+1. Recruit design partners and replace synthetic fixtures with reviewed data.
+2. Measure adoption, time-to-answer, escalation precision, and willingness to pay.
+3. Establish legal/cloud/identity/billing/support/incident-response operations.
+4. Complete independent security review before processing customer data.
 
 ## Final recommendation
 

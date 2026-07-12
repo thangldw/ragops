@@ -2,8 +2,8 @@
 
 ## Decision
 
-**Accepted as a public portfolio-ready case study.** Publication still depends
-on GitHub Pages being enabled for the repository environment.
+**Accepted as a public portfolio-ready case study.** GitHub Pages is enabled;
+the deployment workflow publishes the standalone project site from `site/`.
 
 ## Evidence
 
