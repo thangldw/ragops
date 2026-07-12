@@ -1,9 +1,9 @@
 # Portfolio integration handoff
 
-## Recommended destination
+## Deployment status
 
-Add a featured project card on `thangldw.github.io` linking to the deployed
-RAGOps case study and GitHub repository.
+Completed: the featured project card and case study are live on
+`thangldw.github.io` and link to the public GitHub repository.
 
 ## Card copy
 
@@ -24,8 +24,7 @@ controlled rollout recommendation.
 
 ## Links
 
-- Case study: `https://thangldw.github.io/ragops/`
+- Case study: `https://thangldw.github.io/projects/ragops/`
 - Repository: `https://github.com/thangldw/ragops`
 
 Do not claim production adoption or ROI until a real pilot produces evidence.
-

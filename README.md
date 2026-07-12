@@ -95,9 +95,9 @@ decisions, portable trace 0.4 export, and an end-to-end RAGOps release gate.
 The recorded experiment blocks a lexical-only candidate that regresses against
 the accepted graph-assisted baseline.
 
-The presentation-oriented case study is published from `site/` through GitHub
-Pages and is designed to link from `thangldw.github.io` as a featured FDE
-deployment story.
+The presentation-oriented case study source lives in `site/`. The portfolio
+version is live at https://thangldw.github.io/projects/ragops/. The repository
+Pages workflow remains ready if project Pages is enabled later.
 
 ## Team workflow
 

@@ -47,16 +47,15 @@ public presentation assets.
 The following require owner authority, external systems, or real users and are
 therefore launch activities rather than missing repository implementation:
 
-1. Enable/approve the GitHub Pages environment if repository settings block it.
-2. Link the project card from the separate `thangldw.github.io` repository.
-3. Recruit design partners and replace synthetic fixtures with reviewed data.
-4. Measure adoption, time-to-answer, escalation precision, and willingness to pay.
-5. Establish legal/cloud/identity/billing/support/incident-response operations.
-6. Complete independent security review before processing customer data.
+1. Optionally enable the separate project Pages environment; the main portfolio
+   case study is already live at `thangldw.github.io/projects/ragops/`.
+2. Recruit design partners and replace synthetic fixtures with reviewed data.
+3. Measure adoption, time-to-answer, escalation precision, and willingness to pay.
+4. Establish legal/cloud/identity/billing/support/incident-response operations.
+5. Complete independent security review before processing customer data.
 
 ## Final recommendation
 
 Use release 1.4.0 for FDE interviews, OSS feedback, and customer discovery.
 Proceed to a real offline design-partner pilot; do not market the control-plane
 alpha as production SaaS or claim measured ROI until external evidence exists.
-
