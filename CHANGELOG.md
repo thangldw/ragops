@@ -25,6 +25,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 - Balanced the hero conversion controls with equal desktop columns and clear
   full-width mobile stacking, and tightened numbered-card label-to-title rhythm
   across the problem and workflow sections.
+- Reduced oversized PASS/BLOCK typography and tightened report, card, and
+  section spacing so the showcase reads as one compact release narrative.
 
 ## [2.4.0] - 2026-07-13
 

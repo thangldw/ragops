@@ -92,3 +92,6 @@ def test_showcase_hero_actions_use_balanced_columns() -> None:
     assert ".hero-copy .actions { grid-template-columns: 1fr; }" in styles
     assert ".problem-grid h3 { margin: 18px 0 8px;" in styles
     assert ".flow b { margin: 18px 0 10px;" in styles
+    assert ".decision strong { margin: 12px 0 7px; font-size: 38px;" in styles
+    assert "padding: 64px 28px;" in styles
+    assert ".decision-pair { grid-template-columns: 1fr 1fr; gap: 8px; }" in styles
