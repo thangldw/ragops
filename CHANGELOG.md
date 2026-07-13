@@ -13,8 +13,9 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ### Changed
 
-- Marked the completed project as archived and paused active development,
-  support, and contributions while preserving the stable `2.4.0` release.
+- Marked active development as paused while keeping the completed project public
+  for stars, usage feedback, issues, and Discussions; stable release `2.4.0`
+  remains available.
 - Removed unreferenced intermediate design-review captures and local development
   artefacts; published screenshots and historical release evidence remain.
 - Repositioned public discovery copy around regression tests and explainable

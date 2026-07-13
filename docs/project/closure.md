@@ -5,7 +5,8 @@
 RAGOps is complete and active development is paused as of 2026-07-13. Stable
 release `2.4.0`, its source, package distributions, documentation, examples,
 release evidence, and GitHub Pages showcase remain public. The repository is
-archived until the owner decides to resume development.
+open for stars, usage feedback, bug reports, and Discussions. New implementation
+work remains paused until the owner decides to resume development.
 
 ## Contract and compatibility impact
 
@@ -25,12 +26,12 @@ maintenance status only; it does not publish a new package version.
 - Removed unreferenced intermediate design-review captures.
 - Removed obsolete, unreferenced showcase screenshots.
 - Removed local caches, bytecode, and operating-system metadata.
-- Replaced active contribution and support expectations with archived-project
-  guidance.
+- Replaced active contribution and support expectations with paused-development
+  guidance while keeping public feedback channels open.
 
-## Reopening checklist
+## Resuming development checklist
 
-1. Unarchive the GitHub repository and confirm the owner-approved user need.
+1. Confirm an owner-approved user need and define its acceptance boundary.
 2. Write a scoped product requirement; add an ADR for any public contract,
    metric, release-gate, or open-core boundary change.
 3. Review supported Python versions, dependencies, workflows, documentation,
@@ -38,4 +39,5 @@ maintenance status only; it does not publish a new package version.
 4. Run `ruff check .` and `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest -q`, then run
    the complete local release-readiness workflow before publishing anything.
 5. Update the roadmap, support policy, changelog, and project status only after
-   owner acceptance.
+   owner acceptance. Keep feedback channels open without implying a delivery
+   commitment.

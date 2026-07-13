@@ -1,10 +1,10 @@
 # RAGOps
 
 > [!IMPORTANT]
-> **Project status: complete and archived.** Active development and support are
-> paused as of 2026-07-13. The stable `2.4.0` release, documentation, and GitHub
-> Pages showcase remain available. Future work starts only after the owner
-> reopens the repository and approves a concrete requirement.
+> **Project status: complete; active development is paused.** The repository
+> stays public for stars, usage feedback, bug reports, and Discussions. Stable
+> release `2.4.0`, documentation, and GitHub Pages remain available. New
+> implementation work starts only after owner approval of a concrete need.
 
 **Regression tests and explainable release gates for RAG and AI agents—offline,
 provider-independent, and CI-ready.**

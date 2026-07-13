@@ -1,18 +1,20 @@
 # Contributing to RAGOps
 
-RAGOps is complete and archived. The project is not accepting issues, pull
-requests, or feature proposals while active development is paused. The guidance
-below is retained for forks and for a future owner-approved reopening.
+RAGOps is complete and active development is paused. Usage feedback, focused
+bug reports, and feature ideas remain welcome through GitHub Discussions and
+issues. Please do not open an implementation pull request before the owner has
+accepted its scope.
 
-When reopened, good first changes are usually a scenario case, evaluator test,
-report improvement, documentation example, or focused integration fixture.
+After scope acceptance, good first changes are usually a scenario case,
+evaluator test, report improvement, documentation example, or focused
+integration fixture.
 
 Read the [Code of Conduct](CODE_OF_CONDUCT.md) and never submit customer data,
 secrets, credentials, private traces, or proprietary prompts.
 
 ## First contribution
 
-1. Confirm that the repository has been reopened and choose an approved issue.
+1. Start from an owner-approved issue with a clear acceptance boundary.
 2. Fork the repository and create a branch.
 3. Set up the development environment:
 
