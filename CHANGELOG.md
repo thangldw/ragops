@@ -4,6 +4,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-07-13
+
 ### Added
 
 - Isolated, least-privilege GitHub `workflow_run` publisher that validates a

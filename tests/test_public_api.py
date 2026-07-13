@@ -2,7 +2,7 @@ from ragops import __version__, responses_from_data, scenario_from_dict
 
 
 def test_stable_version() -> None:
-    assert __version__ == "1.7.0"
+    assert __version__ == "1.8.0"
 
 
 def test_public_contract_parsers() -> None:

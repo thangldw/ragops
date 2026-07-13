@@ -14,7 +14,7 @@ not customer production adoption.
   troubleshooting reference agent; RAGOps blocked a lexical-only candidate with
   25-point citation coverage/precision regressions.
 - Published architecture decisions, threat model, rollout plan, executive
-  go/no-go recommendation, reproducible reports, and 50 automated tests.
+  go/no-go recommendation, reproducible reports, and 99 automated tests.
 
 ## LinkedIn project description
 
@@ -25,4 +25,3 @@ make an honest rollout decision. The repository and case study are public.
 
 Repository: https://github.com/thangldw/ragops
 Case study: https://thangldw.github.io/projects/ragops/
-
