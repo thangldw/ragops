@@ -4,6 +4,14 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-07-13
+
+### Added
+
+- Quota-independent local release fallback with full offline validation,
+  build-once artifacts, reproducible SBOM, checksums, GitHub CLI publication,
+  and fail-closed optional PyPI token promotion.
+
 ## [2.1.0] - 2026-07-13
 
 ### Added

@@ -3,7 +3,7 @@
 from ragops.engine import compare, evaluate
 from ragops.loader import load_responses, load_scenario, responses_from_data, scenario_from_dict
 
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 
 __all__ = [
     "compare",
