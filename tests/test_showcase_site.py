@@ -32,9 +32,7 @@ def test_showcase_has_accessible_structure_and_valid_local_links() -> None:
     assert {
         "main",
         "top",
-        "problem",
         "solution",
-        "demo",
         "evidence",
         "limits",
         "get-started",
@@ -78,10 +76,9 @@ def test_showcase_separates_evidence_and_states_limits() -> None:
     assert "Catch RAG regressions" in page
     assert "regression release gate for RAG &amp; AI agents" in page
     assert "embedding model" in page
-    assert "<dt>0</dt><dd>required model APIs</dd>" in page
-    assert "JSON · Markdown · HTML" in page
+    assert "Evidence formats" in page
     assert "docs/demo/social-preview.png" in page
-    assert page.count("#five-minute-proof") == 2
+    assert page.count("#five-minute-proof") == 1
     assert "#quick-start" not in page
 
 
@@ -90,8 +87,8 @@ def test_showcase_hero_actions_use_balanced_columns() -> None:
 
     assert "grid-template-columns: repeat(2, minmax(0, 1fr));" in styles
     assert ".hero-copy .actions { grid-template-columns: 1fr; }" in styles
-    assert ".problem-grid h3 { margin: 18px 0 8px;" in styles
     assert ".flow b { margin: 18px 0 10px;" in styles
     assert ".decision strong { margin: 12px 0 7px; font-size: 38px;" in styles
     assert "padding: 64px 28px;" in styles
     assert ".decision-pair { grid-template-columns: 1fr 1fr; gap: 8px; }" in styles
+    assert ".flow," in styles and ".limits-grid { grid-template-columns: 1fr 1fr; }" in styles

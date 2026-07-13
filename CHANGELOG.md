@@ -27,6 +27,9 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
   across the problem and workflow sections.
 - Reduced oversized PASS/BLOCK typography and tightened report, card, and
   section spacing so the showcase reads as one compact release narrative.
+- Converted the showcase to a short-form landing page by removing duplicate
+  problem/demo storytelling, compacting evidence into linked summaries, and
+  using two-column mobile workflow and limitation grids.
 
 ## [2.4.0] - 2026-07-13
 
