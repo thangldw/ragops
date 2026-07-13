@@ -4,6 +4,13 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+### Added
+
+- Deterministic publisher fixtures for single-association fork PRs, expired and
+  paginated artifacts, bounded comment enumeration, and GitHub API rate limits.
+- An explicit adapter retention decision: repositories own artifact/comment
+  lifecycle, while the publisher remains bounded and fail closed.
+
 ## [2.4.0] - 2026-07-13
 
 ### Changed

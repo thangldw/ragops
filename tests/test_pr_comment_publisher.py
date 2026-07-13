@@ -82,6 +82,21 @@ def test_source_event_rejects_ambiguous_pr_association() -> None:
         )
 
 
+def test_source_event_accepts_single_fork_pr_association() -> None:
+    payload = source_event()
+    payload["workflow_run"]["head_repository"] = {"full_name": "contributor/ragops"}
+    payload["workflow_run"]["head_branch"] = "publisher-fixture"
+
+    source = validate_source_event(
+        payload,
+        expected_repository=REPOSITORY,
+        expected_workflow=WORKFLOW,
+    )
+
+    assert source.repository == REPOSITORY
+    assert source.pull_request_number == 7
+
+
 def test_artifact_selection_is_exact_and_bounded() -> None:
     artifact = select_artifact(
         {
@@ -100,6 +115,34 @@ def test_artifact_selection_is_exact_and_bounded() -> None:
 
     with pytest.raises(PublisherContractError, match="exactly one"):
         select_artifact({"total_count": 0, "artifacts": []})
+
+
+def test_artifact_selection_rejects_expired_or_paginated_results() -> None:
+    expired = {
+        "total_count": 1,
+        "artifacts": [
+            {
+                "name": "ragops-release-evidence",
+                "expired": True,
+                "size_in_bytes": 100,
+                "archive_download_url": "https://api.github.com/artifacts/1/zip",
+            }
+        ],
+    }
+    with pytest.raises(PublisherContractError, match="expired"):
+        select_artifact(expired)
+
+    first_hundred = [
+        {
+            "name": f"unrelated-{index}",
+            "expired": False,
+            "size_in_bytes": 100,
+            "archive_download_url": f"https://api.github.com/artifacts/{index}/zip",
+        }
+        for index in range(100)
+    ]
+    with pytest.raises(PublisherContractError, match="incomplete or paginated"):
+        select_artifact({"total_count": 101, "artifacts": first_hundred})
 
 
 def test_archive_rejects_unexpected_or_non_regular_files() -> None:
@@ -150,6 +193,46 @@ def test_artifact_redirect_never_sends_token_to_arbitrary_host() -> None:
         validate_artifact_redirect_url("https://attacker.example/artifact.zip")
     with pytest.raises(PublisherContractError, match="approved HTTPS storage host"):
         validate_artifact_redirect_url("http://objects.githubusercontent.com/artifact.zip")
+
+
+def test_comment_pagination_fails_closed_after_one_thousand_comments(monkeypatch) -> None:
+    client = publisher.GitHubClient("token")
+    requested_urls = []
+
+    def full_page(url: str, *, method: str = "GET", body=None):
+        assert method == "GET"
+        assert body is None
+        requested_urls.append(url)
+        return [
+            {"id": index, "body": "unrelated", "user": {"type": "User"}}
+            for index in range(100)
+        ]
+
+    monkeypatch.setattr(client, "request_json", full_page)
+
+    with pytest.raises(PublisherContractError, match="safe page limit"):
+        client.request_list_pages("https://api.github.com/repos/thangldw/ragops/issues/7/comments")
+
+    assert len(requested_urls) == 10
+    assert requested_urls[-1].endswith("per_page=100&page=10")
+
+
+@pytest.mark.parametrize("http_status", [403, 429])
+def test_github_rate_limit_response_fails_closed(monkeypatch, http_status: int) -> None:
+    def rate_limited(request, timeout: int = 30):
+        raise publisher.urllib.error.HTTPError(
+            request.full_url,
+            http_status,
+            "rate limited",
+            hdrs={},
+            fp=None,
+        )
+
+    monkeypatch.setattr(publisher.urllib.request, "urlopen", rate_limited)
+    client = publisher.GitHubClient("token")
+
+    with pytest.raises(PublisherContractError, match="GitHub API request failed"):
+        client.request_json("https://api.github.com/rate_limit")
 
 
 def test_publish_comment_creates_one_comment_through_json_api(monkeypatch, tmp_path) -> None:

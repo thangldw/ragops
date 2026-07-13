@@ -53,6 +53,17 @@ evidence instead of adding noise.
   failure as the release gate.
 - API failure: do not weaken or reinterpret the evaluation result.
 
+## Bounded enumeration and retention
+
+- Artifact discovery accepts one complete response of at most 100 artifacts;
+  a larger or incomplete collection fails closed.
+- Comment discovery reads at most 1,000 comments; a full tenth page is treated
+  as ambiguous and fails closed.
+- Expired artifacts and GitHub API rate-limit responses publish nothing.
+- Artifact retention follows the adopting repository's Actions settings.
+  RAGOps updates one marker comment but does not automatically delete evidence
+  or comments. See ADR 0021.
+
 ## Implemented controls
 
 The publisher is implemented in `.github/workflows/ragops-pr-comment.yml` and

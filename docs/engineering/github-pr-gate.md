@@ -109,3 +109,9 @@ is publishable when GitHub supplies that single association; otherwise the
 publisher fails closed without writing a comment. The source workflow remains
 the required branch-protection check. The publisher only improves visibility
 and never converts a blocked gate into a passing check.
+
+Artifact enumeration is capped at one complete 100-item response, and comment
+enumeration is capped at ten 100-item pages. Expired evidence, larger ambiguous
+collections, and GitHub API failures or rate limits publish nothing. Configure
+artifact retention in the adopting repository; the publisher updates one bot
+marker but intentionally does not delete artifacts or comments.
