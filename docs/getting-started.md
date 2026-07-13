@@ -76,9 +76,14 @@ If the application already exports OpenTelemetry spans, start with the
 ## Run the workbench
 
 ```bash
-docker compose up --build
+RAGOPS_API_KEY="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')" \
+  docker compose up --build
 open http://localhost:8000
 ```
 
-Set `RAGOPS_API_KEY` before exposing the service beyond localhost. Interactive
-API documentation is available at `/docs`.
+Compose requires `RAGOPS_API_KEY` and binds to `127.0.0.1:8000` by default.
+Protected endpoints fail closed when no key is configured. For an explicitly
+unauthenticated local process, set `RAGOPS_INSECURE_DEV_MODE=true`; never use
+that mode on a shared host. Requests default to 2 MiB and evaluation collections
+to 1,000 cases, configurable with `RAGOPS_MAX_REQUEST_BYTES` and
+`RAGOPS_MAX_CASES`. Interactive API documentation is available at `/docs`.

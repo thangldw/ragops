@@ -4,6 +4,25 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+### Added
+
+- Optional evaluation-policy TOML contract for minimum/maximum custom metric
+  gates and configurable finding-severity gates.
+- Unified evaluator selection and absolute gate semantics across `evaluate` and
+  `compare`, including custom metric deltas.
+- Official JSON Schema for recorded response lists and documented evaluator
+  gate examples.
+
+### Changed
+
+- Scenario, response, trace, evaluator, and policy numeric values now fail
+  closed on non-finite, negative, boolean, or out-of-range values.
+- Protected API endpoints require a configured key by default; explicit local
+  bypass uses `RAGOPS_INSECURE_DEV_MODE=true`. Compose requires a key, binds to
+  localhost, and configures request/case limits.
+- The Japanese troubleshooting suite is labeled as a synthetic release-gate
+  fixture rather than evidence of Japanese semantic quality.
+
 ## [1.8.0] - 2026-07-13
 
 ### Added

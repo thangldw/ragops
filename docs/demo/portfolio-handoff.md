@@ -16,7 +16,7 @@ controlled rollout recommendation.
 
 ## Proof points
 
-- 30-case Japanese benchmark across nine enterprise failure families.
+- 30-case synthetic Japanese-question release-gate fixture across nine failure families.
 - End-to-end graph-assisted reference agent with portable trace export.
 - Lexical-only candidate blocked on citation and groundedness regressions.
 - Product thesis, architecture decisions, threat model, rollout plan, and

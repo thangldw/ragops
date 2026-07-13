@@ -1,0 +1,8 @@
+[metrics.claim_support]
+minimum = 0.90
+
+[metrics.citation_correctness]
+minimum = 0.95
+
+[findings]
+fail_on_severity = "high"

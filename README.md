@@ -96,14 +96,14 @@ questions and release contract.
 | Lexical groundedness | 100% | 78.12% | -21.88% |
 | Release decision | Pass | **Block** | Hold release |
 
-The benchmark contains 30 Japanese cases across nine failure families,
+The synthetic fixture contains 30 Japanese questions across nine failure families,
 including stale evidence, model disambiguation, permission leakage, prompt
 injection, abstention, and consequential actions. These synthetic results
-validate the harness and architecture comparison; they do not claim customer
-adoption or production ROI.
+validate the harness and architecture comparison; they do not establish
+Japanese semantic quality, customer adoption, or production ROI.
 
 The repository currently validates its core, adapters, reference deployment,
-showcase, and demo paths with 99 automated tests.
+showcase, and demo paths with 115+ automated tests.
 
 <p align="center">
   <img src="docs/demo/infographics/evidence-stack.svg" alt="RAGOps evidence stack combining quality, safety, operational budgets, and regression comparison into a release decision" width="100%">
@@ -137,6 +137,10 @@ ragops evaluate \
   --evaluator citation_correctness \
   --evaluator claim_support
 ```
+
+Promote selected evaluator metrics or finding severities into release gates
+with an explicit [evaluation policy](docs/evaluation/evaluator-gates.md). The
+same evaluator and gate options are available on `evaluate` and `compare`.
 
 Add a deterministic Unicode code-point budget when response length matters:
 

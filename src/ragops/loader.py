@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -21,8 +22,13 @@ class ContractError(ValueError):
 
 def _read_json(path: str | Path) -> Any:
     try:
-        return json.loads(Path(path).read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+        return json.loads(
+            Path(path).read_text(encoding="utf-8"),
+            parse_constant=lambda value: (_ for _ in ()).throw(
+                ValueError(f"non-finite JSON number {value}")
+            ),
+        )
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
         raise ContractError(f"Cannot load JSON from {path}: {exc}") from exc
 
 
@@ -80,11 +86,18 @@ def scenario_from_dict(data: dict[str, Any]) -> Scenario:
         raise ContractError(f"Unsupported scenario schema: {scenario.schema_version}")
     if not scenario.cases or len({case.id for case in scenario.cases}) != len(scenario.cases):
         raise ContractError("Scenario needs at least one case and case IDs must be unique")
+    _ratio(scenario.thresholds.citation_coverage, "thresholds.citation_coverage")
+    _ratio(scenario.thresholds.citation_precision, "thresholds.citation_precision")
+    _ratio(scenario.thresholds.lexical_groundedness, "thresholds.lexical_groundedness")
+    _nonnegative_integer(scenario.thresholds.max_latency_ms, "thresholds.max_latency_ms")
+    _nonnegative_number(scenario.thresholds.max_cost_usd, "thresholds.max_cost_usd")
     return scenario
 
 
 def load_responses(path: str | Path) -> tuple[RecordedResponse, ...]:
-    return _load_response_fixture(Path(path), seen=set())
+    responses = _load_response_fixture(Path(path), seen=set())
+    _validate_response_numbers(responses)
+    return responses
 
 
 def _load_response_fixture(path: Path, *, seen: set[Path]) -> tuple[RecordedResponse, ...]:
@@ -193,4 +206,38 @@ def responses_from_data(data: list[dict[str, Any]]) -> tuple[RecordedResponse, .
         raise ContractError(f"Invalid response contract: {exc}") from exc
     if len({response.case_id for response in responses}) != len(responses):
         raise ContractError("Response case IDs must be unique")
+    _validate_response_numbers(responses)
     return responses
+
+
+def _validate_response_numbers(responses: tuple[RecordedResponse, ...]) -> None:
+    for index, response in enumerate(responses):
+        _nonnegative_integer(response.latency_ms, f"responses[{index}].latency_ms")
+        _nonnegative_number(response.cost_usd, f"responses[{index}].cost_usd")
+
+
+def _finite_number(value: object, name: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ContractError(f"{name} must be a number")
+    result = float(value)
+    if not math.isfinite(result):
+        raise ContractError(f"{name} must be finite")
+    return result
+
+
+def _ratio(value: object, name: str) -> None:
+    result = _finite_number(value, name)
+    if not 0 <= result <= 1:
+        raise ContractError(f"{name} must be between 0 and 1")
+
+
+def _nonnegative_number(value: object, name: str) -> None:
+    if _finite_number(value, name) < 0:
+        raise ContractError(f"{name} must be non-negative")
+
+
+def _nonnegative_integer(value: object, name: str) -> None:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ContractError(f"{name} must be an integer")
+    if value < 0:
+        raise ContractError(f"{name} must be non-negative")

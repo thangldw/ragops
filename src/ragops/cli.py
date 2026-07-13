@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from ragops.benchmarks import scenario_summary
-from ragops.config import load_regression_policy
+from ragops.config import load_evaluation_policy, load_regression_policy
 from ragops.control_plane import ControlPlane
 from ragops.demo import DEFAULT_DEMO_SCENARIO, DEMO_BUNDLES, write_demo
 from ragops.engine import compare, evaluate
@@ -55,6 +55,7 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate_parser.add_argument("--format", choices=("json", "markdown"), default="json")
     evaluate_parser.add_argument("--store")
     evaluate_parser.add_argument("--label", default="")
+    evaluate_parser.add_argument("--evaluation-policy", help="TOML evaluator gate policy")
     evaluate_parser.add_argument(
         "--evaluator",
         action="append",
@@ -85,6 +86,24 @@ def build_parser() -> argparse.ArgumentParser:
     compare_parser.add_argument("--store")
     compare_parser.add_argument("--label", default="")
     compare_parser.add_argument("--policy", help="TOML regression policy")
+    compare_parser.add_argument("--evaluation-policy", help="TOML evaluator gate policy")
+    compare_parser.add_argument(
+        "--evaluator",
+        action="append",
+        choices=(
+            "retrieval_recall",
+            "citation_correctness",
+            "claim_support",
+            "answer_length_budget",
+        ),
+        default=[],
+    )
+    compare_parser.add_argument(
+        "--answer-length-limit",
+        type=int,
+        default=500,
+        help="Unicode code-point limit for answer_length_budget (default: 500)",
+    )
     history_parser = commands.add_parser("history", help="List saved experiment runs")
     history_parser.add_argument("--store", required=True)
     history_parser.add_argument("--limit", type=int, default=20)
@@ -215,6 +234,11 @@ def main() -> int:
                     args.evaluator,
                     answer_length_limit=args.answer_length_limit,
                 ),
+                policy=(
+                    load_evaluation_policy(args.evaluation_policy)
+                    if args.evaluation_policy
+                    else None
+                ),
             )
         else:
             report = compare(
@@ -230,6 +254,15 @@ def main() -> int:
                     else load_responses(args.candidate)
                 ),
                 policy=load_regression_policy(args.policy) if args.policy else None,
+                evaluators=_evaluators_from_names(
+                    args.evaluator,
+                    answer_length_limit=args.answer_length_limit,
+                ),
+                evaluation_policy=(
+                    load_evaluation_policy(args.evaluation_policy)
+                    if args.evaluation_policy
+                    else None
+                ),
             )
     except (ContractError, ValueError) as exc:
         raise SystemExit(f"contract error: {exc}") from exc

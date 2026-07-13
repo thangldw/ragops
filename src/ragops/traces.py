@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Iterable
 
-from ragops.loader import ContractError
+from ragops.loader import ContractError, responses_from_data
 from ragops.models import RecordedResponse
 
 
@@ -19,23 +19,31 @@ def load_trace_jsonl(path: str | Path) -> tuple[RecordedResponse, ...]:
         if not line.strip():
             continue
         try:
-            item: dict[str, Any] = json.loads(line)
-            usage = item.get("usage", {})
-            records.append(
-                RecordedResponse(
-                    case_id=item["case_id"],
-                    answer=item["output"]["answer"],
-                    citation_ids=tuple(item["output"].get("citation_ids", [])),
-                    retrieved_ids=tuple(item.get("retrieval", {}).get("document_ids", [])),
-                    latency_ms=item["latency_ms"],
-                    cost_usd=usage.get("cost_usd", 0.0),
-                    human_approved=item.get("human_approved", False),
-                    metadata={
-                        "trace_schema_version": item.get("schema_version", "0.3"),
-                        **item.get("metadata", {}),
-                    },
-                )
+            item: dict[str, Any] = json.loads(
+                line,
+                parse_constant=lambda value: (_ for _ in ()).throw(
+                    ValueError(f"non-finite JSON number {value}")
+                ),
             )
+            usage = item.get("usage", {})
+            response = responses_from_data(
+                [
+                    {
+                        "case_id": item["case_id"],
+                        "answer": item["output"]["answer"],
+                        "citation_ids": item["output"].get("citation_ids", []),
+                        "retrieved_ids": item.get("retrieval", {}).get("document_ids", []),
+                        "latency_ms": item["latency_ms"],
+                        "cost_usd": usage.get("cost_usd", 0.0),
+                        "human_approved": item.get("human_approved", False),
+                        "metadata": {
+                            "trace_schema_version": item.get("schema_version", "0.3"),
+                            **item.get("metadata", {}),
+                        },
+                    }
+                ]
+            )[0]
+            records.append(response)
         except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
             raise ContractError(f"Invalid trace at line {line_number}: {exc}") from exc
     if not records:

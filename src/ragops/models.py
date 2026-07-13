@@ -116,6 +116,18 @@ class RegressionPolicy:
 
 
 @dataclass(frozen=True)
+class MetricGate:
+    minimum: float | None = None
+    maximum: float | None = None
+
+
+@dataclass(frozen=True)
+class EvaluationPolicy:
+    metric_gates: dict[str, MetricGate] = field(default_factory=dict)
+    fail_on_severity: str = "critical"
+
+
+@dataclass(frozen=True)
 class ComparisonReport:
     report_version: str
     scenario_id: str

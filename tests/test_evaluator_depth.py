@@ -1,6 +1,6 @@
 from ragops.engine import evaluate
 from ragops.loader import scenario_from_dict
-from ragops.models import RecordedResponse
+from ragops.models import EvaluationPolicy, MetricGate, RecordedResponse
 import pytest
 
 from ragops.plugins import (
@@ -60,6 +60,55 @@ def test_claim_support_calibration_flags_added_claim() -> None:
     assert report.metrics["claim_support.score"] == 0.5
     assert report.metrics["claim_support.unsupported_claims"] == 1.0
     assert report.cases[0].findings[0].rule == "unsupported_claim"
+
+
+def test_plugin_metric_and_high_finding_can_block_release() -> None:
+    response = RecordedResponse(
+        "q1",
+        "Stop the machine. Replace the controller immediately.",
+        ("manual-1",),
+        1,
+        0,
+    )
+    report = evaluate(
+        _scenario(),
+        (response,),
+        evaluators=(ClaimSupportEvaluator(),),
+        policy=EvaluationPolicy(
+            metric_gates={"claim_support": MetricGate(minimum=0.9)},
+            fail_on_severity="high",
+        ),
+    )
+
+    assert report.passed is False
+    assert report.metrics["claim_support"] == report.metrics["claim_support.score"] == 0.5
+    assert "metric_minimum:claim_support" in report.failed_gates
+    assert "finding_severity:high" in report.failed_gates
+
+
+def test_policy_fails_closed_for_unavailable_metric() -> None:
+    response = RecordedResponse("q1", "Stop the machine.", ("manual-1",), 1, 0)
+
+    with pytest.raises(ValueError, match="unavailable"):
+        evaluate(
+            _scenario(),
+            (response,),
+            policy=EvaluationPolicy(metric_gates={"claim_support": MetricGate(minimum=0.9)}),
+        )
+
+
+def test_python_policy_rejects_ambiguous_metric_direction() -> None:
+    response = RecordedResponse("q1", "Stop the machine.", ("manual-1",), 1, 0)
+
+    with pytest.raises(ValueError, match="exactly one"):
+        evaluate(
+            _scenario(),
+            (response,),
+            evaluators=(ClaimSupportEvaluator(),),
+            policy=EvaluationPolicy(
+                metric_gates={"claim_support": MetricGate(minimum=0.8, maximum=1.0)}
+            ),
+        )
 
 
 def test_citation_correctness_flags_untrusted_id() -> None:
