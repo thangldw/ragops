@@ -194,17 +194,63 @@ examples only and are not customer adoption or ROI claims.
 
 ## Architecture
 
-```text
-RAG / agent application
-        │ portable traces
-        ▼
-Scenario loader → deterministic checks → evaluator plugins
-        │                                      │
-        └──────── evidence + policy ────────────┘
-                           │
-                           ▼
-             report → baseline comparison → release gate
+```mermaid
+flowchart TB
+    subgraph SOURCE["1 · SYSTEM UNDER TEST"]
+        direction LR
+        APP["RAG / AI agent<br/>Your existing application"]
+        TRACE["Portable evidence<br/>answers · retrievals · citations<br/>latency · cost · metadata"]
+        APP -->|records each case| TRACE
+    end
+
+    subgraph CORE["2 · RAGOPS LOCAL EVALUATION CORE"]
+        direction LR
+        LOAD["Load versioned contracts<br/>scenario · evidence · policy"]
+        CHECKS["Deterministic checks<br/>citations · lexical support<br/>budgets · red-team rules"]
+        PLUGINS["Evaluator plugins<br/>custom metrics · external judges"]
+        CASES["Case-level evidence<br/>scores · findings · named reasons"]
+
+        LOAD --> CHECKS
+        LOAD -. optional .-> PLUGINS
+        CHECKS --> CASES
+        PLUGINS --> CASES
+    end
+
+    subgraph DECIDE["3 · REGRESSION DECISION"]
+        direction LR
+        BASE["Accepted baseline<br/>last known-good evidence"]
+        COMPARE["Compare candidate<br/>apply versioned release policy"]
+        REPORT["Portable report<br/>JSON · Markdown · HTML"]
+        GATE{"Release gate"}
+        PASS["PASS<br/>safe to continue"]
+        BLOCK["BLOCK<br/>fix and re-run"]
+
+        BASE --> COMPARE
+        COMPARE --> REPORT --> GATE
+        GATE -->|meets policy| PASS
+        GATE -->|named gates fail| BLOCK
+    end
+
+    TRACE --> LOAD
+    CASES -->|candidate evidence| COMPARE
+    REPORT -->|reviewable evidence| REVIEW["Engineer · CI · pull request"]
+
+    classDef source fill:#10233f,stroke:#5da2ff,color:#f4f7ff,stroke-width:2px;
+    classDef core fill:#102a24,stroke:#47d7a2,color:#f4f7ff,stroke-width:2px;
+    classDef decision fill:#211b38,stroke:#a78bfa,color:#f4f7ff,stroke-width:2px;
+    classDef pass fill:#123126,stroke:#53d68b,color:#f4f7ff,stroke-width:2px;
+    classDef block fill:#38191d,stroke:#ff7474,color:#f4f7ff,stroke-width:2px;
+
+    class APP,TRACE source;
+    class LOAD,CHECKS,PLUGINS,CASES core;
+    class BASE,COMPARE,REPORT,GATE,REVIEW decision;
+    class PASS pass;
+    class BLOCK block;
 ```
+
+Solid arrows are the required offline path. The dotted plugin path is optional;
+the dependency-free core can make a complete release decision without a model
+API or hosted service.
 
 ```text
 src/ragops/    Dependency-free evaluation core

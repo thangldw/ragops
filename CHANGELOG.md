@@ -13,6 +13,9 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ### Changed
 
+- Replaced the README's ASCII architecture sketch with a color-coded Mermaid
+  flow that separates the system under test, local evaluation core, optional
+  plugins, portable evidence, baseline comparison, and PASS/BLOCK decision.
 - Marked active development as paused while keeping the completed project public
   for stars, usage feedback, issues, and Discussions; stable release `2.4.0`
   remains available.
