@@ -76,6 +76,14 @@ PR comment integration and notifications remain hosted/integration work.
 - Fail-closed API authentication, bounded input, and explicit local dev mode.
 - Synthetic benchmark positioning and evidence-safe workbench error states.
 
+## 2.1 — portable external evaluator evidence
+
+- Versioned per-case external metric envelope for Ragas, DeepEval, Langfuse,
+  and internal judges.
+- Shared absolute gate semantics and baseline/candidate deltas without provider
+  dependencies in the core.
+- Copyable downstream PR-comment publisher recipe with explicit trust boundary.
+
 ## 3.0 — hosted control plane (local alpha boundary implemented)
 
 - Workspace isolation, SSO/RBAC, audit retention, managed ingestion, and

@@ -23,6 +23,7 @@ public presentation assets.
 | v1.7 broader adoption proof | Released | `docs/project/v1.7-acceptance.md` |
 | v1.8 review visibility and measured adoption | Released | `docs/project/v1.8-acceptance.md` |
 | v2.0 trustworthy extensible release gates | Released | `docs/project/v2.0-acceptance.md` |
+| v2.1 portable external evaluator evidence | Release candidate | `docs/project/v2.1-acceptance.md` |
 
 ## FDE competency coverage
 

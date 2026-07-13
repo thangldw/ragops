@@ -4,6 +4,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-07-13
+
 ### Added
 
 - Portable external metric envelope and dependency-free evaluator bridge for
