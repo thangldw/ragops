@@ -11,6 +11,11 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 - An explicit adapter retention decision: repositories own artifact/comment
   lifecycle, while the publisher remains bounded and fail closed.
 
+### Changed
+
+- Repositioned public discovery copy around regression tests and explainable
+  release gates for teams that already have a RAG or AI agent.
+
 ## [2.4.0] - 2026-07-13
 
 ### Changed

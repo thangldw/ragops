@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "ragops"
 version = "2.4.0"
-description = "Evaluation and red-team release gates for RAG and agent systems"
+description = "Regression tests and explainable release gates for RAG and AI agents"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }

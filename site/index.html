@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="RAGOps turns RAG and agent quality requirements into versioned tests, portable evidence, and explainable release decisions.">
+  <meta name="description" content="Regression tests and explainable release gates for RAG and AI agents—offline, provider-independent, and CI-ready.">
   <link rel="canonical" href="https://thangldw.github.io/ragops/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="RAGOps — Release gates for RAG and agents">
-  <meta property="og:description" content="Catch regressions before rollout with local-first evaluation, red-team checks, and portable evidence.">
+  <meta property="og:title" content="RAGOps — RAG regression release gates">
+  <meta property="og:description" content="Change a prompt, retriever, embedding model, dataset, or evaluator. Compare with an accepted baseline and keep explainable PASS/BLOCK evidence.">
   <meta property="og:url" content="https://thangldw.github.io/ragops/">
   <meta property="og:image" content="https://raw.githubusercontent.com/thangldw/ragops/main/docs/demo/social-preview.png">
   <meta property="og:image:width" content="1280">
@@ -16,7 +16,7 @@
   <meta name="theme-color" content="#101216">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <title>RAGOps — Release gates for RAG and agents</title>
+  <title>RAGOps — RAG regression release gates</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -38,9 +38,9 @@
   <main id="main">
     <section class="hero proof-hero" id="top">
       <div class="hero-copy">
-        <p class="eyebrow">Open-source release gates for RAG and agents</p>
+        <p class="eyebrow">Regression release gates for RAG and AI agents</p>
         <h1>From install to release decision in <em>five minutes.</em></h1>
-        <p class="lede">Evaluate existing RAG and agent outputs offline. Compare a candidate with an accepted baseline, then keep the explainable PASS or BLOCK evidence.</p>
+        <p class="lede">Change a prompt, retriever, embedding model, dataset, or evaluator. Compare the candidate with an accepted baseline offline, then keep the explainable PASS or BLOCK evidence.</p>
         <div class="proof-code" aria-label="Five-minute quick start">
           <div class="proof-tabs"><b>Terminal</b><span>What happens</span><button id="copy-demo" type="button">Copy commands</button></div>
           <pre><code><span class="line-no">1</span> pip install ragops==2.4.0

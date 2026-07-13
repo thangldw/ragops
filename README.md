@@ -1,15 +1,17 @@
 # RAGOps
 
-**From install to an explainable RAG release decision in five minutes.**
+**Regression tests and explainable release gates for RAG and AI agents—offline,
+provider-independent, and CI-ready.**
 
 [![CI](https://github.com/thangldw/ragops/actions/workflows/ci.yml/badge.svg)](https://github.com/thangldw/ragops/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/ragops.svg)](https://pypi.org/project/ragops/)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-5DA2FF.svg)](LICENSE)
 
-RAGOps turns AI quality requirements into versioned scenarios, repeatable
-checks, machine-readable reports, and defensible release decisions. The
-dependency-free core runs locally; provider and hosted integrations remain
+RAGOps is the release gate for teams that already have a RAG or AI agent. Change
+a prompt, retriever, embedding model, dataset, or evaluator; RAGOps compares the
+candidate with an accepted baseline and returns explainable PASS/BLOCK evidence.
+The dependency-free core runs locally; provider and hosted integrations remain
 optional.
 
 <p align="center">

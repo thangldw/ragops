@@ -69,6 +69,8 @@ def test_showcase_separates_evidence_and_states_limits() -> None:
     assert "<dt>144</dt><dd>release-validation tests</dd>" in page
     assert "pip install ragops==2.4.0" in page
     assert "From install to release decision" in page
+    assert "Regression release gates for RAG and AI agents" in page
+    assert "embedding model" in page
     assert "docs/demo/social-preview.png" in page
     assert page.count("#five-minute-proof") == 2
     assert "#quick-start" not in page
