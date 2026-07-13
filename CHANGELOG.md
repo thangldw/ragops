@@ -19,6 +19,9 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
   aligned current roadmap, launch, observability, and presentation copy with
   the released v2.4 state. Historical ADRs, requirements, acceptance records,
   and release notes remain unchanged.
+- Rebuilt the GitHub Pages showcase around a decision-first regression proof,
+  shortened the mobile narrative, replaced mutable test-count marketing with
+  stable product signals, and refreshed public screenshots and social preview.
 
 ## [2.4.0] - 2026-07-13
 

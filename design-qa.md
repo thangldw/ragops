@@ -1,56 +1,63 @@
-# Adoption refresh design QA
+# Growth refresh design QA
 
-- Source visual truth: `docs/design-audit/adoption-refresh/source-option-3.png`
-- Desktop implementation: `docs/design-audit/adoption-refresh/implementation-desktop.png`
-- Mobile implementation: `docs/design-audit/adoption-refresh/implementation-mobile.png`
-- Full-view comparison: `docs/design-audit/adoption-refresh/comparison-desktop.png`
-- Desktop viewport/state: 1440×1024, initial hero
-- Mobile viewport/state: 390×844, initial hero
+- Source visual truth: `docs/design-audit/growth-refresh/source-option-1.png`
+- Desktop implementation: `docs/design-audit/growth-refresh/implementation-desktop-v1.png`
+- Mobile implementation: `docs/design-audit/growth-refresh/implementation-mobile-v1.png`
+- Full-view comparison: `docs/design-audit/growth-refresh/comparison-desktop-v1.png`
+- Desktop viewport/state: 1440 × 1024, initial hero
+- Mobile viewport/state: 390 × 844, initial hero
 
 ## Findings
 
 No actionable P0, P1, or P2 differences remain.
 
-- Fonts and typography: implementation preserves the target's editorial sans +
-  monospace pairing, large three-line headline, blue emphasis, and readable code.
-- Spacing and layout rhythm: two-column desktop proportions, left proof sequence,
-  right release report, CTA row, and evidence strip match the target hierarchy.
-- Colors and tokens: graphite background, restrained blue, mint PASS, and warm
-  red BLOCK remain semantic and high contrast.
-- Image quality and asset fidelity: the selected raster mock is retained only as
-  design truth; public screenshots are browser captures from the real HTML/CSS.
-  No visual asset was replaced with placeholder or improvised icon art.
-- Copy and content: version is intentionally updated from the selected v2.3.0
-  concept to the released v2.4.0 evidence. Metrics are recorded repository
-  evidence and limitations remain explicit.
+- Fonts and typography: the implementation preserves the mock's heavy editorial
+  sans headline, compact mono evidence, three-line desktop wrap, and blue emphasis.
+- Spacing and layout rhythm: the two-column hero, compact quickstart, decision
+  report, proof pillars, and stable-signal strip retain the selected hierarchy.
+- Colors and tokens: graphite, restrained blue, mint PASS, and coral BLOCK map
+  directly to semantic CSS tokens with readable contrast.
+- Image quality and asset fidelity: the RAGOps interface remains semantic HTML.
+  Visible UI icons are pinned Heroicons and Simple Icons assets rather than
+  improvised CSS or inline SVG art.
+- Copy and content: invented build identifiers, mutable test counts, and an
+  unmeasured time-to-result claim from the concept were replaced with recorded
+  Graph+ACL versus lexical-only evidence, stable release metadata, and portable
+  report formats.
+- Responsive behavior: desktop and 390px mobile have no horizontal overflow.
+  The report follows the quickstart on mobile, so the main conversion action stays
+  above the fold while proof begins in the first viewport.
+- Accessibility: semantic headings, landmarks, tables, buttons, skip link,
+  keyboard focus indicators, an ARIA live copy status, and reduced-motion support
+  are present. Screenshot review does not establish full accessibility compliance.
 
 ## Primary interactions tested
 
-- Copy-command primary CTA resolves uniquely and executes.
-- Navigation and GitHub links are real anchors.
-- Desktop and 390px mobile layouts have no horizontal overflow.
-- Browser console contained no errors during the desktop interaction test.
+- Both quickstart controls resolve uniquely and copy the same two commands.
+- The copy confirmation updates through the live status region.
+- Navigation anchors and GitHub links are real links.
+- Browser console contained no warnings or errors during desktop and mobile QA.
 
 ## Focused-region evidence
 
-The full-view comparison keeps headline, proof terminal, PASS/BLOCK panels,
-reason deltas, and CTA text legible at the same desktop viewport, so a separate
-crop was not required. The mobile capture separately verifies text wrapping,
-command readability, button width, and responsive navigation behavior.
+The full-view comparison keeps the headline, quickstart, PASS/BLOCK report,
+recorded deltas, proof pillars, and signal strip readable at the same desktop
+state. Separate evidence and limitations captures verify lower-page typography,
+tables, cards, and honest-claim boundaries. A separate crop was not needed.
 
 ## Comparison history
 
-1. Initial desktop capture matched the selected information hierarchy but used
-   v2.3.0 evidence.
-2. Documentation and implementation were aligned to the v2.4.0 release
-   candidate, then desktop and mobile screenshots were recaptured.
-3. Final comparison found only intentional content simplification: the
-   implementation uses three named regressions rather than invented aggregate
-   scores from the mock.
+1. The first browser-rendered implementation preserved the selected composition
+   and produced no actionable P0/P1/P2 mismatch.
+2. Intentional product corrections replaced concept-only prompt/build metadata,
+   mutable test counts, and the unmeasured “60 seconds” claim with repository
+   evidence. These corrections do not change the visual hierarchy.
+3. Mobile QA confirmed a 390px layout with no horizontal overflow; page height
+   decreased from the previous 11,850px implementation to 9,087px.
 
 ## Follow-up polish
 
-- P3: after observed traffic exists, test whether “copy commands” or “view live
-  report” produces higher five-minute-demo activation.
+- P3: after real traffic exists, compare quickstart-copy and GitHub click-through
+  before changing CTA emphasis.
 
 final result: passed

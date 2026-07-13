@@ -45,6 +45,14 @@ def test_showcase_has_accessible_structure_and_valid_local_links() -> None:
     assert (root / "styles.css").is_file()
     assert (root / "favicon.png").is_file()
     assert (root / "apple-touch-icon.png").is_file()
+    for icon in (
+        "github.svg",
+        "clipboard-document.svg",
+        "shield-check.svg",
+        "circle-stack.svg",
+        "document-text.svg",
+    ):
+        assert (root / "assets" / icon).is_file()
 
 
 def test_showcase_metrics_match_recorded_experiment() -> None:
@@ -66,11 +74,12 @@ def test_showcase_separates_evidence_and_states_limits() -> None:
     assert "30-case synthetic harness benchmark" in page
     assert "Lexical groundedness is overlap, not entailment" in page
     assert "MIT License" in page
-    assert "<dt>144</dt><dd>release-validation tests</dd>" in page
     assert "pip install ragops==2.4.0" in page
-    assert "From install to release decision" in page
-    assert "Regression release gates for RAG and AI agents" in page
+    assert "Catch RAG regressions" in page
+    assert "regression release gate for RAG &amp; AI agents" in page
     assert "embedding model" in page
+    assert "<dt>0</dt><dd>required model APIs</dd>" in page
+    assert "JSON · Markdown · HTML" in page
     assert "docs/demo/social-preview.png" in page
     assert page.count("#five-minute-proof") == 2
     assert "#quick-start" not in page
