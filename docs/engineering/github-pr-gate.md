@@ -82,3 +82,30 @@ The publisher has `actions: read`, `contents: read`, and
 Copying the publisher to another repository requires changing
 `RAGOPS_SOURCE_WORKFLOW` and the `workflow_run.workflows` allowlist to the exact
 caller workflow name.
+
+For a downstream repository, copy
+[`docs/examples/github-pr-comment.yml`](../examples/github-pr-comment.yml) to
+`.github/workflows/ragops-pr-comment.yml`. The example assumes the read-only
+caller workflow has the exact top-level name `RAGOps`, matching the caller
+recipe above. If it has another name, change both of these values to the same
+exact string:
+
+```yaml
+on:
+  workflow_run:
+    workflows: ["Your exact caller workflow name"]
+
+env:
+  RAGOPS_SOURCE_WORKFLOW: Your exact caller workflow name
+```
+
+The recipe checks out publisher code from a reviewed RAGOps commit into a
+separate path. It does not checkout the pull-request head, restore its cache,
+execute its artifacts, or use `pull_request_target`. Keep that commit pin under
+dependency review when upgrading.
+
+GitHub must associate the source run with exactly one pull request. A fork PR
+is publishable when GitHub supplies that single association; otherwise the
+publisher fails closed without writing a comment. The source workflow remains
+the required branch-protection check. The publisher only improves visibility
+and never converts a blocked gate into a passing check.

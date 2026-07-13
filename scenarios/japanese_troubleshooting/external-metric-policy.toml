@@ -1,0 +1,5 @@
+[metrics."ragas.faithfulness"]
+minimum = 0.90
+
+[metrics."ragas.answer_relevance"]
+minimum = 0.90

@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 
@@ -13,6 +14,22 @@ def test_gitlab_recipe_preserves_evidence_and_exit_code() -> None:
     assert "ragops-command.log" in recipe
     assert "allow_failure" not in recipe
     assert "PRIVATE-TOKEN" not in recipe
+
+
+def test_downstream_github_publisher_is_copyable_and_least_privilege() -> None:
+    recipe = Path("docs/examples/github-pr-comment.yml").read_text(encoding="utf-8")
+
+    assert 'workflows: ["RAGOps"]' in recipe
+    assert "RAGOPS_SOURCE_WORKFLOW: RAGOps" in recipe
+    assert "actions: read" in recipe
+    assert "contents: read" in recipe
+    assert "pull-requests: write" in recipe
+    assert "pull_request_target" not in recipe
+    assert "persist-credentials: false" in recipe
+    assert "repository: thangldw/ragops" in recipe
+    assert re.search(r"ref: [0-9a-f]{40}", recipe)
+    assert re.search(r"actions/checkout@[0-9a-f]{40}", recipe)
+    assert "python .ragops-publisher/apps/github_pr_comment.py" in recipe
 
 
 def test_pr_comment_design_keeps_write_path_separate() -> None:

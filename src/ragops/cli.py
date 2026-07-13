@@ -4,6 +4,10 @@ import argparse
 import json
 from pathlib import Path
 
+from ragops.adapters.external_metrics import (
+    load_external_metric_evaluator,
+    validate_external_metric_pair,
+)
 from ragops.benchmarks import scenario_summary
 from ragops.config import load_evaluation_policy, load_regression_policy
 from ragops.control_plane import ControlPlane
@@ -57,6 +61,10 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate_parser.add_argument("--label", default="")
     evaluate_parser.add_argument("--evaluation-policy", help="TOML evaluator gate policy")
     evaluate_parser.add_argument(
+        "--external-metrics",
+        help="Portable per-case metric envelope from Ragas, DeepEval, Langfuse, or custom",
+    )
+    evaluate_parser.add_argument(
         "--evaluator",
         action="append",
         choices=(
@@ -87,6 +95,14 @@ def build_parser() -> argparse.ArgumentParser:
     compare_parser.add_argument("--label", default="")
     compare_parser.add_argument("--policy", help="TOML regression policy")
     compare_parser.add_argument("--evaluation-policy", help="TOML evaluator gate policy")
+    compare_parser.add_argument(
+        "--baseline-external-metrics",
+        help="Portable baseline per-case external metric envelope",
+    )
+    compare_parser.add_argument(
+        "--candidate-external-metrics",
+        help="Portable candidate per-case external metric envelope",
+    )
     compare_parser.add_argument(
         "--evaluator",
         action="append",
@@ -227,13 +243,16 @@ def main() -> int:
     try:
         scenario = load_scenario(args.scenario)
         if args.command == "evaluate":
+            evaluators = _evaluators_from_names(
+                args.evaluator,
+                answer_length_limit=args.answer_length_limit,
+            )
+            if args.external_metrics:
+                evaluators += (load_external_metric_evaluator(args.external_metrics, scenario),)
             report = evaluate(
                 scenario,
                 load_trace_jsonl(args.traces) if args.traces else load_responses(args.responses),
-                evaluators=_evaluators_from_names(
-                    args.evaluator,
-                    answer_length_limit=args.answer_length_limit,
-                ),
+                evaluators=evaluators,
                 policy=(
                     load_evaluation_policy(args.evaluation_policy)
                     if args.evaluation_policy
@@ -241,6 +260,23 @@ def main() -> int:
                 ),
             )
         else:
+            if bool(args.baseline_external_metrics) != bool(args.candidate_external_metrics):
+                raise ContractError(
+                    "Compare needs both --baseline-external-metrics and "
+                    "--candidate-external-metrics"
+                )
+            evaluators = _evaluators_from_names(
+                args.evaluator,
+                answer_length_limit=args.answer_length_limit,
+            )
+            if args.baseline_external_metrics:
+                baseline_external = load_external_metric_evaluator(
+                    args.baseline_external_metrics, scenario
+                )
+                candidate_external = load_external_metric_evaluator(
+                    args.candidate_external_metrics, scenario
+                )
+                validate_external_metric_pair(baseline_external, candidate_external)
             report = compare(
                 scenario,
                 (
@@ -254,9 +290,16 @@ def main() -> int:
                     else load_responses(args.candidate)
                 ),
                 policy=load_regression_policy(args.policy) if args.policy else None,
-                evaluators=_evaluators_from_names(
-                    args.evaluator,
-                    answer_length_limit=args.answer_length_limit,
+                evaluators=evaluators,
+                baseline_evaluators=(
+                    evaluators + (baseline_external,)
+                    if args.baseline_external_metrics
+                    else None
+                ),
+                candidate_evaluators=(
+                    evaluators + (candidate_external,)
+                    if args.candidate_external_metrics
+                    else None
                 ),
                 evaluation_policy=(
                     load_evaluation_policy(args.evaluation_policy)

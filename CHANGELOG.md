@@ -4,6 +4,15 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+### Added
+
+- Portable external metric envelope and dependency-free evaluator bridge for
+  per-case scores exported by Ragas, DeepEval, Langfuse, or internal judges.
+- CLI support for external metrics in both absolute evaluation and baseline
+  comparison, with exact coverage/provider/metric compatibility checks.
+- Copyable downstream GitHub PR-comment publisher recipe with a commit-pinned
+  trusted publisher checkout and explicit workflow-name allowlist.
+
 ## [2.0.0] - 2026-07-13
 
 ### Added

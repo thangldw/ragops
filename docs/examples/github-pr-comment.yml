@@ -1,0 +1,30 @@
+name: RAGOps PR comment publisher
+
+on:
+  workflow_run:
+    # Must exactly match the top-level name of the read-only caller workflow.
+    workflows: ["RAGOps"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: write
+
+jobs:
+  publish:
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout reviewed RAGOps publisher code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          repository: thangldw/ragops
+          ref: e3139cc03ffcf522803e2e3e4ef141f37ee4fbf8 # v2.0.0
+          path: .ragops-publisher
+          persist-credentials: false
+      - name: Validate evidence and publish one idempotent comment
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RAGOPS_SOURCE_WORKFLOW: RAGOps
+        run: python .ragops-publisher/apps/github_pr_comment.py

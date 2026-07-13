@@ -150,14 +150,27 @@ def compare(
     policy: RegressionPolicy | None = None,
     evaluators: tuple[CaseEvaluator, ...] = (),
     evaluation_policy: EvaluationPolicy | None = None,
+    baseline_evaluators: tuple[CaseEvaluator, ...] | None = None,
+    candidate_evaluators: tuple[CaseEvaluator, ...] | None = None,
 ) -> ComparisonReport:
     """Compare a candidate build with a known baseline and apply regression gates."""
     policy = policy or RegressionPolicy()
+    if (baseline_evaluators is None) != (candidate_evaluators is None):
+        raise ContractError("Compare requires both baseline and candidate evaluator sets")
+    baseline_evaluators = baseline_evaluators or evaluators
+    candidate_evaluators = candidate_evaluators or evaluators
+    baseline_names = tuple(evaluator.name for evaluator in baseline_evaluators)
+    candidate_names = tuple(evaluator.name for evaluator in candidate_evaluators)
+    if baseline_names != candidate_names:
+        raise ContractError(
+            "Baseline and candidate evaluator names must match; "
+            f"baseline={baseline_names}, candidate={candidate_names}"
+        )
     baseline = evaluate(
-        scenario, baseline_responses, evaluators=evaluators, policy=evaluation_policy
+        scenario, baseline_responses, evaluators=baseline_evaluators, policy=evaluation_policy
     )
     candidate = evaluate(
-        scenario, candidate_responses, evaluators=evaluators, policy=evaluation_policy
+        scenario, candidate_responses, evaluators=candidate_evaluators, policy=evaluation_policy
     )
     shared_metrics = baseline.metrics.keys() & candidate.metrics.keys()
     deltas = {

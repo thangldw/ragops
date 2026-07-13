@@ -34,6 +34,8 @@ optional.
 - Exports JSON, Markdown, and standalone HTML evidence for review and CI.
 - Supports Python, CLI, an optional FastAPI adapter, and portable JSONL traces.
 - Keeps scenarios, policies, and reports versioned and provider-independent.
+- Gates portable per-case metrics exported by Ragas, DeepEval, Langfuse, or
+  internal judges without adding those frameworks to the core.
 
 ## How the release gate works
 
@@ -141,6 +143,10 @@ ragops evaluate \
 Promote selected evaluator metrics or finding severities into release gates
 with an explicit [evaluation policy](docs/evaluation/evaluator-gates.md). The
 same evaluator and gate options are available on `evaluate` and `compare`.
+
+Already use another evaluator stack? Export per-case results through the
+[portable external metric envelope](docs/engineering/provider-adapters.md#external-evaluator-metrics)
+and gate namespaced scores without installing that framework into RAGOps.
 
 Add a deterministic Unicode code-point budget when response length matters:
 

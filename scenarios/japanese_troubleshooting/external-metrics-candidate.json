@@ -1,0 +1,8 @@
+{
+  "schema_version": "0.1",
+  "provider": "ragas",
+  "records": [
+    {"case_id": "error-e42", "metrics": {"faithfulness": 0.81, "answer_relevance": 0.92}},
+    {"case_id": "escalation-e42", "metrics": {"faithfulness": 0.84, "answer_relevance": 0.91}}
+  ]
+}
