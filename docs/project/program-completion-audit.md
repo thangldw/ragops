@@ -25,7 +25,7 @@ public presentation assets.
 | v2.0 trustworthy extensible release gates | Released | `docs/project/v2.0-acceptance.md` |
 | v2.1 portable external evaluator evidence | Released | `docs/project/v2.1-acceptance.md` |
 | v2.2 quota-independent release | Released | `docs/project/v2.2-acceptance.md` |
-| v2.3 release integrity | Ready | `docs/project/v2.3-acceptance.md` |
+| v2.3 release integrity | GitHub released; PyPI hold | `docs/project/v2.3-acceptance.md` |
 
 ## FDE competency coverage
 
@@ -55,6 +55,20 @@ public presentation assets.
   horizontal overflow.
 
 ## Work that cannot be completed from source code alone
+
+```mermaid
+flowchart LR
+  A["Local OSS program"] --> B["Evaluation core"]
+  A --> C["Release governance"]
+  A --> D["Reference deployment"]
+  B --> E["Complete and released"]
+  C --> E
+  D --> E
+  E --> F["Design-partner pilot"]
+  E --> G["Hosted control plane"]
+  F --> H["Needs real users and consent"]
+  G --> I["Needs cloud, identity, legal, and operations"]
+```
 
 The following require owner authority, external systems, or real users and are
 therefore launch activities rather than missing repository implementation:
