@@ -22,6 +22,9 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 - Rebuilt the GitHub Pages showcase around a decision-first regression proof,
   shortened the mobile narrative, replaced mutable test-count marketing with
   stable product signals, and refreshed public screenshots and social preview.
+- Balanced the hero conversion controls with equal desktop columns and clear
+  full-width mobile stacking, and tightened numbered-card label-to-title rhythm
+  across the problem and workflow sections.
 
 ## [2.4.0] - 2026-07-13
 

@@ -83,3 +83,12 @@ def test_showcase_separates_evidence_and_states_limits() -> None:
     assert "docs/demo/social-preview.png" in page
     assert page.count("#five-minute-proof") == 2
     assert "#quick-start" not in page
+
+
+def test_showcase_hero_actions_use_balanced_columns() -> None:
+    styles = Path("site/styles.css").read_text(encoding="utf-8")
+
+    assert "grid-template-columns: repeat(2, minmax(0, 1fr));" in styles
+    assert ".hero-copy .actions { grid-template-columns: 1fr; }" in styles
+    assert ".problem-grid h3 { margin: 18px 0 8px;" in styles
+    assert ".flow b { margin: 18px 0 10px;" in styles

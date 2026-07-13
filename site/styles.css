@@ -231,8 +231,16 @@ a:focus-visible {
   gap: 12px;
 }
 
-.hero-copy .actions { margin-top: 16px; }
-.hero-copy .actions .primary { min-width: 212px; }
+.hero-copy .actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 16px;
+}
+
+.hero-copy .actions .button {
+  width: 100%;
+  min-width: 0;
+}
 
 .copy-status {
   min-height: 20px;
@@ -457,7 +465,7 @@ a:focus-visible {
 .problem-grid span,
 .flow span,
 .demo-story span { color: var(--blue); font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-.problem-grid h3 { margin: 54px 0 8px; font-size: 20px; }
+.problem-grid h3 { margin: 18px 0 8px; font-size: 20px; }
 .problem-grid p { margin: 0; color: var(--muted); font-size: 13px; }
 
 .flow {
@@ -476,7 +484,7 @@ a:focus-visible {
 }
 
 .flow li:first-child { border-left: 0; }
-.flow b { margin: 52px 0 10px; font-size: 17px; }
+.flow b { margin: 18px 0 10px; font-size: 17px; }
 .flow small { color: var(--muted); font-size: 12px; }
 
 .boundary { margin: 17px 0 0; color: var(--muted); font-size: 12px; }
@@ -640,6 +648,7 @@ footer {
   .lede { margin: 23px 0 31px; font-size: 16px; }
   .quickstart pre { padding: 16px 13px; font-size: 11px; }
   .icon-button { width: 48px; flex-basis: 48px; }
+  .hero-copy .actions { grid-template-columns: 1fr; }
   .hero-copy .actions .button { width: 100%; }
   .release-report { border-radius: 12px; }
   .change-strip { grid-template-columns: 1fr; }
@@ -692,7 +701,7 @@ footer {
   .demo-story > div:first-child,
   .limits-grid div:first-child { border-top: 0; }
   .problem-grid h3,
-  .flow b,
+  .flow b { margin-top: 14px; }
   .demo-story b { margin-top: 26px; }
   .run-card,
   .evidence-grid > article { padding: 22px; overflow: auto; }

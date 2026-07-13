@@ -1,63 +1,53 @@
 # Growth refresh design QA
 
 - Source visual truth: `docs/design-audit/growth-refresh/source-option-1.png`
-- Desktop implementation: `docs/design-audit/growth-refresh/implementation-desktop-v1.png`
-- Mobile implementation: `docs/design-audit/growth-refresh/implementation-mobile-v1.png`
-- Full-view comparison: `docs/design-audit/growth-refresh/comparison-desktop-v1.png`
-- Desktop viewport/state: 1440 × 1024, initial hero
-- Mobile viewport/state: 390 × 844, initial hero
+- Desktop implementation: `docs/design-audit/growth-refresh/implementation-desktop-v2.png`
+- Mobile implementation: `docs/design-audit/growth-refresh/implementation-mobile-v2.png`
+- Full-view comparison: `docs/design-audit/growth-refresh/comparison-desktop-v2.png`
+- Focused problem spacing: `docs/design-audit/growth-refresh/spacing-problem-desktop-v2.png`
+- Focused workflow spacing: `docs/design-audit/growth-refresh/spacing-workflow-desktop-v2.png`
+- Desktop viewport/state: 1440 × 1024, initial hero and numbered sections
+- Mobile viewport/state: 390 × 844, initial hero and responsive numbered cards
 
 ## Findings
 
 No actionable P0, P1, or P2 differences remain.
 
-- Fonts and typography: the implementation preserves the mock's heavy editorial
-  sans headline, compact mono evidence, three-line desktop wrap, and blue emphasis.
-- Spacing and layout rhythm: the two-column hero, compact quickstart, decision
-  report, proof pillars, and stable-signal strip retain the selected hierarchy.
-- Colors and tokens: graphite, restrained blue, mint PASS, and coral BLOCK map
-  directly to semantic CSS tokens with readable contrast.
-- Image quality and asset fidelity: the RAGOps interface remains semantic HTML.
-  Visible UI icons are pinned Heroicons and Simple Icons assets rather than
-  improvised CSS or inline SVG art.
-- Copy and content: invented build identifiers, mutable test counts, and an
-  unmeasured time-to-result claim from the concept were replaced with recorded
-  Graph+ACL versus lexical-only evidence, stable release metadata, and portable
-  report formats.
-- Responsive behavior: desktop and 390px mobile have no horizontal overflow.
-  The report follows the quickstart on mobile, so the main conversion action stays
-  above the fold while proof begins in the first viewport.
-- Accessibility: semantic headings, landmarks, tables, buttons, skip link,
-  keyboard focus indicators, an ARIA live copy status, and reduced-motion support
-  are present. Screenshot review does not establish full accessibility compliance.
+- Fonts and typography: headline, UI labels, card titles, and mono evidence keep
+  the selected hierarchy. Number labels now sit 18px from workflow titles and
+  approximately 23px from problem titles on desktop, eliminating the oversized
+  52–59px visual gaps.
+- Spacing and layout rhythm: hero actions use two equal 261px desktop columns
+  aligned to the 534px quickstart card. At 390px they stack as equal 358px
+  controls. Numbered cards use a tighter 14px mobile title margin.
+- Colors and tokens: primary blue still identifies the quickstart action while
+  the equal button geometry removes the earlier visual imbalance.
+- Image quality and asset fidelity: visible icons remain pinned Heroicons and
+  Simple Icons assets; no raster or improvised icon substitutions were added.
+- Copy and content: all product claims and recorded evidence are unchanged.
+- Responsive behavior: desktop and 390px mobile have zero horizontal overflow.
+- Accessibility: both CTA controls remain real, labeled controls with keyboard
+  focus styles; the copy confirmation still updates through the live region.
 
 ## Primary interactions tested
 
-- Both quickstart controls resolve uniquely and copy the same two commands.
-- The copy confirmation updates through the live status region.
-- Navigation anchors and GitHub links are real links.
-- Browser console contained no warnings or errors during desktop and mobile QA.
-
-## Focused-region evidence
-
-The full-view comparison keeps the headline, quickstart, PASS/BLOCK report,
-recorded deltas, proof pillars, and signal strip readable at the same desktop
-state. Separate evidence and limitations captures verify lower-page typography,
-tables, cards, and honest-claim boundaries. A separate crop was not needed.
+- `Copy quickstart` copies both commands and announces confirmation.
+- `View on GitHub` remains a real link.
+- Desktop and mobile CTA geometry was measured in the rendered page.
+- Browser console contained no warnings or errors.
 
 ## Comparison history
 
-1. The first browser-rendered implementation preserved the selected composition
-   and produced no actionable P0/P1/P2 mismatch.
-2. Intentional product corrections replaced concept-only prompt/build metadata,
-   mutable test counts, and the unmeasured “60 seconds” claim with repository
-   evidence. These corrections do not change the visual hierarchy.
-3. Mobile QA confirmed a 390px layout with no horizontal overflow; page height
-   decreased from the previous 11,850px implementation to 9,087px.
+1. The selected concept used unequal CTA widths and large label-to-title gaps.
+2. User review identified both as visually unbalanced.
+3. The implementation changed the hero to equal desktop columns and full-width
+   mobile stacking, then reduced numbered-card title spacing from 52–54px to
+   18px on desktop and 14px on mobile.
+4. Post-fix browser evidence confirmed equal CTA widths, compact label rhythm,
+   working copy behavior, zero overflow, and no console errors.
 
 ## Follow-up polish
 
-- P3: after real traffic exists, compare quickstart-copy and GitHub click-through
-  before changing CTA emphasis.
+No remaining P3 recommendation is needed for this scoped adjustment.
 
 final result: passed
