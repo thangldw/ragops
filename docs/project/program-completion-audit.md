@@ -3,8 +3,8 @@
 ## Outcome
 
 The repository now implements the complete locally executable program defined
-in the FDE blueprint: product strategy, open-source evaluation core, Japanese
-enterprise benchmark, red-team contracts, reference GraphRAG-style deployment,
+in the FDE blueprint: product strategy, open-source evaluation core, synthetic
+Japanese-question release-gate fixture, red-team contracts, reference GraphRAG-style deployment,
 portable observability evidence, team review workflow, control-plane alpha, and
 public presentation assets.
 
@@ -28,7 +28,7 @@ public presentation assets.
 
 - **Discover:** ambiguous request, users, constraints, KPI hypothesis, scope.
 - **Build:** ACL-first lexical+graph retrieval and controlled workflow agent.
-- **Evaluate:** 30-case benchmark, baseline/regression/adversarial candidates,
+- **Evaluate:** 30-case synthetic fixture, baseline/regression/adversarial candidates,
   citations, claim support, latency, cost, and critical policy gates.
 - **Deploy:** Docker/API/CLI, CI/nightly workflows, portable traces, rollout plan.
 - **Measure:** experiment history, trends, review decisions, release evidence.
@@ -41,7 +41,9 @@ public presentation assets.
 ## Verification baseline
 
 - Python 3.11+ dependency-free core.
-- Ninety-nine automated tests at the latest acceptance run.
+- 126 automated tests on Python 3.11, 3.12, and 3.13 at the latest acceptance run.
+- GitHub/PyPI distributions are byte-identical; GitHub Release includes a
+  reproducible CycloneDX SBOM, SHA-256 manifest, and provenance attestation.
 - Ruff and diff checks pass.
 - Baseline and reference deployment pass; regressed/adversarial builds return
   expected release-blocking exit codes.
