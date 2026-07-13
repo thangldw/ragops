@@ -2,9 +2,8 @@
 
 ## Supported versions
 
-The latest minor version receives security fixes. Before public launch,
-security reports should be sent privately to the repository owner rather than
-opened as public issues.
+The latest minor version receives security fixes. Security reports should be
+sent privately to the repository owner rather than opened as public issues.
 
 ## Data handling
 

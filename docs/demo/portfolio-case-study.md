@@ -7,10 +7,11 @@ quickly. The harder problem is deciding whether the candidate is still good
 enough to release. Quality scores, operational budgets, citations, and review
 notes often live in separate tools with no accepted baseline.
 
-I built RAGOps as the provider-independent evidence layer between an AI change
-and a release. It consumes recorded responses, portable traces, and optional
-external evaluator metrics; applies versioned absolute and regression policy;
-then emits an explainable `PASS` or `BLOCK` decision in JSON, Markdown, or HTML.
+I built RAGOps as a provider-independent regression release gate for teams that
+already have a RAG or AI agent. It consumes recorded responses, portable traces,
+and optional external evaluator metrics; applies versioned absolute and
+regression policy; then emits an explainable `PASS` or `BLOCK` decision in JSON,
+Markdown, or HTML.
 
 ## Five-minute proof
 

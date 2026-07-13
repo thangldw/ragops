@@ -21,7 +21,7 @@ No actionable P0, P1, or P2 differences remain.
   design truth; public screenshots are browser captures from the real HTML/CSS.
   No visual asset was replaced with placeholder or improvised icon art.
 - Copy and content: version is intentionally updated from the selected v2.3.0
-  concept to the v2.4.0 release candidate. Metrics are recorded repository
+  concept to the released v2.4.0 evidence. Metrics are recorded repository
   evidence and limitations remain explicit.
 
 ## Primary interactions tested

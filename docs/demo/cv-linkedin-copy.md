@@ -5,7 +5,7 @@ not customer production adoption.
 
 ## CV project entry
 
-**RAGOps — Open-source evaluation and release infrastructure for RAG/agents**
+**RAGOps — Regression release gates for RAG and AI agents**
 
 - Designed and shipped a dependency-free Python evaluation core with versioned
   scenarios/traces, regression gates, red-team policies, CLI/API, CI, Docker,
@@ -20,11 +20,11 @@ not customer production adoption.
 
 ## LinkedIn project description
 
-RAGOps is the provider-independent evidence layer between an AI change and a
-release decision. It evaluates recorded RAG/agent output, applies versioned
-quality and operational policy, and produces an explainable PASS or BLOCK report
-locally. The public synthetic fixture validates the harness—not customer
-adoption, production security, or Japanese semantic quality.
+RAGOps is the regression release gate for teams that already have a RAG or AI
+agent. It compares recorded candidate output with an accepted baseline, applies
+versioned quality and operational policy, and produces an explainable PASS or
+BLOCK report locally. The public synthetic fixture validates the harness—not
+customer adoption, production security, or Japanese semantic quality.
 
 Repository: https://github.com/thangldw/ragops
 Case study: https://thangldw.github.io/projects/ragops/

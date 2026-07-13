@@ -36,8 +36,8 @@ public presentation assets.
   citations, claim support, latency, cost, and critical policy gates.
 - **Deploy:** Docker/API/CLI, CI/nightly workflows, portable traces, rollout plan.
 - **Measure:** experiment history, trends, review decisions, release evidence.
-- **Communicate:** ADRs, threat model, executive report, case-study site, demo and
-  video scripts, honest go/no-go recommendation.
+- **Communicate:** ADRs, threat model, executive report, case-study site, demo
+  walkthrough, and honest go/no-go recommendation.
 - **Productize:** open-core boundary, commercialization hypothesis, workspace
   alpha, contribution/security guidance, GitHub release process, and PyPI OIDC
   distribution.

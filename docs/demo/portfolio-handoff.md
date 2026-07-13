@@ -7,11 +7,11 @@ Completed: the featured project card and case study are live on
 
 ## Card copy
 
-**RAGOps — release confidence for RAG and agents**
+**RAGOps — regression release gates for RAG and AI agents**
 
-An open-source, local-first evaluation and red-team harness demonstrated through
-a Japanese enterprise troubleshooting deployment: ACL-first graph retrieval,
-approval-aware workflow decisions, portable traces, regression gates, and a
+An open-source, local-first regression release gate demonstrated through a
+Japanese enterprise troubleshooting deployment: ACL-first graph retrieval,
+approval-aware workflow decisions, portable traces, versioned policy, and a
 controlled rollout recommendation.
 
 ## Proof points

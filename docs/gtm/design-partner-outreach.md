@@ -16,9 +16,9 @@ messages or emails have been sent automatically.
 
 Subject: Offline release evaluation for your RAG/agent pilot
 
-I’m building RAGOps, an open-source local evaluation and red-team harness for
-RAG and agent systems. It turns a team’s quality, latency, cost, citation, and
-safety expectations into a versioned release decision.
+I’m building RAGOps, an open-source regression release gate for teams that
+already have a RAG or AI agent. It turns quality, latency, cost, citation, and
+safety expectations into a versioned baseline comparison and release decision.
 
 I’m looking for 3–5 design partners who already have a pilot and can share a
 small synthetic or redacted failure set. The first engagement is an offline

@@ -10,16 +10,16 @@ RAGOps distinguishes application telemetry from evaluation evidence.
 - End-to-end latency and estimated cost.
 - Human approval state for consequential actions.
 
-## Planned metadata
+## Portable trace metadata
 
 - Model/provider and generation parameters.
 - Prompt, retriever, index, dataset, and application build versions.
 - Token usage and step-level latency.
 - Tool calls, authorization decision, and execution outcome.
 
-Portable trace 0.4 now records application, build, retriever, generator, and
-role metadata. Provider token usage and step-level/tool-call spans remain
-planned extensions.
+Portable trace 0.4 records application, build, retriever, generator, and role
+metadata. Provider-specific token usage and step-level/tool-call spans are not
+part of the current portable core contract.
 
 ## Privacy
 

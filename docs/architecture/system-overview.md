@@ -16,8 +16,9 @@ versioned to allow future migrations.
 ## Boundary decisions
 
 - RAGOps evaluates a system; it does not own the system's retrieval or LLM.
-- v0.1 consumes recorded responses so evaluation is reproducible and offline.
+- The core consumes recorded responses or portable traces so evaluation remains
+  reproducible and offline.
 - Deterministic lexical groundedness is a transparent baseline, not a claim of
-  semantic correctness. Provider-backed semantic judges will be pluggable.
+  semantic correctness. Provider-backed judge scores can enter through optional
+  adapters and the external metric envelope.
 - Critical policy findings always override aggregate averages.
-

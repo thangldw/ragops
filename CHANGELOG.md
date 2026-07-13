@@ -15,6 +15,10 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 - Repositioned public discovery copy around regression tests and explainable
   release gates for teams that already have a RAG or AI agent.
+- Removed obsolete active-planning documents after program completion and
+  aligned current roadmap, launch, observability, and presentation copy with
+  the released v2.4 state. Historical ADRs, requirements, acceptance records,
+  and release notes remain unchanged.
 
 ## [2.4.0] - 2026-07-13
 
