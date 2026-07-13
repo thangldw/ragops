@@ -36,11 +36,15 @@ def test_readme_infographics_are_well_formed_accessible_svg() -> None:
 def test_readme_architecture_is_a_detailed_mermaid_release_flow() -> None:
     readme = Path("README.md").read_text(encoding="utf-8")
 
-    assert 'subgraph SOURCE["1 · SYSTEM UNDER TEST"]' in readme
-    assert 'subgraph CORE["2 · RAGOPS LOCAL EVALUATION CORE"]' in readme
-    assert 'subgraph DECIDE["3 · REGRESSION DECISION"]' in readme
+    assert 'subgraph SOURCE["1 · CAPTURE EVIDENCE"]' in readme
+    assert 'subgraph CORE["2 · EVALUATE LOCALLY"]' in readme
+    assert 'subgraph DECIDE["3 · GATE THE RELEASE"]' in readme
     assert 'GATE{"Release gate"}' in readme
     assert 'PASS["PASS<br/>safe to continue"]' in readme
     assert 'BLOCK["BLOCK<br/>fix and re-run"]' in readme
     assert "classDef source fill:#10233f" in readme
+    assert "style SOURCE fill:#081a33,stroke:#3b82f6" in readme
+    assert "style CORE fill:#062b25,stroke:#2dd4bf" in readme
+    assert "style DECIDE fill:#21153f,stroke:#8b5cf6" in readme
+    assert '"edgeLabelBackground":"#0f172a"' in readme
     assert "RAG / agent application\n        │ portable traces" not in readme

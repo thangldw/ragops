@@ -195,15 +195,16 @@ examples only and are not customer adoption or ROI claims.
 ## Architecture
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"Arial, sans-serif","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"background":"transparent","textColor":"#e2e8f0","lineColor":"#7c8db5","arrowheadColor":"#94a3b8","edgeLabelBackground":"#0f172a","clusterBkg":"#0b1220","clusterBorder":"#334155","primaryTextColor":"#f8fafc"}}}%%
 flowchart TB
-    subgraph SOURCE["1 · SYSTEM UNDER TEST"]
+    subgraph SOURCE["1 · CAPTURE EVIDENCE"]
         direction LR
         APP["RAG / AI agent<br/>Your existing application"]
         TRACE["Portable evidence<br/>answers · retrievals · citations<br/>latency · cost · metadata"]
         APP -->|records each case| TRACE
     end
 
-    subgraph CORE["2 · RAGOPS LOCAL EVALUATION CORE"]
+    subgraph CORE["2 · EVALUATE LOCALLY"]
         direction LR
         LOAD["Load versioned contracts<br/>scenario · evidence · policy"]
         CHECKS["Deterministic checks<br/>citations · lexical support<br/>budgets · red-team rules"]
@@ -216,7 +217,7 @@ flowchart TB
         PLUGINS --> CASES
     end
 
-    subgraph DECIDE["3 · REGRESSION DECISION"]
+    subgraph DECIDE["3 · GATE THE RELEASE"]
         direction LR
         BASE["Accepted baseline<br/>last known-good evidence"]
         COMPARE["Compare candidate<br/>apply versioned release policy"]
@@ -246,6 +247,11 @@ flowchart TB
     class BASE,COMPARE,REPORT,GATE,REVIEW decision;
     class PASS pass;
     class BLOCK block;
+
+    style SOURCE fill:#081a33,stroke:#3b82f6,stroke-width:2px,color:#dbeafe;
+    style CORE fill:#062b25,stroke:#2dd4bf,stroke-width:2px,color:#ccfbf1;
+    style DECIDE fill:#21153f,stroke:#8b5cf6,stroke-width:2px,color:#ede9fe;
+    linkStyle default stroke:#7c8db5,stroke-width:1.5px;
 ```
 
 Solid arrows are the required offline path. The dotted plugin path is optional;
