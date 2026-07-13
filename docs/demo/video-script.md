@@ -1,32 +1,30 @@
-# Five-minute showcase video script
+# 60-second adoption video script
 
-## 0:00–0:35 — Problem
+## 0:00–0:10 — The change
 
-Open the case-study hero. Explain that the customer request is ambiguous and
-the production decision—not a chatbot—is the deliverable.
+Show a prompt/retriever/model change and ask: “Is this candidate still safe
+enough and useful enough to release?”
 
-## 0:35–1:20 — Discovery and scope
+## 0:10–0:22 — Install and run
 
-Show the four constraints: trusted citations, ACL, controlled agency, and
-measurable rollout. State the MVP boundary and success criteria.
+```text
+pip install ragops==2.4.0
+ragops demo --output ragops-demo
+```
 
-## 1:20–2:15 — Reference system
+Say: “No model API. No hosted dependency. Five minutes to reviewable evidence.”
 
-Walk through question/role → ACL → lexical+graph retrieval → workflow decision
-→ trace. Ask the Japanese A1000/E-42 question and show citations.
+## 0:22–0:38 — Decision
 
-## 2:15–3:25 — Evaluation
+Open the report. Baseline is `PASS`; candidate is `BLOCK`. Highlight named
+citation, groundedness, latency, or cost gates rather than an opaque score.
 
-Generate graph and lexical-only traces. Run `ragops compare`. Explain the 25
-point citation regression and why the candidate is blocked.
+## 0:38–0:50 — Fit your stack
 
-## 3:25–4:20 — Safety and rollout
+Show portable responses/traces and optional metrics from Ragas, DeepEval,
+Langfuse, or an internal judge entering the same versioned policy.
 
-Show the executive-only document exclusion and email `request_approval`
-decision. Present offline, shadow, 20-user pilot, and controlled scale phases.
+## 0:50–1:00 — Honest close
 
-## 4:20–5:00 — Honest decision
-
-Recommend customer-reviewed offline pilot, not production. Close with the FDE
-loop: discover, build, evaluate, deploy, measure, improve.
-
+“RAGOps evaluates the system you already have. Synthetic fixtures validate the
+harness; your reviewed production evidence decides what ships.”

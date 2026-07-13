@@ -26,6 +26,7 @@ public presentation assets.
 | v2.1 portable external evaluator evidence | Released | `docs/project/v2.1-acceptance.md` |
 | v2.2 quota-independent release | Released | `docs/project/v2.2-acceptance.md` |
 | v2.3 release integrity | Released | `docs/project/v2.3-acceptance.md` |
+| v2.4 adoption experience | Ready | `docs/project/v2.4-acceptance.md` |
 
 ## FDE competency coverage
 

@@ -19,7 +19,7 @@ Set these repository-relative variables:
 
 ```yaml
 variables:
-  RAGOPS_VERSION: "2.3.0"
+  RAGOPS_VERSION: "2.4.0"
   RAGOPS_SCENARIO: "evaluation/scenario.json"
   RAGOPS_BASELINE: "evaluation/baseline.json"
   RAGOPS_CANDIDATE: "evaluation/candidate.json"

@@ -1,74 +1,56 @@
-# RAGOps showcase design QA
+# Adoption refresh design QA
 
-- Source visual truth: `docs/demo/design-audit/selected-open-source-adoption.png`
-- Desktop implementation: `docs/demo/design-audit/02-implementation-desktop.jpg`
-- Mobile implementation: `docs/demo/design-audit/04-implementation-mobile.jpg`
-- Normalized comparison: `docs/demo/design-audit/06-desktop-comparison.jpg`
-- Limitations detail: `docs/demo/design-audit/09-limitations-section.jpg`
-- Desktop viewport: 1440 × 1024, top-of-page state
-- Mobile viewport: 390 × 844, top-of-page state
-
-## Full-view comparison evidence
-
-The normalized comparison places the generated Open Source Adoption direction
-beside the browser-rendered implementation. Both use a graphite base, warm
-white typography, restrained blue emphasis, a two-column hero, recorded
-release terminal, evidence-first calls to action, and thin rule-based section
-separation. The implementation intentionally gives the headline and problem
-more space than the compressed long-page concept while preserving its visual
-hierarchy and adoption path.
-
-## Focused evidence
-
-- The desktop hero keeps the terminal as evidence rather than decoration and
-  holds primary content within the first viewport.
-- The 390px render has no horizontal page overflow; navigation, headline,
-  buttons, metrics, and terminal stack without clipping primary actions.
-- The limitations capture confirms that all six gaps and the rollout
-  recommendation are readable without green/neon status styling.
-- The Problem navigation link was exercised in the browser and resolved to
-  `#problem`. Browser console inspection returned no errors.
-
-## Required fidelity surfaces
-
-- **Fonts and typography:** System sans and monospace fallbacks preserve the
-  target's developer-tool feel, readable weights, compact eyebrow labels, and
-  strong display hierarchy. No wrapping or truncation blocks comprehension.
-- **Spacing and layout rhythm:** 1180px content width, consistent 72–104px
-  section rhythm, and grid collapse rules preserve hierarchy across desktop
-  and mobile. Desktop and mobile report no horizontal overflow.
-- **Colors and tokens:** Graphite `#101216`, warm white, steel gray, blue
-  `#5da2ff`, and muted red map to neutral, action, and failure semantics with
-  accessible visible contrast. The previous green palette is removed.
-- **Image quality and assets:** The page relies on product UI and evidence, not
-  decorative raster assets. The README hero is a sharp browser capture at
-  1280 × 720. No placeholder, fake product image, or custom SVG substitute is
-  used.
-- **Copy and content:** Problem, solution, demo, reference evidence, synthetic
-  benchmark, limitations, rollout recommendation, and contributor paths are
-  clearly separated. Claims remain scoped to recorded or synthetic evidence.
-- **Interactions and accessibility:** Anchor navigation and external links are
-  functional, keyboard focus is visible, semantic headings/lists/tables are
-  used, and the skip link is preserved.
+- Source visual truth: `docs/design-audit/adoption-refresh/source-option-3.png`
+- Desktop implementation: `docs/design-audit/adoption-refresh/implementation-desktop.png`
+- Mobile implementation: `docs/design-audit/adoption-refresh/implementation-mobile.png`
+- Full-view comparison: `docs/design-audit/adoption-refresh/comparison-desktop.png`
+- Desktop viewport/state: 1440×1024, initial hero
+- Mobile viewport/state: 390×844, initial hero
 
 ## Findings
 
-No actionable P0, P1, or P2 mismatch remains.
+No actionable P0, P1, or P2 differences remain.
+
+- Fonts and typography: implementation preserves the target's editorial sans +
+  monospace pairing, large three-line headline, blue emphasis, and readable code.
+- Spacing and layout rhythm: two-column desktop proportions, left proof sequence,
+  right release report, CTA row, and evidence strip match the target hierarchy.
+- Colors and tokens: graphite background, restrained blue, mint PASS, and warm
+  red BLOCK remain semantic and high contrast.
+- Image quality and asset fidelity: the selected raster mock is retained only as
+  design truth; public screenshots are browser captures from the real HTML/CSS.
+  No visual asset was replaced with placeholder or improvised icon art.
+- Copy and content: version is intentionally updated from the selected v2.3.0
+  concept to the v2.4.0 release candidate. Metrics are recorded repository
+  evidence and limitations remain explicit.
+
+## Primary interactions tested
+
+- Copy-command primary CTA resolves uniquely and executes.
+- Navigation and GitHub links are real anchors.
+- Desktop and 390px mobile layouts have no horizontal overflow.
+- Browser console contained no errors during the desktop interaction test.
+
+## Focused-region evidence
+
+The full-view comparison keeps headline, proof terminal, PASS/BLOCK panels,
+reason deltas, and CTA text legible at the same desktop viewport, so a separate
+crop was not required. The mobile capture separately verifies text wrapping,
+command readability, button width, and responsive navigation behavior.
 
 ## Comparison history
 
-The first implementation pass already matched the selected palette and layout
-direction. QA identified one evidence-maintenance issue before capture: the
-repository test count changed after adding the demo path. The site and README
-now use a stable `50+` proof so later additions do not make the public copy
-stale. No further P0/P1/P2 visual fix loop was required.
+1. Initial desktop capture matched the selected information hierarchy but used
+   v2.3.0 evidence.
+2. Documentation and implementation were aligned to the v2.4.0 release
+   candidate, then desktop and mobile screenshots were recaptured.
+3. Final comparison found only intentional content simplification: the
+   implementation uses three named regressions rather than invented aggregate
+   scores from the mock.
 
 ## Follow-up polish
 
-- P3: replace the stable `50+` signal with generated build metadata if an exact
-  public count becomes important.
-- P3: upload `docs/demo/social-preview.png` through GitHub repository settings.
-
-## Final result
+- P3: after observed traffic exists, test whether “copy commands” or “view live
+  report” produces higher five-minute-demo activation.
 
 final result: passed

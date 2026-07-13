@@ -5,9 +5,10 @@ from xml.etree import ElementTree
 README_VISUALS = (
     "docs/demo/infographics/release-gate-flow.svg",
     "docs/demo/infographics/evidence-stack.svg",
+    "docs/demo/screenshots/ragops-adoption-hero.png",
+    "docs/demo/screenshots/ragops-adoption-mobile.png",
     "docs/demo/screenshots/ragops-release-screen.jpg",
     "docs/demo/screenshots/ragops-limitations-screen.jpg",
-    "docs/demo/screenshots/ragops-mobile-screen.jpg",
 )
 
 

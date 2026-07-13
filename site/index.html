@@ -36,35 +36,46 @@
   </header>
 
   <main id="main">
-    <section class="hero" id="top">
+    <section class="hero proof-hero" id="top">
       <div class="hero-copy">
         <p class="eyebrow">Open-source release gates for RAG and agents</p>
-        <h1>Stop shipping <em>RAG regressions.</em></h1>
-        <p class="lede">Turn quality, safety, latency, and cost expectations into versioned tests and an explainable go/no-go decision—locally and without a required model API.</p>
+        <h1>From install to release decision in <em>five minutes.</em></h1>
+        <p class="lede">Evaluate existing RAG and agent outputs offline. Compare a candidate with an accepted baseline, then keep the explainable PASS or BLOCK evidence.</p>
+        <div class="proof-code" aria-label="Five-minute quick start">
+          <div class="proof-tabs"><b>Terminal</b><span>What happens</span><button id="copy-demo" type="button">Copy commands</button></div>
+          <pre><code><span class="line-no">1</span> pip install ragops==2.4.0
+
+<span class="line-no">2</span> ragops demo --output ragops-demo
+  <span class="success">✓ baseline · PASS</span>
+  <span class="fail">× candidate · BLOCK</span>
+
+<span class="line-no">3</span> open ragops-demo/release-report.html</code></pre>
+          <p id="copy-status" class="copy-status" aria-live="polite"></p>
+        </div>
         <div class="actions">
-          <a class="button primary" href="#demo">Run the 5-minute demo</a>
-          <a class="button secondary" href="https://github.com/thangldw/ragops">Explore the source</a>
+          <button class="button primary" id="copy-demo-primary" type="button">Run the demo · copy commands</button>
+          <a class="button secondary" href="https://github.com/thangldw/ragops">View on GitHub</a>
         </div>
         <dl class="signals" aria-label="Project signals">
-          <div><dt>30</dt><dd>synthetic release-gate cases</dd></div>
-          <div><dt>138</dt><dd>repository tests</dd></div>
-          <div><dt>0</dt><dd>credentials for local demo</dd></div>
+          <div><dt>v2.4.0</dt><dd>stable release</dd></div>
+          <div><dt>144</dt><dd>release-validation tests</dd></div>
+          <div><dt>0</dt><dd>required model APIs</dd></div>
         </dl>
       </div>
-      <aside class="terminal" aria-label="Recorded release decision">
-        <div class="terminal-bar"><span></span><span></span><span></span><b>release-check</b></div>
-        <pre><code><span class="muted">$ ragops compare \</span>
-  --baseline-traces graph.jsonl \
-  --candidate-traces lexical.jsonl
-
-<span class="fail">RELEASE: BLOCKED</span>
-
-citation coverage      <span class="fail">−25.00%</span>
-citation precision     <span class="fail">−25.00%</span>
-lexical groundedness   <span class="fail">−21.88%</span>
-
-<span class="muted">Portable evidence. Versioned policy.
-Reproducible decision.</span></code></pre>
+      <aside class="release-report" aria-label="Recorded demo release report">
+        <div class="report-head"><b>RAG<span>Ops</span> · Release report</b><small>Recorded evidence · 2026-07-13</small></div>
+        <div class="report-meta"><span>Scenario <b>proposal-review</b></span><span>Mode <b>offline</b></span><span>Policy <b>versioned</b></span></div>
+        <div class="decision-pair">
+          <article class="decision pass-decision"><small>BASELINE</small><strong>PASS</strong><span>Meets release policy</span></article>
+          <article class="decision block-decision"><small>CANDIDATE</small><strong>BLOCK</strong><span>3 named gates failed</span></article>
+        </div>
+        <div class="reasons">
+          <p><b>Why the candidate is blocked</b><span>Delta</span></p>
+          <p>Citation coverage <span class="fail">−25.00%</span></p>
+          <p>Citation precision <span class="fail">−25.00%</span></p>
+          <p>Lexical groundedness <span class="fail">−21.88%</span></p>
+        </div>
+        <div class="formats"><b>Portable report</b><span>JSON</span><span>Markdown</span><span>HTML</span></div>
       </aside>
     </section>
 
@@ -212,5 +223,19 @@ ragops demo --output ragops-demo</code></pre>
   </main>
 
   <footer><span>RAGOps · MIT License</span><span>Open-source release evidence for RAG and agent systems.</span></footer>
+  <script>
+    const demoCommands = `pip install ragops==2.4.0\nragops demo --output ragops-demo`;
+    async function copyDemo() {
+      const status = document.querySelector('#copy-status');
+      try {
+        await navigator.clipboard.writeText(demoCommands);
+        status.textContent = 'Commands copied. Paste them into your terminal.';
+      } catch (error) {
+        status.textContent = demoCommands;
+      }
+    }
+    document.querySelector('#copy-demo').addEventListener('click', copyDemo);
+    document.querySelector('#copy-demo-primary').addEventListener('click', copyDemo);
+  </script>
 </body>
 </html>

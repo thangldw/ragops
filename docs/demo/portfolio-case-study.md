@@ -1,28 +1,45 @@
-# Portfolio case study copy
+# RAGOps portfolio case study
 
-## RAGOps — release confidence for RAG and agent systems
+## From AI change to defensible release decision
 
-AI pilots often fail at the transition to production because quality evidence,
-security checks, operational budgets, and release decisions live in separate
-tools. I designed RAGOps as a local-first evaluation and red-team harness that
-turns these expectations into one versioned release contract.
+RAG and agent teams can ship a prompt, retriever, embedding, or dataset change
+quickly. The harder problem is deciding whether the candidate is still good
+enough to release. Quality scores, operational budgets, citations, and review
+notes often live in separate tools with no accepted baseline.
 
-The open-source core evaluates portable application traces, applies absolute
-and baseline regression gates, and exports explainable JSON, Markdown, and HTML
-reports. A Japanese enterprise troubleshooting scenario demonstrates how an
-FDE can translate ambiguous customer expectations into cases, policies, and a
-go/no-go recommendation.
+I built RAGOps as the provider-independent evidence layer between an AI change
+and a release. It consumes recorded responses, portable traces, and optional
+external evaluator metrics; applies versioned absolute and regression policy;
+then emits an explainable `PASS` or `BLOCK` decision in JSON, Markdown, or HTML.
 
-### What this demonstrates
+## Five-minute proof
 
-- Product framing and open-core strategy.
-- Stable contracts, CLI/API adapters, and dependency-free Python design.
-- Evaluation, red-team, cost, latency, and regression thinking.
-- CI, testing, container security, and explicit architecture trade-offs.
+```bash
+pip install ragops==2.4.0
+ragops demo --output ragops-demo
+```
 
-### Honest current boundary
+The generated report shows an accepted baseline passing and an intentionally
+regressed candidate blocked with named reasons. No model API is required.
 
-RAGOps evaluates recorded responses; it is not an orchestration framework. The
-next milestone adds a larger benchmark and reference RAG/agent deployment while
-keeping that boundary intact.
+## Evidence
 
+- Dependency-free Python 3.11+ evaluation core.
+- 30-case synthetic release-gate fixture across nine failure families.
+- Graph+ACL reference agent whose lexical-only candidate records 25-point
+  citation coverage and precision regressions.
+- Portable Ragas, DeepEval, Langfuse, and internal-judge metric envelope.
+- Build-once GitHub/PyPI releases with byte-identical artifacts, SBOM, and
+  checksums; v2.4.0 release validation passed 144 tests.
+
+## Product boundary
+
+RAGOps evaluates an existing RAG or agent. It does not replace orchestration,
+retrieval, generation, model observability, or human review. Synthetic evidence
+validates the harness, not semantic correctness, production security, customer
+adoption, or ROI.
+
+## Current recommendation
+
+Use v2.4.0 for offline evaluation and customer discovery. Convert real failures
+into reviewed regression fixtures before expanding into hosted collaboration.

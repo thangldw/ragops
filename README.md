@@ -1,6 +1,6 @@
 # RAGOps
 
-**Evaluation and red-team release gates for RAG and agent systems.**
+**From install to an explainable RAG release decision in five minutes.**
 
 [![CI](https://github.com/thangldw/ragops/actions/workflows/ci.yml/badge.svg)](https://github.com/thangldw/ragops/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/ragops.svg)](https://pypi.org/project/ragops/)
@@ -14,7 +14,7 @@ optional.
 
 <p align="center">
   <a href="https://thangldw.github.io/ragops/">
-    <img src="docs/demo/screenshots/ragops-release-screen.jpg" alt="RAGOps product screen showing a recorded blocked regression and local release evidence" width="100%">
+    <img src="docs/demo/screenshots/ragops-adoption-hero.png" alt="RAGOps five-minute proof showing terminal commands, a passing baseline, and a blocked candidate with portable release evidence" width="100%">
   </a>
 </p>
 
@@ -25,6 +25,16 @@ optional.
   ·
   <a href="docs/evaluation/benchmark-report-v0.2.md"><strong>Benchmark evidence</strong></a>
 </p>
+
+## The release question RAGOps answers
+
+Your RAG or agent already runs. A prompt, retriever, embedding model, dataset,
+or evaluator changes. **Is the candidate still good enough to release?**
+
+RAGOps compares the candidate with an accepted baseline, applies versioned
+quality and operational policy, and returns `PASS` or `BLOCK` with evidence.
+It evaluates your system; it does not replace LangChain, LlamaIndex, your model,
+or your retrieval stack.
 
 ## What RAGOps does
 
@@ -49,21 +59,12 @@ returns a decision with named reasons rather than an isolated dashboard score.
 
 ## Five-minute proof
 
-Clone the repository and generate a complete, credential-free release bundle:
+Install the stable CLI and generate a complete credential-free release bundle:
 
 ```bash
-git clone https://github.com/thangldw/ragops.git
-cd ragops
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .
-ragops demo --output ragops-demo
-```
-
-For the latest published stable CLI without cloning the repository:
-
-```bash
-pip install ragops==2.3.0
+pip install ragops==2.4.0
 ragops demo --output ragops-demo
 ```
 
@@ -104,8 +105,8 @@ injection, abstention, and consequential actions. These synthetic results
 validate the harness and architecture comparison; they do not establish
 Japanese semantic quality, customer adoption, or production ROI.
 
-The repository currently validates its core, adapters, reference deployment,
-showcase, and demo paths with 140+ automated tests.
+The v2.4.0 release validation passed 144 automated tests. This is repository
+quality evidence, not a customer-adoption or production-security claim.
 
 <p align="center">
   <img src="docs/demo/infographics/evidence-stack.svg" alt="RAGOps evidence stack combining quality, safety, operational budgets, and regression comparison into a release decision" width="100%">
@@ -118,7 +119,7 @@ showcase, and demo paths with 140+ automated tests.
 | <img src="docs/demo/screenshots/ragops-release-screen.jpg" alt="RAGOps desktop release-decision screen" width="640"> | <img src="docs/demo/screenshots/ragops-limitations-screen.jpg" alt="RAGOps known-limitations and rollout-recommendation screen" width="640"> |
 
 <p align="center">
-  <img src="docs/demo/screenshots/ragops-mobile-screen.jpg" alt="RAGOps responsive mobile product screen" width="320">
+  <img src="docs/demo/screenshots/ragops-adoption-mobile.png" alt="RAGOps responsive mobile five-minute proof with copyable commands" width="320">
 </p>
 
 The screens show the public reference experience and recorded synthetic

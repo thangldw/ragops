@@ -66,7 +66,9 @@ def test_showcase_separates_evidence_and_states_limits() -> None:
     assert "30-case synthetic harness benchmark" in page
     assert "Lexical groundedness is overlap, not entailment" in page
     assert "MIT License" in page
-    assert "<dt>138</dt><dd>repository tests</dd>" in page
+    assert "<dt>144</dt><dd>release-validation tests</dd>" in page
+    assert "pip install ragops==2.4.0" in page
+    assert "From install to release decision" in page
     assert "docs/demo/social-preview.png" in page
     assert page.count("#five-minute-proof") == 2
     assert "#quick-start" not in page

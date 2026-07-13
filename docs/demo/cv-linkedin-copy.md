@@ -15,15 +15,16 @@ not customer production adoption.
   candidate with 25-point citation coverage/precision regressions. The fixture
   validates harness behavior, not Japanese semantic quality.
 - Published architecture decisions, threat model, rollout plan, executive
-  go/no-go recommendation, reproducible reports, and 140+ automated tests.
+  go/no-go recommendation, reproducible reports, and a v2.4.0 release validated
+  by 144 automated tests.
 
 ## LinkedIn project description
 
-RAGOps demonstrates my Forward Deployed Engineering approach: start with a
-synthetic Japanese-question workflow fixture, define measurable release
-criteria, build a production-shaped reference system, test regressions and
-safety, and make an honest rollout decision. The repository and case study are
-public; the fixture is not evidence of Japanese semantic quality.
+RAGOps is the provider-independent evidence layer between an AI change and a
+release decision. It evaluates recorded RAG/agent output, applies versioned
+quality and operational policy, and produces an explainable PASS or BLOCK report
+locally. The public synthetic fixture validates the harness—not customer
+adoption, production security, or Japanese semantic quality.
 
 Repository: https://github.com/thangldw/ragops
 Case study: https://thangldw.github.io/projects/ragops/

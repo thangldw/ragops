@@ -95,6 +95,13 @@ PR comment integration and notifications remain hosted/integration work.
 - Clean-wheel smoke testing before tagging.
 - Dependency-free cross-platform checksum verification.
 
+## 2.4 — adoption experience refresh
+
+- Decision-first README and five-minute install-to-evidence onboarding.
+- Interactive developer-proof showcase with implementation-derived screenshots.
+- Unified demo, portfolio, presentation, video, CV/LinkedIn, and launch copy.
+- Evidence-safe product claims and explicit measurement limits.
+
 ## 3.0 — hosted control plane (local alpha boundary implemented)
 
 - Workspace isolation, SSO/RBAC, audit retention, managed ingestion, and

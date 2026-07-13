@@ -6,7 +6,7 @@ public product contract.
 
 ## Repository About — complete
 
-- **Description:** `Dependency-free evaluation and red-team release gates for RAG and agent systems.`
+- **Description:** `From RAG change to explainable PASS/BLOCK release evidence—locally, in five minutes.`
 - **Website:** `https://thangldw.github.io/ragops/`
 - **Topics:** `ai-evaluation`, `rag`, `llm`, `agents`, `red-team`,
   `observability`, `llmops`, `python`, `github-actions`, `japanese`
@@ -29,9 +29,8 @@ v1.7 slice rather than opened as already-completed issues.
 
 ## Owner-only external gates
 
-- PyPI project, `pypi` GitHub environment, and active Trusted Publisher are
-  configured; release 1.7.0 is publicly verified.
-- GitHub Release and PyPI wheel/source artifacts for v1.7.0 are verified.
+- PyPI project and GitHub Releases are active; v2.4.0 is publicly verified.
+- GitHub Release and PyPI wheel/source artifacts for v2.4.0 are byte-identical.
 - Recruit a design partner and record observed adoption/ROI separately from
   synthetic benchmark results.
 - Configure branch protection and security settings under the owner's chosen

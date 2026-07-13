@@ -4,6 +4,19 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-07-13
+
+### Changed
+
+- Reframed the public adoption experience around the five-minute path from
+  installation to an explainable PASS/BLOCK release decision.
+- Rebuilt the showcase hero as a responsive, interactive developer proof with
+  copyable commands and recorded portable evidence.
+- Rewrote getting-started, demo, portfolio, presentation, video, CV/LinkedIn,
+  and GitHub launch materials with one evidence-safe product narrative.
+- Replaced the primary README visual with a screenshot captured from the real
+  implementation and refreshed design-QA evidence.
+
 ## [2.3.0] - 2026-07-13
 
 ### Added

@@ -12,7 +12,7 @@ on:
         description: RAGOps Git revision or tag to install
         required: false
         type: string
-        default: "v2.3.0"
+        default: "v2.4.0"
       scenario:
         description: Caller-relative scenario JSON path
         required: true
