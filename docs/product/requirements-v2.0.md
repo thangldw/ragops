@@ -1,4 +1,4 @@
-# Requirements v1.9 — trustworthy extensible release gates
+# Requirements v2.0 — trustworthy extensible release gates
 
 ## User stories
 

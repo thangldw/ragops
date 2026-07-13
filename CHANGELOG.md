@@ -4,6 +4,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-07-13
+
 ### Added
 
 - Optional evaluation-policy TOML contract for minimum/maximum custom metric
@@ -12,6 +14,8 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
   `compare`, including custom metric deltas.
 - Official JSON Schema for recorded response lists and documented evaluator
   gate examples.
+- Build provenance attestation, reproducible CycloneDX SBOM, and SHA-256 release
+  manifest generated beside each GitHub Release artifact.
 
 ### Changed
 
@@ -22,6 +26,9 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
   localhost, and configures request/case limits.
 - The Japanese troubleshooting suite is labeled as a synthetic release-gate
   fixture rather than evidence of Japanese semantic quality.
+- Release automation builds wheel/source once and promotes those exact verified
+  GitHub Release artifacts to PyPI; CI covers Python 3.11, 3.12, and 3.13 and
+  GitHub Actions are commit-pinned.
 
 ## [1.8.0] - 2026-07-13
 

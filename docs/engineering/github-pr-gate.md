@@ -22,7 +22,7 @@ jobs:
   release-gate:
     uses: thangldw/ragops/.github/workflows/ragops-gate.yml@main
     with:
-      ragops-version: v1.8.0
+      ragops-version: v2.0.0
       scenario: evals/scenario.json
       baseline: evals/baseline.json
       candidate: evals/candidate.json

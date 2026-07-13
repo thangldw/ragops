@@ -43,6 +43,21 @@ def test_pypi_workflow_is_manual_oidc_and_commit_pinned() -> None:
     assert "tag {tag!r} does not match package version" in workflow
     assert "@release/v1" not in workflow
     assert re.search(r"pypa/gh-action-pypi-publish@[0-9a-f]{40}", workflow)
+    assert "gh release download" in workflow
+    assert "sha256sum --check SHA256SUMS" in workflow
+    assert "python -m build" not in workflow
+
+
+def test_release_builds_once_with_sbom_checksums_and_provenance() -> None:
+    workflow = Path(".github/workflows/release.yml").read_text(encoding="utf-8")
+
+    assert workflow.count("python -m build") == 1
+    assert "cyclonedx-bom==7.3.0" in workflow
+    assert "--output-reproducible" in workflow
+    assert "SHA256SUMS" in workflow
+    assert re.search(r"actions/attest-build-provenance@[0-9a-f]{40}", workflow)
+    for action in ("actions/checkout", "actions/setup-python", "actions/upload-artifact"):
+        assert re.search(rf"{action}@[0-9a-f]{{40}}", workflow)
 
 
 def test_repository_smoke_calls_the_reusable_gate() -> None:
@@ -51,6 +66,13 @@ def test_repository_smoke_calls_the_reusable_gate() -> None:
     assert "uses: ./.github/workflows/ragops-gate.yml" in workflow
     assert "ragops-version: ${{ github.event.pull_request.head.sha || github.sha }}" in workflow
     assert "benchmark-baseline.json" in workflow
+
+
+def test_ci_covers_every_declared_python_minor() -> None:
+    workflow = Path(".github/workflows/ci.yml").read_text(encoding="utf-8")
+
+    for version in ("3.11", "3.12", "3.13"):
+        assert f'"{version}"' in workflow
 
 
 def test_integration_guides_are_linked_from_readme() -> None:

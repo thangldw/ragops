@@ -68,7 +68,15 @@ PR comment integration and notifications remain hosted/integration work.
 - Synthetic rehearsal, consent/data-minimization runbook, and public design-
   partner outreach pack.
 
-## 2.0 — hosted control plane (local alpha boundary implemented)
+## 2.0 — trustworthy extensible release gates
+
+- First-class opt-in custom metric and finding-severity gates.
+- Unified evaluator semantics across absolute evaluation and comparison.
+- Strict numeric validation and official response-list schema.
+- Fail-closed API authentication, bounded input, and explicit local dev mode.
+- Synthetic benchmark positioning and evidence-safe workbench error states.
+
+## 3.0 — hosted control plane (local alpha boundary implemented)
 
 - Workspace isolation, SSO/RBAC, audit retention, managed ingestion, and
   enterprise deployment options.
