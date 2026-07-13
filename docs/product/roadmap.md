@@ -1,5 +1,12 @@
 # Product roadmap
 
+## Project status
+
+The program is complete and active development is paused as of 2026-07-13.
+The repository is archived at stable release `2.4.0`. This capability map is
+retained for reference; reopening requires a concrete user need, owner review,
+and a new scoped requirement before implementation begins.
+
 This file is a released-capability map, not an active implementation queue.
 There are no open repository milestones after v2.4; new work starts only after
 owner review of a concrete user need.

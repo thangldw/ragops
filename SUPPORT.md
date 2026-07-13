@@ -1,14 +1,16 @@
 # Support
 
-RAGOps is an early open-source project maintained on a best-effort basis.
+RAGOps is complete and archived. Active maintenance, issue triage, and support
+are paused. The released package and documentation remain available without a
+support SLA.
 
-## Where to ask
+## While the project is archived
 
-- Use a GitHub issue for reproducible bugs and focused feature proposals.
-- Use the evaluator template for a new metric or plugin design.
-- Use the design-partner template only for synthetic or redacted workflows.
-- Do not post customer-confidential data, secrets, credentials, or private
-  traces in public issues.
+- Existing users can continue using the stable `2.4.0` release.
+- Fork the repository for private changes or experiments.
+- Do not send customer-confidential data, secrets, credentials, or private
+  traces to the owner or public repository.
+- New support or feature work requires the owner to reopen the repository.
 
 ## What to include
 
@@ -16,5 +18,5 @@ Share the RAGOps version, Python version, operating system, command, minimal
 scenario/trace fixture, expected behavior, and actual output. Prefer a small
 reproduction over a screenshot of a large private system.
 
-Security vulnerabilities must follow [SECURITY.md](SECURITY.md), not a public
-issue.
+If the repository is reopened, security reports must follow
+[SECURITY.md](SECURITY.md), not a public issue.

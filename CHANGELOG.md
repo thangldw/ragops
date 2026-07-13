@@ -13,6 +13,10 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ### Changed
 
+- Marked the completed project as archived and paused active development,
+  support, and contributions while preserving the stable `2.4.0` release.
+- Removed unreferenced intermediate design-review captures and local development
+  artefacts; published screenshots and historical release evidence remain.
 - Repositioned public discovery copy around regression tests and explainable
   release gates for teams that already have a RAG or AI agent.
 - Removed obsolete active-planning documents after program completion and

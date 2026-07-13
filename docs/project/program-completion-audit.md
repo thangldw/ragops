@@ -82,6 +82,9 @@ therefore launch activities rather than missing repository implementation:
 
 ## Final recommendation
 
-Use the latest stable release for FDE interviews, OSS feedback, and customer discovery.
-Proceed to a real offline design-partner pilot; do not market the control-plane
-alpha as production SaaS or claim measured ROI until external evidence exists.
+Preserve `2.4.0` as the final stable release and keep the repository archived
+until the owner approves a concrete new user need. Existing users may continue
+to use the OSS core and public evidence. Any future design-partner pilot or
+hosted control-plane work starts as a new scoped program; do not market the
+control-plane alpha as production SaaS or claim measured ROI without external
+evidence.

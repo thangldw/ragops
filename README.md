@@ -1,9 +1,14 @@
 # RAGOps
 
+> [!IMPORTANT]
+> **Project status: complete and archived.** Active development and support are
+> paused as of 2026-07-13. The stable `2.4.0` release, documentation, and GitHub
+> Pages showcase remain available. Future work starts only after the owner
+> reopens the repository and approves a concrete requirement.
+
 **Regression tests and explainable release gates for RAG and AI agents—offline,
 provider-independent, and CI-ready.**
 
-[![CI](https://github.com/thangldw/ragops/actions/workflows/ci.yml/badge.svg)](https://github.com/thangldw/ragops/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/ragops.svg)](https://pypi.org/project/ragops/)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-5DA2FF.svg)](LICENSE)
