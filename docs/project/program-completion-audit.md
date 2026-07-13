@@ -23,7 +23,7 @@ public presentation assets.
 | v1.7 broader adoption proof | Released | `docs/project/v1.7-acceptance.md` |
 | v1.8 review visibility and measured adoption | Released | `docs/project/v1.8-acceptance.md` |
 | v2.0 trustworthy extensible release gates | Released | `docs/project/v2.0-acceptance.md` |
-| v2.1 portable external evaluator evidence | Release candidate | `docs/project/v2.1-acceptance.md` |
+| v2.1 portable external evaluator evidence | Released | `docs/project/v2.1-acceptance.md` |
 
 ## FDE competency coverage
 
@@ -63,6 +63,6 @@ therefore launch activities rather than missing repository implementation:
 
 ## Final recommendation
 
-Use release 2.0.0 for FDE interviews, OSS feedback, and customer discovery.
+Use release 2.1.0 for FDE interviews, OSS feedback, and customer discovery.
 Proceed to a real offline design-partner pilot; do not market the control-plane
 alpha as production SaaS or claim measured ROI until external evidence exists.
