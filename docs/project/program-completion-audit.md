@@ -25,7 +25,7 @@ public presentation assets.
 | v2.0 trustworthy extensible release gates | Released | `docs/project/v2.0-acceptance.md` |
 | v2.1 portable external evaluator evidence | Released | `docs/project/v2.1-acceptance.md` |
 | v2.2 quota-independent release | Released | `docs/project/v2.2-acceptance.md` |
-| v2.3 release integrity | GitHub released; PyPI hold | `docs/project/v2.3-acceptance.md` |
+| v2.3 release integrity | Released | `docs/project/v2.3-acceptance.md` |
 
 ## FDE competency coverage
 
