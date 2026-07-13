@@ -63,7 +63,7 @@ ragops demo --output ragops-demo
 For the latest published stable CLI without cloning the repository:
 
 ```bash
-pip install ragops==2.1.0
+pip install ragops==2.3.0
 ragops demo --output ragops-demo
 ```
 
@@ -105,7 +105,7 @@ validate the harness and architecture comparison; they do not establish
 Japanese semantic quality, customer adoption, or production ROI.
 
 The repository currently validates its core, adapters, reference deployment,
-showcase, and demo paths with 138 automated tests.
+showcase, and demo paths with 140+ automated tests.
 
 <p align="center">
   <img src="docs/demo/infographics/evidence-stack.svg" alt="RAGOps evidence stack combining quality, safety, operational budgets, and regression comparison into a release decision" width="100%">

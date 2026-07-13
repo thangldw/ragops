@@ -14,6 +14,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 import tomllib
 from datetime import UTC, datetime
 from pathlib import Path
@@ -59,6 +60,39 @@ def checksums(paths: list[Path]) -> Path:
     return manifest
 
 
+def verify_checksums(directory: Path) -> None:
+    manifest = directory / "SHA256SUMS"
+    if not manifest.is_file():
+        raise SystemExit("release is missing SHA256SUMS")
+    lines = manifest.read_text(encoding="utf-8").splitlines()
+    if not lines:
+        raise SystemExit("SHA256SUMS is empty")
+    for line in lines:
+        try:
+            digest, filename = line.split("  ", 1)
+        except ValueError as exc:
+            raise SystemExit("invalid SHA256SUMS line") from exc
+        path = directory / filename
+        if Path(filename).name != filename or not path.is_file():
+            raise SystemExit(f"invalid checksum target: {filename}")
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if len(digest) != 64 or actual != digest:
+            raise SystemExit(f"checksum mismatch: {filename}")
+
+
+def verify_clean_install(wheel: Path, expected_version: str) -> None:
+    with tempfile.TemporaryDirectory(prefix="ragops-release-") as temp:
+        venv = Path(temp) / "venv"
+        run(sys.executable, "-m", "venv", str(venv))
+        python = venv / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+        run(str(python), "-m", "pip", "install", "--no-deps", str(wheel))
+        run(
+            str(python),
+            "-c",
+            f"import ragops; assert ragops.__version__ == {expected_version!r}",
+        )
+
+
 def verify(tag: str) -> None:
     assert_tag(tag)
     run("ruff", "check", ".")
@@ -77,6 +111,8 @@ def verify(tag: str) -> None:
     shutil.rmtree(DIST, ignore_errors=True)
     run(sys.executable, "-m", "build")
     built = artifacts()
+    wheel = next(path for path in built if path.suffix == ".whl")
+    verify_clean_install(wheel, version())
     sbom = DIST / f"ragops-{version()}.cdx.json"
     if shutil.which("cyclonedx-py"):
         run("cyclonedx-py", "environment", sys.executable, "--output-reproducible",
@@ -123,7 +159,7 @@ def pypi(tag: str, yes: bool) -> None:
     shutil.rmtree(release_dir, ignore_errors=True)
     release_dir.mkdir(parents=True)
     run("gh", "release", "download", tag, "--dir", str(release_dir))
-    run("shasum", "-a", "256", "-c", "SHA256SUMS", cwd=release_dir)
+    verify_checksums(release_dir)
     distributions = sorted(release_dir.glob("ragops-*.whl")) + sorted(release_dir.glob("ragops-*.tar.gz"))
     if len(distributions) != 2:
         raise SystemExit("GitHub Release must contain exactly one wheel and one source distribution")

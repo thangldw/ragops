@@ -15,7 +15,7 @@ not customer production adoption.
   candidate with 25-point citation coverage/precision regressions. The fixture
   validates harness behavior, not Japanese semantic quality.
 - Published architecture decisions, threat model, rollout plan, executive
-  go/no-go recommendation, reproducible reports, and 138 automated tests.
+  go/no-go recommendation, reproducible reports, and 140+ automated tests.
 
 ## LinkedIn project description
 

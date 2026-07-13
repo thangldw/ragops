@@ -19,6 +19,31 @@ def test_checksum_manifest_is_deterministic(tmp_path, monkeypatch) -> None:
     manifest = local_release.checksums([artifact])
     assert manifest.read_text().endswith("  artifact.whl\n")
     assert len(manifest.read_text().split()[0]) == 64
+    local_release.verify_checksums(tmp_path)
+
+
+def test_checksum_verification_rejects_tampering(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(local_release, "DIST", tmp_path)
+    artifact = tmp_path / "artifact.whl"
+    artifact.write_bytes(b"ragops")
+    local_release.checksums([artifact])
+    artifact.write_bytes(b"tampered")
+    try:
+        local_release.verify_checksums(tmp_path)
+    except SystemExit as error:
+        assert "checksum mismatch" in str(error)
+    else:
+        raise AssertionError("tampered artifact must be rejected")
+
+
+def test_checksum_verification_rejects_path_traversal(tmp_path) -> None:
+    (tmp_path / "SHA256SUMS").write_text(f"{'0' * 64}  ../outside.whl\n")
+    try:
+        local_release.verify_checksums(tmp_path)
+    except SystemExit as error:
+        assert "invalid checksum target" in str(error)
+    else:
+        raise AssertionError("checksum target must stay inside release directory")
 
 
 def test_pypi_requires_explicit_token(monkeypatch) -> None:

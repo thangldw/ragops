@@ -24,6 +24,8 @@ public presentation assets.
 | v1.8 review visibility and measured adoption | Released | `docs/project/v1.8-acceptance.md` |
 | v2.0 trustworthy extensible release gates | Released | `docs/project/v2.0-acceptance.md` |
 | v2.1 portable external evaluator evidence | Released | `docs/project/v2.1-acceptance.md` |
+| v2.2 quota-independent release | Released | `docs/project/v2.2-acceptance.md` |
+| v2.3 release integrity | Ready | `docs/project/v2.3-acceptance.md` |
 
 ## FDE competency coverage
 
@@ -42,7 +44,8 @@ public presentation assets.
 ## Verification baseline
 
 - Python 3.11+ dependency-free core.
-- 126 automated tests on Python 3.11, 3.12, and 3.13 at the latest acceptance run.
+- 140+ automated tests; the last CI matrix covered Python 3.11, 3.12, and 3.13,
+  while v2.2+ release gates run locally during the Actions quota pause.
 - GitHub/PyPI distributions are byte-identical; GitHub Release includes a
   reproducible CycloneDX SBOM, SHA-256 manifest, and provenance attestation.
 - Ruff and diff checks pass.
@@ -63,6 +66,6 @@ therefore launch activities rather than missing repository implementation:
 
 ## Final recommendation
 
-Use release 2.1.0 for FDE interviews, OSS feedback, and customer discovery.
+Use the latest stable release for FDE interviews, OSS feedback, and customer discovery.
 Proceed to a real offline design-partner pilot; do not market the control-plane
 alpha as production SaaS or claim measured ROI until external evidence exists.

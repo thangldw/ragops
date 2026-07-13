@@ -10,7 +10,7 @@ body:
     id: version
     attributes:
       label: RAGOps version or commit
-      placeholder: v2.1.0 or commit SHA
+      placeholder: v2.3.0 or commit SHA
     validations:
       required: true
   - type: textarea

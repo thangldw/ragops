@@ -4,6 +4,20 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-07-13
+
+### Added
+
+- `ragops --version` for installed-package and support diagnostics.
+- Clean-wheel installation smoke testing in the local release verification lane.
+
+### Changed
+
+- Local artifact checksum verification is dependency-free and portable across
+  supported operating systems.
+- Public documentation, roadmap, release evidence, and integration examples now
+  identify the current stable release consistently.
+
 ## [2.2.0] - 2026-07-13
 
 ### Added

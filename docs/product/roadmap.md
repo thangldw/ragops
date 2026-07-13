@@ -59,7 +59,7 @@ PR comment integration and notifications remain hosted/integration work.
 - GitHub discovery metadata, Discussions, and real starter issues.
 - GitLab CI release-gate recipe and reviewed least-privilege PR-comment design.
 
-## 1.8 — review visibility and measured adoption (complete on main, unreleased)
+## 1.8 — review visibility and measured adoption (released)
 
 - Isolated, write-enabled PR comment publisher with bounded artifact parsing,
   exact metadata verification, pinned actions, and idempotent updates.
@@ -83,6 +83,17 @@ PR comment integration and notifications remain hosted/integration work.
 - Shared absolute gate semantics and baseline/candidate deltas without provider
   dependencies in the core.
 - Copyable downstream PR-comment publisher recipe with explicit trust boundary.
+
+## 2.2 — quota-independent release fallback (released)
+
+- Local quality gates, build-once packages, SBOM, checksums, and evidence.
+- Direct GitHub CLI publication and fail-closed project-token PyPI promotion.
+
+## 2.3 — release integrity and discoverability
+
+- Installed CLI version diagnostics.
+- Clean-wheel smoke testing before tagging.
+- Dependency-free cross-platform checksum verification.
 
 ## 3.0 — hosted control plane (local alpha boundary implemented)
 

@@ -24,6 +24,13 @@ backed by a versioned scenario and persisted report.
 - Core test and lint pass rate remains 100% on supported Python versions.
 - Median local deterministic run remains below one second for 1,000 cases.
 
+## Release integrity
+
+- Published GitHub and PyPI wheel/source hashes match exactly: target 100%.
+- Every stable release passes clean-wheel installation before tagging: target 100%.
+- Every local release records version, commit, checksums, SBOM, and validation result.
+- Release evidence must distinguish OIDC provenance from local-token publication.
+
 ## Commercial signals
 
 - Teams requesting shared datasets, SSO/RBAC, audit retention, or hosted runs.
@@ -32,4 +39,3 @@ backed by a versioned scenario and persisted report.
 
 These are proposed targets. Public claims must use measured repository or
 product telemetry, never illustrative values presented as real adoption.
-

@@ -1,8 +1,19 @@
 from ragops import __version__, responses_from_data, scenario_from_dict
+from ragops.cli import build_parser
 
 
 def test_stable_version() -> None:
-    assert __version__ == "2.2.0"
+    assert __version__ == "2.3.0"
+
+
+def test_cli_exposes_version(capsys) -> None:
+    try:
+        build_parser().parse_args(["--version"])
+    except SystemExit as error:
+        assert error.code == 0
+    else:
+        raise AssertionError("argparse version action must exit")
+    assert capsys.readouterr().out.strip() == f"ragops {__version__}"
 
 
 def test_public_contract_parsers() -> None:

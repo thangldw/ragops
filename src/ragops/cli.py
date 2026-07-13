@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from ragops import __version__
 from ragops.adapters.external_metrics import (
     load_external_metric_evaluator,
     validate_external_metric_pair,
@@ -36,6 +37,7 @@ from ragops.traces import load_trace_jsonl
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ragops")
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     commands = parser.add_subparsers(dest="command", required=True)
     demo_parser = commands.add_parser("demo", help="Generate a credential-free release-gate demo")
     demo_parser.add_argument("--output", default="ragops-demo")
