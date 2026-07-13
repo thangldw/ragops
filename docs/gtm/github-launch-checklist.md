@@ -29,8 +29,10 @@ v1.7 slice rather than opened as already-completed issues.
 
 ## Owner-only external gates
 
-- PyPI project and GitHub Releases are active; v2.4.0 is publicly verified.
-- GitHub Release and PyPI wheel/source artifacts for v2.4.0 are byte-identical.
+- GitHub Release v2.4.0 and the refreshed GitHub Pages showcase are publicly
+  verified without GitHub Actions.
+- PyPI v2.4.0 promotion is on hold until the owner provides a project-scoped
+  token locally; verify byte-identical wheel/source artifacts after promotion.
 - Recruit a design partner and record observed adoption/ROI separately from
   synthetic benchmark results.
 - Configure branch protection and security settings under the owner's chosen
