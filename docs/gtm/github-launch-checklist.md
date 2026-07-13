@@ -31,8 +31,8 @@ v1.7 slice rather than opened as already-completed issues.
 
 - GitHub Release v2.4.0 and the refreshed GitHub Pages showcase are publicly
   verified without GitHub Actions.
-- PyPI v2.4.0 promotion is on hold until the owner provides a project-scoped
-  token locally; verify byte-identical wheel/source artifacts after promotion.
+- PyPI v2.4.0 is publicly verified; its wheel and source archive match the
+  GitHub Release SHA-256 values byte-for-byte, and a clean install/demo passes.
 - Recruit a design partner and record observed adoption/ROI separately from
   synthetic benchmark results.
 - Configure branch protection and security settings under the owner's chosen

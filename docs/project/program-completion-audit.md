@@ -26,7 +26,7 @@ public presentation assets.
 | v2.1 portable external evaluator evidence | Released | `docs/project/v2.1-acceptance.md` |
 | v2.2 quota-independent release | Released | `docs/project/v2.2-acceptance.md` |
 | v2.3 release integrity | Released | `docs/project/v2.3-acceptance.md` |
-| v2.4 adoption experience | GitHub/Pages released; PyPI hold | `docs/project/v2.4-acceptance.md` |
+| v2.4 adoption experience | Released | `docs/project/v2.4-acceptance.md` |
 
 ## FDE competency coverage
 
@@ -47,9 +47,9 @@ public presentation assets.
 - Python 3.11+ dependency-free core.
 - 140+ automated tests; the last CI matrix covered Python 3.11, 3.12, and 3.13,
   while v2.2+ release gates run locally during the Actions quota pause.
-- Through v2.3, GitHub/PyPI distributions are byte-identical. The v2.4 GitHub
+- GitHub/PyPI distributions through v2.4 are byte-identical. The v2.4 GitHub
   Release includes a reproducible CycloneDX SBOM, SHA-256 manifest, and local
-  release evidence; its PyPI promotion remains pending owner authorization.
+  release evidence.
 - Ruff and diff checks pass.
 - Baseline and reference deployment pass; regressed/adversarial builds return
   expected release-blocking exit codes.
