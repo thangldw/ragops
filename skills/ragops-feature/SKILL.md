@@ -1,18 +1,17 @@
-# RAGOps feature implementation
+# RAGOps feature workflow
 
-Use this skill for a new or changed RAGOps capability.
+Use for any new or changed capability or repository contract.
 
-1. Read `AGENTS.md`, the related product requirement, architecture overview,
-   and relevant ADRs completely.
-2. Write the user story, public contract impact, acceptance criteria, and
-   explicit non-goals before editing code.
-3. Keep evaluation semantics in `src/ragops/`; keep adapters in `apps/`.
-4. Add contract, unit, integration, and negative tests proportional to risk.
-5. Preserve offline deterministic behavior unless an optional plugin is the
+1. Read `AGENTS.md`, `docs/product/requirements.md`,
+   `docs/architecture/decisions.md`, and the affected canonical guide.
+2. Record the user outcome, public compatibility, acceptance criteria, and
+   explicit non-goals before implementation.
+3. Keep evaluation semantics in `src/ragops/`; keep adapters outside the core.
+4. Add contract, unit, integration, and negative coverage proportional to risk.
+5. Preserve offline deterministic behavior unless an optional adapter is the
    stated scope.
-6. Run lint and the full test suite, then exercise the affected CLI/API path.
-7. Update docs and changelog. Report limitations and owner decisions required.
+6. Run lint, full tests, and affected CLI/API paths.
+7. Update the canonical documentation and changelog; remove superseded copy.
 
 Never silently change metric meaning, schema compatibility, critical-gate
 behavior, or the open-core boundary.
-

@@ -1,31 +1,28 @@
 # Security policy
 
-## Supported versions
+## Supported version
 
-The latest minor version receives security fixes. Security reports should be
-sent privately to the repository owner rather than opened as public issues.
+The latest minor version receives security fixes. Send vulnerability reports
+privately to the repository owner through the contact method on their GitHub
+profile; do not open a public issue.
 
-## Data handling
+Include the affected version, minimal reproduction, impact, and any suggested
+mitigation. Do not include real secrets or customer data.
 
-RAGOps core runs offline and does not transmit scenarios, responses, or traces.
-Provider-backed plugins are responsible for clearly documenting transmission
-and retention. Never put production secrets or personal data in public fixtures.
+## Deployment baseline
 
-## Deployment guidance
+- Configure `RAGOPS_API_KEY` for protected endpoints.
+- Keep explicit insecure mode local only.
+- Terminate TLS at a trusted proxy and apply ingress request/rate limits.
+- Run the container as non-root with a read-only filesystem where practical.
+- Protect databases and reports; they may contain answers and evidence.
+- Redact sensitive content before provider or telemetry export.
 
-- Set `RAGOPS_API_KEY` when the API is reachable outside localhost.
-- Terminate TLS at a trusted reverse proxy.
-- Run the provided image as its non-root user and keep the filesystem read-only.
-- Put experiment databases on an encrypted, access-controlled volume.
-- Treat reports as sensitive because answers and evidence may be embedded.
-- Apply request-size and rate limits at the ingress for internet-facing use.
+## Known limits
 
-## Known limitations
+The API key is not enterprise identity. The local control plane is not a
+production tenant boundary. The repository has no SSO/RBAC, immutable audit
+service, regional residency, HA, managed backup, or independent penetration
+test. Lexical groundedness is not semantic verification.
 
-- Single-workspace API-key authentication is not an identity system.
-- The control-plane alpha uses isolated SQLite paths and generated-key digests;
-  it is not a production multi-tenant security boundary.
-- There is no SSO/RBAC, immutable audit export, managed secrets, rate limiting,
-  regional residency, HA, backup policy, or independent penetration test.
-- Lexical groundedness is a transparent baseline, not semantic verification.
-- The bundled dashboard is an operator workbench, not a hardened multi-user UI.
+See the full [security model](docs/architecture/security.md).

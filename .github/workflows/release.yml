@@ -50,5 +50,5 @@ jobs:
             gh release create "$GITHUB_REF_NAME" dist/* \
               --verify-tag \
               --title "RAGOps $GITHUB_REF_NAME" \
-              --notes-file "docs/releases/$GITHUB_REF_NAME.md"
+              --generate-notes
           fi

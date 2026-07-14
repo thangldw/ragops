@@ -1,40 +1,79 @@
 # Evaluation strategy
 
-## Evaluation pyramid
+## Decision flow
 
-1. Contract validity and response coverage.
-2. Deterministic safety and policy rules.
-3. Retrieval, citation, quality, latency, and cost metrics.
-4. Optional semantic/model judges with calibration evidence.
-5. Human review and online workflow outcomes.
+```mermaid
+%%{init: {"theme":"base","fontFamily":"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif","flowchart":{"curve":"basis"},"themeVariables":{"background":"#f8f6f0","primaryColor":"#ffdc7c","primaryTextColor":"#17152f","primaryBorderColor":"#17152f","secondaryColor":"#bfe8ff","tertiaryColor":"#d8ceff","lineColor":"#756f84","edgeLabelBackground":"#fffef9"}}}%%
+flowchart LR
+    INPUT["Scenario + evidence"]
+    CONTRACT["Contract validity<br/>and case coverage"]
+    CHECKS["Deterministic checks<br/>quality · safety · budgets"]
+    JUDGES["Optional evaluators<br/>recorded provenance"]
+    POLICY["Absolute + regression<br/>policy"]
+    DECISION{"Release decision"}
+    PASS["PASS"]
+    BLOCK["BLOCK"]
+    INPUT --> CONTRACT --> CHECKS --> POLICY --> DECISION
+    CONTRACT --> JUDGES --> POLICY
+    DECISION --> PASS
+    DECISION --> BLOCK
+    classDef input fill:#bfe8ff,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef check fill:#ffdc7c,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef policy fill:#d8ceff,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef pass fill:#aee8c9,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef block fill:#ffc0dd,stroke:#17152f,color:#8d2037,stroke-width:2px;
+    class INPUT input;
+    class CONTRACT,CHECKS,JUDGES check;
+    class POLICY,DECISION policy;
+    class PASS pass;
+    class BLOCK block;
+```
 
-## Release-decision rule
+The candidate must pass absolute thresholds and baseline regression tolerances.
+Critical findings are non-compensating.
 
-The candidate must pass absolute thresholds and regression tolerances. Critical
-policy findings are non-compensating: higher average quality cannot offset one.
+## Built-in and plugin evidence
 
-## Calibration
+- Citation coverage and precision check required and supplied citation IDs.
+- Lexical groundedness measures transparent term overlap; it is not entailment.
+- Retrieval, latency, and cost metrics connect behavior to operational policy.
+- Red-team rules detect configured leakage, prompt-injection, approval, and
+  excessive-agency failures.
+- `citation_correctness` and `claim_support` add deterministic case evidence.
+- `answer_length_budget` counts Python Unicode code points, including whitespace
+  and punctuation, without normalization. Equal-to-limit passes; over-limit
+  emits a medium diagnostic finding.
 
-Every non-trivial evaluator needs labeled examples, documented failure modes,
-and agreement analysis against qualified human reviewers. LLM-as-judge outputs
-must record model and prompt versions and be treated as measurements with
-uncertainty, not ground truth.
+## Evaluation policy
 
-The open-source core includes two transparent evaluator baselines:
+Custom metrics remain diagnostic until policy declares one direction:
 
-- `citation_correctness` checks supplied citation IDs against the case evidence
-  contract and reports unsupported citations.
-- `claim_support` splits answers into claims and measures lexical evidence
-  support. It is explicitly not semantic entailment.
-- `answer_length_budget` counts Python Unicode code points and reports whether
-  each answer fits an application-owned limit. It is not token usage, display
-  width, grapheme count, semantic concision, or a core release threshold.
+```toml
+[metrics.claim_support]
+minimum = 0.90
 
-Both expose aggregate and per-case plugin metrics. Production semantic judges
-must be separately calibrated against qualified human labels.
+[metrics.citation_correctness]
+minimum = 0.95
 
-## Outcome metrics
+[findings]
+fail_on_severity = "high"
+```
 
-Offline answer quality does not prove business impact. Reference deployments
-should also propose adoption, task completion, escalation, time saved, and
-cost-per-successful-task measures.
+Unknown or missing metrics, invalid directions, and non-finite values fail
+closed. Evaluate and compare use the same evaluator set and absolute policy;
+regression tolerances remain separate.
+
+## Calibration and human review
+
+Non-trivial evaluators need labeled cases, documented failure modes, and
+agreement analysis against qualified reviewers. Provider-backed judges must
+record model, prompt, and sampling configuration and be treated as uncertain
+measurements, not ground truth.
+
+## Red-team coverage
+
+Attack families include injection, secret extraction, permission leakage,
+retrieval poisoning, malicious citations, tool manipulation, excessive agency,
+obfuscation, and multi-turn persistence. Use synthetic secrets and isolated
+systems. Coverage and zero findings must never be described as proof of
+security.

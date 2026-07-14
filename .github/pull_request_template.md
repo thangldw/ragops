@@ -1,26 +1,27 @@
-## Product contract
+## Outcome
 
-- Requirement / issue:
-- User outcome:
+- User problem:
+- Decision enabled:
+- Requirement or issue:
+
+## Contract
+
+- Public schema/API impact:
+- Metric or PASS/BLOCK impact:
+- Architecture/open-core impact:
 - Explicit non-goals:
 
-## Change
+## Evidence
 
-- Public API or schema impact:
-- Metric or release-decision impact:
-- Architecture / ADR impact:
-
-## Verification
-
-- [ ] Tests added or updated
+- [ ] Expected and failure tests
 - [ ] `ruff check .`
 - [ ] `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest -q`
-- [ ] Affected CLI/API workflow exercised
-- [ ] Documentation and changelog updated
+- [ ] Affected CLI/API path exercised
+- [ ] Canonical documentation and changelog updated
+- [ ] Superseded content removed
 
-## Owner acceptance
+## Owner review
 
-- Evidence or demo:
 - Known limitations:
-- Decision requested from product owner:
-
+- Compatibility recommendation:
+- Publication requested: no / yes (specify)

@@ -1,4 +1,4 @@
-# RAGOps regression check: FAIL
+# Recorded release decision: BLOCK
 
 Scenario: `jp-reference-agent-v1`
 
@@ -11,9 +11,12 @@ Scenario: `jp-reference-agent-v1`
 | avg_cost_usd | 0 | 0 | +0 |
 | critical_findings | 0 | 0 | +0 |
 
-## Failed gates
+## Blocking gates
 
 - `candidate_release_gate`
 - `citation_coverage_regression`
 - `citation_precision_regression`
 - `groundedness_regression`
+
+This checked-in report is deterministic fixture evidence, not a live customer
+result or a model-quality claim.

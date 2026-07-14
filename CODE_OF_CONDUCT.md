@@ -1,32 +1,24 @@
-# Contributor Covenant Code of Conduct
+# Code of Conduct
 
-## Our pledge
+## Pledge
 
-We pledge to make participation in RAGOps a harassment-free experience for
-everyone, regardless of age, body size, disability, ethnicity, sex
-characteristics, gender identity and expression, experience level, education,
-socio-economic status, nationality, personal appearance, race, religion, or
-sexual identity and orientation.
+Participation in RAGOps must remain harassment-free regardless of age, body
+size, disability, ethnicity, sex characteristics, gender identity or
+expression, experience, education, socioeconomic status, nationality,
+appearance, race, religion, or sexual identity and orientation.
 
-## Our standards
+## Expected behavior
 
-Positive behavior includes empathy, respectful feedback, focus on what is best
-for the community, and accepting responsibility for mistakes. Unacceptable
-behavior includes harassment, discriminatory language, trolling, personal or
-political attacks, publishing private information, and other conduct that would
-be inappropriate in a professional setting.
+Be respectful, empathetic, specific, and focused on the project. Accept
+responsibility for mistakes and protect private information.
+
+Harassment, discriminatory language, trolling, personal attacks, publishing
+private information, or other unprofessional conduct is not accepted.
 
 ## Enforcement
 
-Report unacceptable behavior privately to the project owner through the
-contact method listed on the owner's GitHub profile. Reports will be reviewed
-promptly and handled with confidentiality appropriate to the situation.
+Report conduct concerns privately to the project owner through the contact
+method on their GitHub profile. Reports are reviewed confidentially. Maintainers
+may remove contributions or participation that violates this policy.
 
-Project maintainers may remove, edit, or reject comments, commits, issues, and
-other contributions that do not align with this code, and may temporarily or
-permanently ban contributors for behavior they deem harmful.
-
-## Attribution
-
-This policy is adapted from the Contributor Covenant, version 2.1:
-https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
+This policy is adapted from [Contributor Covenant 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html).

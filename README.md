@@ -199,16 +199,16 @@ approval.
 - [Getting started](docs/getting-started.md)
 - [System architecture](docs/architecture/system-overview.md)
 - [Evaluation strategy](docs/evaluation/strategy.md)
-- [GitHub pull-request gate](docs/engineering/github-pr-gate.md)
-- [Export your first trace](docs/engineering/export-your-first-trace.md)
-- [PyPI publishing runbook](docs/engineering/pypi-publishing.md)
-- [Reference benchmark](docs/evaluation/benchmark-report-v0.2.md)
+- [CI and pull-request gates](docs/engineering/ci-gates.md)
+- [Trace, provider, and metric integrations](docs/engineering/integrations.md)
+- [Testing and release workflow](docs/engineering/testing-and-release.md)
+- [Reference benchmark](docs/evaluation/benchmark.md)
 - [Contributing](CONTRIBUTING.md), [support](SUPPORT.md), and
   [security](SECURITY.md)
 
-Historical requirements, ADRs, acceptance records, and release notes are kept
-as immutable evidence. Active guidance is linked from the documentation map so
-released records are not mistaken for current instructions.
+Git history and the changelog preserve released evolution. Repository HEAD keeps
+one current source per topic so milestone snapshots are not mistaken for active
+requirements.
 
 ## License
 

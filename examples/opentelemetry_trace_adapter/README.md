@@ -1,12 +1,29 @@
-# OpenTelemetry span-to-trace example
+# OpenTelemetry trace adapter
 
-This dependency-free adapter turns already-exported, filtered OpenTelemetry
-span JSONL into the portable RAGOps trace 0.4 envelope. It is an integration
-example, not an SDK, collector, or change to core evaluation semantics.
+This dependency-free example converts already-exported and filtered
+OpenTelemetry span JSONL into the portable RAGOps trace 0.4 envelope. It is an
+adapter example—not an SDK, collector, or change to evaluation semantics.
 
-## Run it
+## Data path
 
-From the repository root:
+```mermaid
+%%{init: {"theme":"base","fontFamily":"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif","flowchart":{"curve":"basis"},"themeVariables":{"background":"#f8f6f0","primaryColor":"#bfe8ff","primaryTextColor":"#17152f","primaryBorderColor":"#17152f","secondaryColor":"#ffdc7c","tertiaryColor":"#d8ceff","lineColor":"#756f84","edgeLabelBackground":"#fffef9"}}}%%
+flowchart LR
+    APP["Application spans"] --> FILTER["Filter + redact"]
+    FILTER --> ADAPTER["Example adapter"]
+    ADAPTER --> TRACE["Portable trace 0.4"]
+    TRACE --> CORE["RAGOps evaluation"]
+    classDef blue fill:#bfe8ff,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef yellow fill:#ffdc7c,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef purple fill:#d8ceff,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef green fill:#aee8c9,stroke:#17152f,color:#17152f,stroke-width:2px;
+    class APP blue;
+    class FILTER yellow;
+    class ADAPTER,TRACE purple;
+    class CORE green;
+```
+
+## Run
 
 ```bash
 PYTHONPATH=src python -m examples.opentelemetry_trace_adapter.adapter \
@@ -22,10 +39,9 @@ ragops evaluate \
   --output /tmp/ragops-otel-report.md
 ```
 
-The included synthetic spans produce two evaluable traces and require no
-provider credentials.
+The synthetic spans produce two evaluable traces without provider credentials.
 
-## Attribute mapping
+## Mapping
 
 | Span field or attribute | Trace 0.4 field | Required |
 | --- | --- | --- |
@@ -34,10 +50,10 @@ provider credentials.
 | `gen_ai.response.text` | `output.answer` | Yes |
 | `ragops.citation_ids` | `output.citation_ids` | No |
 | `ragops.retrieved_document_ids` | `retrieval.document_ids` | No |
-| span timestamps or `duration_ms` | `latency_ms` | Yes |
+| timestamps or `duration_ms` | `latency_ms` | Yes |
 | `ragops.cost_usd` | `usage.cost_usd` | No |
 | `service.name`, `service.version` | trace metadata | No |
 
-Applications should export only the attributes required for evaluation. Remove
-secrets, personal data, unneeded prompt content, and sensitive document text
-before writing fixtures or uploading report artifacts.
+Export only attributes required for evaluation. Remove secrets, personal data,
+unneeded prompt content, and sensitive source text before persisting fixtures
+or uploading evidence artifacts.
