@@ -5,6 +5,7 @@ promotes their aggregate metrics or findings into release gates. This keeps
 existing scenarios compatible and makes policy changes reviewable.
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif","flowchart":{"curve":"basis"},"themeVariables":{"background":"#f8f6f0","primaryColor":"#ffdc7c","primaryTextColor":"#17152f","primaryBorderColor":"#17152f","secondaryColor":"#bfe8ff","tertiaryColor":"#d8ceff","lineColor":"#756f84","edgeLabelBackground":"#fffef9"}}}%%
 flowchart LR
     I["Scenario + recorded responses"] --> E["Evaluator registry"]
     E --> B["Built-in metrics and findings"]
@@ -17,6 +18,14 @@ flowchart LR
     R["Regression policy"] --> X
     X --> D["Custom + built-in deltas"]
     D --> Y["Compare: PASS or BLOCK"]
+    classDef input fill:#bfe8ff,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef evaluate fill:#ffdc7c,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef policy fill:#d8ceff,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef decision fill:#aee8c9,stroke:#17152f,color:#17152f,stroke-width:2px;
+    class I,E,B,P input;
+    class A,X,D evaluate;
+    class C,R policy;
+    class V,Y decision;
 ```
 
 ```toml

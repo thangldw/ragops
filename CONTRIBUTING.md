@@ -1,9 +1,9 @@
 # Contributing to RAGOps
 
-RAGOps is complete and active development is paused. Usage feedback, focused
-bug reports, and feature ideas remain welcome through GitHub Discussions and
-issues. Please do not open an implementation pull request before the owner has
-accepted its scope.
+RAGOps accepts focused, owner-reviewed maintenance and product slices. Usage
+feedback, reproducible bug reports, and feature ideas are welcome through
+GitHub Discussions and issues. Do not open an implementation pull request
+before the owner has accepted its scope and compatibility boundary.
 
 After scope acceptance, good first changes are usually a scenario case,
 evaluator test, report improvement, documentation example, or focused

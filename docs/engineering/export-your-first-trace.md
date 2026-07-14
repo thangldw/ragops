@@ -3,19 +3,16 @@
 This tutorial turns two synthetic application events into RAGOps release
 evidence without a model API, telemetry backend, or provider SDK.
 
-## 1. Install the released CLI
-
-Download the wheel from the
-[v1.7.0 GitHub Release](https://github.com/thangldw/ragops/releases/tag/v1.7.0),
-then install it:
+## 1. Install the stable CLI
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install ./ragops-1.7.0-py3-none-any.whl
+pip install ragops==2.4.0
+ragops --version
 ```
 
-For repository development, `pip install -e .` is equivalent.
+For repository development, use `pip install -e '.[dev]'` instead.
 
 ## 2. Export one JSON object per evaluated task
 

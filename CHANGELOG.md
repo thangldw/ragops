@@ -6,39 +6,30 @@ All notable changes follow Keep a Changelog. This project uses Semantic Versioni
 
 ### Added
 
-- Deterministic publisher fixtures for single-association fork PRs, expired and
-  paginated artifacts, bounded comment enumeration, and GitHub API rate limits.
-- An explicit adapter retention decision: repositories own artifact/comment
-  lifecycle, while the publisher remains bounded and fail closed.
+- A current documentation map that separates active guidance from immutable
+  ADR, requirement, acceptance, release, and design-audit records.
+- Requirements v2.4.1 for a presentation-only documentation and visual-system
+  maintenance slice.
+- A v2.4.1 owner-acceptance candidate with local quality, visual, API, package,
+  and PASS/BLOCK evidence.
+- Deterministic publisher coverage for bounded enumeration, expired artifacts,
+  fork PRs, and GitHub API rate limits, with repository-owned retention.
 
 ### Changed
 
-- Replaced the README's ASCII architecture sketch with a color-coded Mermaid
-  flow that separates the system under test, local evaluation core, optional
-  plugins, portable evidence, baseline comparison, and PASS/BLOCK decision;
-  modern dark blue, teal, and violet panels remain legible in GitHub themes.
-- Marked active development as paused while keeping the completed project public
-  for stars, usage feedback, issues, and Discussions; stable release `2.4.0`
-  remains available.
-- Removed unreferenced intermediate design-review captures and local development
-  artefacts; published screenshots and historical release evidence remain.
-- Repositioned public discovery copy around regression tests and explainable
-  release gates for teams that already have a RAG or AI agent.
-- Removed obsolete active-planning documents after program completion and
-  aligned current roadmap, launch, observability, and presentation copy with
-  the released v2.4 state. Historical ADRs, requirements, acceptance records,
-  and release notes remain unchanged.
-- Rebuilt the GitHub Pages showcase around a decision-first regression proof,
-  shortened the mobile narrative, replaced mutable test-count marketing with
-  stable product signals, and refreshed public screenshots and social preview.
-- Balanced the hero conversion controls with equal desktop columns and clear
-  full-width mobile stacking, and tightened numbered-card label-to-title rhythm
-  across the problem and workflow sections.
-- Reduced oversized PASS/BLOCK typography and tightened report, card, and
-  section spacing so the showcase reads as one compact release narrative.
-- Converted the showcase to a short-form landing page by removing duplicate
-  problem/demo storytelling, compacting evidence into linked summaries, and
-  using two-column mobile workflow and limitation grids.
+- Standardized every browser-facing and infographic font on local system UI and
+  native monospace stacks; no hosted font or font file is required.
+- Rebuilt the GitHub Pages showcase as an accessible, responsive board-style
+  release narrative with sticky notes, explicit connectors, and bounded claims.
+- Restyled active Mermaid diagrams and SVG infographics with one light canvas,
+  colored-card, and connector vocabulary.
+- Condensed the README, active roadmap, demo assets, contribution guidance, and
+  trace tutorial around the current stable release and one documentation path.
+
+### Removed
+
+- Superseded launch-status and portfolio-handoff documents.
+- Outdated showcase screenshots that no longer matched the current site.
 
 ## [2.4.0] - 2026-07-13
 

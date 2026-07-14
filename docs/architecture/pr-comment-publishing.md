@@ -2,14 +2,24 @@
 
 ## Trust boundary
 
-```text
-pull_request workflow (read-only, untrusted code)
-        │ bounded Markdown artifact
-        ▼
-workflow_run publisher (default-branch code, write only to PR comments)
-        │ verify metadata; parse as data; never execute
-        ▼
-one idempotent RAGOps comment + canonical workflow/artifact links
+```mermaid
+%%{init: {"theme":"base","fontFamily":"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif","flowchart":{"curve":"basis"},"themeVariables":{"background":"#f8f6f0","primaryColor":"#ffdc7c","primaryTextColor":"#17152f","primaryBorderColor":"#17152f","secondaryColor":"#bfe8ff","tertiaryColor":"#d8ceff","lineColor":"#756f84","edgeLabelBackground":"#fffef9"}}}%%
+flowchart LR
+    SOURCE["pull_request workflow<br/>read-only · untrusted code"]
+    ARTIFACT["Bounded artifact<br/>Markdown · manifest · metadata"]
+    VERIFY["workflow_run publisher<br/>default-branch code"]
+    COMMENT["One idempotent comment<br/>canonical evidence links"]
+    SOURCE -->|writes data only| ARTIFACT
+    ARTIFACT -->|verify · parse · never execute| VERIFY
+    VERIFY -->|pull-requests: write| COMMENT
+    classDef source fill:#bfe8ff,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef evidence fill:#ffdc7c,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef control fill:#d8ceff,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef output fill:#aee8c9,stroke:#17152f,color:#17152f,stroke-width:2px;
+    class SOURCE source;
+    class ARTIFACT evidence;
+    class VERIFY control;
+    class COMMENT output;
 ```
 
 ## Evaluation workflow

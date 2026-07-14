@@ -1,46 +1,47 @@
 # Five-minute demo walkthrough
 
-Audience: an engineer who already operates a RAG or agent system and needs a
-repeatable release decision.
+**Audience:** an engineer who operates a RAG or agent system.
 
-## Minute 0–1: state the release question
+**Decision:** whether RAGOps can reproduce a reviewable release gate without a
+provider account or model API.
 
-“The system already works. We changed a prompt, retriever, embedding model, or
-dataset. Is the candidate still good enough to release?”
+## 0:00–1:00 — ask the release question
 
-RAGOps sits outside the application. It consumes recorded evidence and applies
-the same versioned policy to baseline and candidate.
+“We changed a prompt, retriever, embedding model, dataset, or evaluator. Is the
+candidate still good enough to release?”
 
-## Minute 1–2: run the proof
+Clarify the boundary: RAGOps sits outside the application and evaluates recorded
+behavior against a versioned contract.
+
+## 1:00–2:00 — run the proof
 
 ```bash
 pip install ragops==2.4.0
 ragops demo --output ragops-demo
 ```
 
-Explain that process success and release decision are separate: the command
-returns successfully because it reproduced the expected blocked regression.
+The command completes because it reproduced the expected experiment. A blocked
+candidate is a valid release decision, not a process failure.
 
-## Minute 2–3: inspect PASS and BLOCK
+## 2:00–3:00 — compare PASS and BLOCK
 
-Open `ragops-demo/release-report.html`.
+Open `ragops-demo/release-report.html` and show:
 
-- Baseline: `PASS`, because it satisfies the frozen scenario and thresholds.
-- Candidate: `BLOCK`, with named metric and case-level reasons.
-- Evidence: portable JSON, Markdown, HTML, scenario, baseline, and candidate.
+- Baseline `PASS`: the accepted fixture meets the frozen policy.
+- Candidate `BLOCK`: named metrics and cases exceed release tolerances.
+- Portable evidence: scenario, fixtures, JSON, Markdown, and HTML.
 
-## Minute 3–4: trace one failure
+## 3:00–4:00 — trace one finding
 
-Follow one aggregate regression to its case, answer, citations, metric delta,
-and policy rule. Emphasize evidence lineage rather than a single dashboard score.
+Follow one aggregate regression to its case, answer, citation, metric delta,
+and policy rule. Keep the focus on evidence lineage rather than a single score.
 
-## Minute 4–5: map to the adopter's stack
+## 4:00–5:00 — map to the adopter's stack
 
-Replace the demo responses with recorded application output or JSONL traces.
-Keep model, retriever, and orchestration choices outside RAGOps. Import optional
-Ragas, DeepEval, Langfuse, or internal-judge metrics through the portable metric
-envelope when those tools already exist.
+Replace demo responses with recorded application output or JSONL traces. Import
+optional Ragas, DeepEval, Langfuse, or internal-judge metrics through the
+portable envelope when those tools already exist.
 
-Close honestly: lexical groundedness is not semantic entailment, synthetic
-fixtures are not customer evidence, and the local control plane is not hosted
+Close with the evidence boundary: lexical overlap is not semantic entailment,
+synthetic fixtures are not customer evidence, and the local alpha is not hosted
 production infrastructure.

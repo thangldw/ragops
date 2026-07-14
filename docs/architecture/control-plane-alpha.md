@@ -1,12 +1,19 @@
 # Control-plane alpha architecture
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif","flowchart":{"curve":"basis"},"themeVariables":{"background":"#f8f6f0","primaryColor":"#ffdc7c","primaryTextColor":"#17152f","primaryBorderColor":"#17152f","secondaryColor":"#bfe8ff","tertiaryColor":"#d8ceff","lineColor":"#756f84","edgeLabelBackground":"#fffef9"}}}%%
 flowchart LR
     Client["Workspace client"] -->|workspace id + key| API["RAGOps API"]
     API --> Auth["Hashed-key authentication"]
     Auth --> Index["Workspace index + audit events"]
     Auth --> StoreA["Workspace A runs.db"]
     Auth --> StoreB["Workspace B runs.db"]
+    classDef client fill:#bfe8ff,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef control fill:#ffdc7c,stroke:#17152f,color:#17152f,stroke-width:2px;
+    classDef store fill:#d8ceff,stroke:#17152f,color:#17152f,stroke-width:2px;
+    class Client client;
+    class API,Auth control;
+    class Index,StoreA,StoreB store;
 ```
 
 ## Implemented alpha controls
@@ -31,4 +38,3 @@ flowchart LR
 Production commercialization requires a managed database with row-level tenant
 policies, external identity, secrets management, immutable audit export, and an
 independent security review.
-

@@ -66,7 +66,7 @@ def comparison_html(report: ComparisonReport) -> str:
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
 <title>RAGOps regression report</title>
 <style>
-body{{font:16px system-ui;max-width:960px;margin:40px auto;padding:0 20px;color:#172033}}
+body{{font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:960px;margin:40px auto;padding:0 20px;color:#172033}}
 .status{{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700}}
 .pass{{background:#d1fae5;color:#065f46}}.fail{{background:#fee2e2;color:#991b1b}}
 table{{border-collapse:collapse;width:100%;margin:24px 0}}th,td{{padding:10px;border-bottom:1px solid #d7dce5;text-align:right}}

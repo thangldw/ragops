@@ -59,6 +59,7 @@ public presentation assets.
 ## Work that cannot be completed from source code alone
 
 ```mermaid
+%%{init: {"theme":"base","fontFamily":"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif","flowchart":{"curve":"basis"},"themeVariables":{"background":"#f8f6f0","primaryColor":"#ffdc7c","primaryTextColor":"#17152f","primaryBorderColor":"#17152f","secondaryColor":"#bfe8ff","tertiaryColor":"#d8ceff","lineColor":"#756f84","edgeLabelBackground":"#fffef9"}}}%%
 flowchart LR
   A["Local OSS program"] --> B["Evaluation core"]
   A --> C["Release governance"]
@@ -70,6 +71,12 @@ flowchart LR
   E --> G["Hosted control plane"]
   F --> H["Needs real users and consent"]
   G --> I["Needs cloud, identity, legal, and operations"]
+  classDef source fill:#bfe8ff,stroke:#17152f,color:#17152f,stroke-width:2px;
+  classDef complete fill:#aee8c9,stroke:#17152f,color:#17152f,stroke-width:2px;
+  classDef external fill:#ffc0dd,stroke:#17152f,color:#8d2037,stroke-width:2px;
+  class A,B,C,D source;
+  class E complete;
+  class F,G,H,I external;
 ```
 
 The following require owner authority, external systems, or real users and are
