@@ -41,8 +41,9 @@ def assert_tag(tag: str) -> str:
     expected = f"v{version()}"
     if tag != expected:
         raise SystemExit(f"tag {tag!r} does not match package version {expected!r}")
-    if not (ROOT / "docs" / "releases" / f"{tag}.md").is_file():
-        raise SystemExit(f"missing release notes: docs/releases/{tag}.md")
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    if f"## [{version()}]" not in changelog:
+        raise SystemExit(f"missing CHANGELOG entry for {version()}")
     return expected
 
 
@@ -147,7 +148,7 @@ def github(tag: str, yes: bool) -> None:
     run("git", "tag", "-a", tag, "-m", f"RAGOps {tag}")
     run("git", "push", "origin", tag)
     run("gh", "release", "create", tag, *(str(path) for path in paths), "--verify-tag",
-        "--title", f"RAGOps {tag}", "--notes-file", f"docs/releases/{tag}.md")
+        "--title", f"RAGOps {tag}", "--generate-notes")
 
 
 def pypi(tag: str, yes: bool) -> None:

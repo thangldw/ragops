@@ -1,18 +1,16 @@
-# RAGOps release validation
+# RAGOps release-readiness workflow
 
-Use this skill to prepare a version for owner acceptance. It does not authorize
-publishing, tagging, pushing, or releasing.
+Use to prepare owner acceptance. It does not authorize publication.
 
-1. Read the release plan, changelog, acceptance record, and affected ADRs.
-2. Verify clean installation and supported Python versions where available.
-3. Run lint, tests, sample pass, sample regression, API health/evaluate, schema
-   validation, and package build.
-4. Check public version consistency across package, API, schemas, reports, and
-   changelog.
-5. Review security-sensitive changes, dependency changes, generated artifacts,
-   and repository secrets.
-6. Produce an acceptance report: passed evidence, failed evidence, limitations,
-   compatibility impact, and an explicit go/hold recommendation.
+1. Read `docs/product/requirements.md`, `docs/architecture/decisions.md`,
+   `docs/project/status.md`, and `CHANGELOG.md`.
+2. Verify version consistency and supported Python versions where available.
+3. Run lint, full tests, schema checks, PASS/BLOCK samples, API health/evaluate,
+   package build, and clean install.
+4. Review security-sensitive changes, dependencies, generated files, secrets,
+   and Git state.
+5. Produce acceptance evidence with passed/failed gates, limitations,
+   compatibility impact, and a go/hold recommendation.
 
-Only the product owner accepts and publishes a release.
-
+Only the product owner may tag, release, publish packages, or deploy public
+assets.

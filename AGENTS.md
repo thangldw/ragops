@@ -1,36 +1,40 @@
 # RAGOps collaboration contract
 
-This repository is product-first. Product intent, contracts, and acceptance
-criteria are authoritative; implementation must not silently redefine them.
+RAGOps is product-first. Current requirements, architecture decisions, and
+acceptance criteria are authoritative; implementation must not redefine them
+silently.
 
 ## Ownership
 
-- Thang owns product vision, architecture acceptance, review, and release.
-- Codex and Claude Code may implement, test, refactor, and propose ADRs.
-- Any change to a public schema, release gate, metric meaning, or open-core
-  boundary requires an ADR and explicit owner review.
+- Thang owns product vision, architecture acceptance, release, and publication.
+- Coding agents may implement, test, refactor, document, and propose decisions.
+- Public schema, metric, release-gate, or open-core changes require an explicit
+  decision record and owner review.
 
 ## Required workflow
 
-1. Read the relevant product requirement and architecture decision.
-2. State the contract being changed and its compatibility impact.
-3. Implement the smallest vertical slice, including tests and documentation.
+1. Read `docs/product/requirements.md`, the affected architecture decisions,
+   and the relevant canonical guide.
+2. State user outcome, contract impact, acceptance criteria, and non-goals.
+3. Implement the smallest vertical slice with proportional tests and docs.
 4. Run `ruff check .` and `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest -q`.
-5. Update the changelog for user-visible behavior.
-6. Leave the work ready for owner acceptance; do not publish or release unless
-   explicitly requested.
+5. Exercise affected CLI/API paths and update `CHANGELOG.md`.
+6. Leave work ready for owner acceptance. Do not tag, release, or publish unless
+   explicitly authorized.
 
-## Architectural boundaries
+## Boundaries
 
-- `src/ragops/` is the dependency-free evaluation core.
-- `apps/` contains adapters and user interfaces, not evaluation semantics.
-- `scenarios/` contains portable fixtures, policies, and expected evidence.
-- Provider integrations are optional adapters or plugins.
-- The open-source core must remain valuable without a hosted service.
+- `src/ragops/`: dependency-free evaluation semantics.
+- `apps/`: optional API and UI adapters.
+- `scenarios/`: portable fixtures, policies, and expected evidence.
+- `examples/`: reference integrations outside the core.
+- `schemas/`: versioned public contracts.
+
+The open-source core must make a complete offline release decision without a
+hosted service.
 
 ## Repository skills
 
-- Use `skills/ragops-feature/SKILL.md` for feature implementation.
-- Use `skills/ragops-release/SKILL.md` for validation and release readiness.
-- Use `skills/ragops-presentation/SKILL.md` for demos and presentation assets.
-
+- `skills/ragops-feature/SKILL.md`: feature and maintenance work.
+- `skills/ragops-presentation/SKILL.md`: showcase, diagrams, and demos.
+- `skills/ragops-release/SKILL.md`: acceptance and release readiness.

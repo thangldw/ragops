@@ -1,19 +1,17 @@
-# RAGOps presentation and demo
+# RAGOps presentation workflow
 
-Use this skill when preparing portfolio, interview, customer, contributor, or
-investor-facing materials.
+Use for the website, README visuals, portfolio material, demos, or talks.
 
-1. Choose the audience and one decision the presentation should enable.
-2. Use measured repository evidence; label targets, simulations, and product
-   hypotheses explicitly.
-3. Follow problem → product thesis → workflow → live evidence → architecture
-   → limitations → roadmap.
-4. Demonstrate both a passing baseline and a blocked regression.
-5. Keep one consistent vocabulary: scenario, trace, evaluator, finding,
-   release gate, baseline, candidate, and decision.
-6. Rehearse the demo from a clean environment and prepare static fallback
-   screenshots or reports.
+1. Choose one audience and decision.
+2. Follow problem → thesis → workflow → live evidence → architecture → limits →
+   recommendation.
+3. Demonstrate a passing baseline and blocked regression.
+4. Use measured repository evidence; label simulations, targets, and hypotheses.
+5. Keep vocabulary consistent: scenario, trace, evaluator, finding, release
+   gate, baseline, candidate, and decision.
+6. Use the repository visual system: light dotted canvas, colored cards, rounded
+   sticky notes, explicit connectors, dark ink, and local system fonts.
+7. Render desktop and mobile views and keep static SVG/report fallbacks.
 
-Do not describe lexical groundedness as semantic correctness or a limited
-attack suite as proof of security.
-
+Never describe lexical groundedness as semantic correctness or limited attack
+coverage as proof of security.

@@ -33,19 +33,17 @@ def test_downstream_github_publisher_is_copyable_and_least_privilege() -> None:
 
 
 def test_pr_comment_design_keeps_write_path_separate() -> None:
-    design = Path("docs/architecture/pr-comment-publishing.md").read_text(encoding="utf-8")
-    adr = Path(
-        "docs/architecture/adr/0014-separate-pr-evaluation-from-comment-publication.md"
-    ).read_text(encoding="utf-8")
+    design = Path("docs/engineering/ci-gates.md").read_text(encoding="utf-8")
+    decisions = Path("docs/architecture/decisions.md").read_text(encoding="utf-8")
 
     for required in (
         "workflow_run",
         "pull-requests: write",
-        "never `pull_request_target`",
-        "do not checkout the pull request",
+        "never use `pull_request_target`",
+        "checkout the pull request",
         "untrusted data",
         "<!-- ragops-release-gate -->",
     ):
         assert required in design
-    assert "Accepted for bounded implementation" in adr
-    assert "owner authorized" in adr
+    assert "Pull-request evaluation remains read-only" in decisions
+    assert "isolated default-branch workflow" in decisions

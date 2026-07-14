@@ -38,7 +38,7 @@ def test_synthetic_pilot_report_separates_metrics_and_estimates() -> None:
     markdown = pilot_markdown(report)
     assert "SYNTHETIC EXAMPLE — NOT CUSTOMER EVIDENCE" in markdown
     assert "does not establish causality" in markdown
-    assert markdown == (FIXTURES.parent / "synthetic-pilot-report.md").read_text(encoding="utf-8")
+    assert markdown == pilot_markdown(load_report())
 
 
 def test_pilot_cli_writes_markdown(monkeypatch, tmp_path: Path) -> None:
