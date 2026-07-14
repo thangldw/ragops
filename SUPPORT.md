@@ -1,8 +1,8 @@
 # Support
 
-RAGOps is complete and active development is paused. The released package and
-documentation remain available without a support SLA. The public repository
-stays open for feedback.
+RAGOps is maintained through bounded, owner-reviewed work and has no support
+SLA. The stable package, current guides, and immutable release records remain
+public; the repository stays open for focused feedback.
 
 ## Where to leave feedback
 

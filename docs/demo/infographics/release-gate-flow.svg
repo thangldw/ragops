@@ -1,54 +1,72 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="480" viewBox="0 0 1400 480" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1200 520">
   <title id="title">RAGOps release-gate workflow</title>
-  <desc id="desc">Application traces flow through versioned scenarios, deterministic and optional evaluators, baseline comparison, and an explainable pass or block decision.</desc>
+  <desc id="desc">A light collaborative board showing portable evidence moving through evaluation, baseline comparison, and an explainable pass or block release decision.</desc>
   <defs>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#d3cfc5"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#29231a" flood-opacity=".12"/>
+    </filter>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-      <path d="M0 0L10 5L0 10Z" fill="#6f7b8b"/>
+      <path d="M0 0L10 5L0 10Z" fill="#756f84"/>
     </marker>
   </defs>
-  <rect width="1400" height="480" rx="28" fill="#101216"/>
-  <text x="64" y="66" fill="#5da2ff" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" letter-spacing="3">HOW THE RELEASE GATE WORKS</text>
-  <text x="64" y="112" fill="#f4f2ed" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="750">Portable evidence in. Explainable decision out.</text>
 
-  <g font-family="Inter,Arial,sans-serif">
-    <g transform="translate(64 164)">
-      <rect width="214" height="190" rx="16" fill="#171a20" stroke="#303846"/>
-      <circle cx="34" cy="34" r="18" fill="#223b60"/><text x="34" y="40" text-anchor="middle" fill="#b8d5ff" font-size="15" font-weight="700">1</text>
-      <text x="24" y="91" fill="#f4f2ed" font-size="21" font-weight="700">RAG / agent app</text>
-      <text x="24" y="126" fill="#a7afbc" font-size="15">Answers, citations,</text>
-      <text x="24" y="150" fill="#a7afbc" font-size="15">retrievals, tool actions</text>
+  <rect width="1200" height="520" rx="26" fill="#f8f6f0"/>
+  <rect width="1200" height="520" rx="26" fill="url(#dots)"/>
+  <text x="54" y="52" fill="#5a3fe0" font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="14" font-weight="800" letter-spacing="2">RELEASE-GATE WORKFLOW</text>
+  <text x="54" y="88" fill="#17152f" font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="26" font-weight="750">Portable evidence in. Explainable decision out.</text>
+
+  <g fill="none" stroke="#756f84" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round" marker-end="url(#arrow)">
+    <path d="M262 246C302 246 313 246 350 246"/>
+    <path d="M536 246C576 246 587 246 624 246"/>
+    <path d="M810 246C850 246 861 246 898 246"/>
+  </g>
+
+  <g filter="url(#shadow)" font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+    <g transform="translate(54 156) rotate(-1 104 90)">
+      <rect width="208" height="180" fill="#ffdc7c" stroke="#17152f" stroke-width="2"/>
+      <circle cx="34" cy="34" r="19" fill="#fffef9" stroke="#17152f" stroke-width="2"/>
+      <text x="34" y="39" text-anchor="middle" font-size="12" font-weight="800" fill="#17152f">01</text>
+      <text x="24" y="92" font-size="20" font-weight="750" fill="#17152f">Record</text>
+      <text x="24" y="120" font-size="12" fill="#4e4939">Answers · citations · retrievals</text>
+      <text x="24" y="140" font-size="12" fill="#4e4939">latency · cost · metadata</text>
     </g>
-    <path d="M290 259H348" stroke="#6f7b8b" stroke-width="3" marker-end="url(#arrow)"/>
-    <g transform="translate(360 164)">
-      <rect width="214" height="190" rx="16" fill="#171a20" stroke="#303846"/>
-      <circle cx="34" cy="34" r="18" fill="#223b60"/><text x="34" y="40" text-anchor="middle" fill="#b8d5ff" font-size="15" font-weight="700">2</text>
-      <text x="24" y="91" fill="#f4f2ed" font-size="21" font-weight="700">Portable trace</text>
-      <text x="24" y="126" fill="#a7afbc" font-size="15">Provider-independent</text>
-      <text x="24" y="150" fill="#a7afbc" font-size="15">JSON / JSONL evidence</text>
+
+    <g transform="translate(350 156) rotate(1 104 90)">
+      <rect width="208" height="180" fill="#bfe8ff" stroke="#17152f" stroke-width="2"/>
+      <circle cx="34" cy="34" r="19" fill="#fffef9" stroke="#17152f" stroke-width="2"/>
+      <text x="34" y="39" text-anchor="middle" font-size="12" font-weight="800" fill="#17152f">02</text>
+      <text x="24" y="92" font-size="20" font-weight="750" fill="#17152f">Evaluate</text>
+      <text x="24" y="120" font-size="12" fill="#3e4c54">Versioned checks · findings</text>
+      <text x="24" y="140" font-size="12" fill="#3e4c54">optional external metrics</text>
     </g>
-    <path d="M586 259H644" stroke="#6f7b8b" stroke-width="3" marker-end="url(#arrow)"/>
-    <g transform="translate(656 164)">
-      <rect width="214" height="190" rx="16" fill="#171a20" stroke="#5da2ff"/>
-      <circle cx="34" cy="34" r="18" fill="#5da2ff"/><text x="34" y="40" text-anchor="middle" fill="#08101d" font-size="15" font-weight="800">3</text>
-      <text x="24" y="91" fill="#f4f2ed" font-size="21" font-weight="700">Versioned checks</text>
-      <text x="24" y="126" fill="#a7afbc" font-size="15">Quality · safety</text>
-      <text x="24" y="150" fill="#a7afbc" font-size="15">Latency · cost</text>
+
+    <g transform="translate(646 156) rotate(-1 104 90)">
+      <rect width="208" height="180" fill="#d8ceff" stroke="#17152f" stroke-width="2"/>
+      <circle cx="34" cy="34" r="19" fill="#fffef9" stroke="#17152f" stroke-width="2"/>
+      <text x="34" y="39" text-anchor="middle" font-size="12" font-weight="800" fill="#17152f">03</text>
+      <text x="24" y="92" font-size="20" font-weight="750" fill="#17152f">Compare</text>
+      <text x="24" y="120" font-size="12" fill="#4c4760">Accepted baseline · candidate</text>
+      <text x="24" y="140" font-size="12" fill="#4c4760">explicit regression tolerances</text>
     </g>
-    <path d="M882 259H940" stroke="#6f7b8b" stroke-width="3" marker-end="url(#arrow)"/>
-    <g transform="translate(952 164)">
-      <rect width="214" height="190" rx="16" fill="#171a20" stroke="#303846"/>
-      <circle cx="34" cy="34" r="18" fill="#223b60"/><text x="34" y="40" text-anchor="middle" fill="#b8d5ff" font-size="15" font-weight="700">4</text>
-      <text x="24" y="91" fill="#f4f2ed" font-size="21" font-weight="700">Compare baseline</text>
-      <text x="24" y="126" fill="#a7afbc" font-size="15">Measure candidate</text>
-      <text x="24" y="150" fill="#a7afbc" font-size="15">deltas and findings</text>
-    </g>
-    <path d="M1178 259H1214" stroke="#6f7b8b" stroke-width="3" marker-end="url(#arrow)"/>
-    <g transform="translate(1226 164)">
-      <rect width="110" height="88" rx="14" fill="#17231f" stroke="#4a8f73"/>
-      <text x="55" y="53" text-anchor="middle" fill="#7de0b8" font-size="22" font-weight="800">PASS</text>
-      <rect y="102" width="110" height="88" rx="14" fill="#25191c" stroke="#9b4d4b"/>
-      <text x="55" y="155" text-anchor="middle" fill="#ff847b" font-size="22" font-weight="800">BLOCK</text>
+
+    <g transform="translate(942 156) rotate(1 104 90)">
+      <rect width="208" height="180" fill="#aee8c9" stroke="#17152f" stroke-width="2"/>
+      <circle cx="34" cy="34" r="19" fill="#fffef9" stroke="#17152f" stroke-width="2"/>
+      <text x="34" y="39" text-anchor="middle" font-size="12" font-weight="800" fill="#17152f">04</text>
+      <text x="24" y="92" font-size="20" font-weight="750" fill="#17152f">Gate</text>
+      <text x="24" y="120" font-size="12" fill="#385246">PASS or BLOCK</text>
+      <text x="24" y="140" font-size="12" fill="#385246">with named reasons</text>
     </g>
   </g>
-  <text x="64" y="422" fill="#a7afbc" font-family="Inter,Arial,sans-serif" font-size="15">RAGOps evaluates recorded behavior; it does not own your model, retrieval stack, or application.</text>
+
+  <g font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+    <rect x="222" y="383" width="756" height="73" rx="12" fill="#fffef9" stroke="#17152f" stroke-width="2"/>
+    <text x="246" y="413" font-size="12" font-weight="750" fill="#17152f">Open-source core</text>
+    <text x="246" y="437" font-size="12" fill="#625f72">Runs locally without a model API, hosted font, analytics service, or control plane.</text>
+    <rect x="819" y="398" width="133" height="31" rx="15" fill="#7357ff"/>
+    <text x="885" y="418" text-anchor="middle" font-size="11" font-weight="750" fill="#ffffff">JSON · MD · HTML</text>
+  </g>
 </svg>

@@ -1,19 +1,25 @@
 # RAGOps portfolio case study
 
-## From AI change to defensible release decision
+## Decision enabled
 
-RAG and agent teams can ship a prompt, retriever, embedding, or dataset change
-quickly. The harder problem is deciding whether the candidate is still good
-enough to release. Quality scores, operational budgets, citations, and review
-notes often live in separate tools with no accepted baseline.
+Help an engineering team decide whether a changed RAG or AI-agent candidate is
+still good enough to release.
 
-I built RAGOps as a provider-independent regression release gate for teams that
-already have a RAG or AI agent. It consumes recorded responses, portable traces,
-and optional external evaluator metrics; applies versioned absolute and
-regression policy; then emits an explainable `PASS` or `BLOCK` decision in JSON,
-Markdown, or HTML.
+## Problem
 
-## Five-minute proof
+Prompt, retriever, embedding, dataset, and evaluator changes can preserve fluent
+answers while degrading citations, evidence support, latency, cost, or safety.
+Isolated dashboard scores do not identify the accepted baseline or explain why
+a release should continue or stop.
+
+## Product thesis
+
+RAGOps is a provider-independent regression release gate for systems teams
+already operate. It consumes recorded responses, portable traces, and optional
+external evaluator metrics; applies versioned absolute and regression policy;
+then emits an explainable `PASS` or `BLOCK` in JSON, Markdown, or HTML.
+
+## Reproducible proof
 
 ```bash
 pip install ragops==2.4.0
@@ -23,24 +29,29 @@ ragops demo --output ragops-demo
 The generated report shows an accepted baseline passing and an intentionally
 regressed candidate blocked with named reasons. No model API is required.
 
-## Evidence
+## Recorded evidence
 
 - Dependency-free Python 3.11+ evaluation core.
-- 30-case synthetic release-gate fixture across nine failure families.
+- Thirty-case synthetic benchmark across nine failure families.
 - Graph+ACL reference agent whose lexical-only candidate records 25-point
   citation coverage and precision regressions.
-- Portable Ragas, DeepEval, Langfuse, and internal-judge metric envelope.
-- Build-once GitHub/PyPI releases with byte-identical artifacts, SBOM, and
-  checksums; v2.4.0 release validation passed 144 tests.
+- Portable metric envelope for Ragas, DeepEval, Langfuse, and internal judges.
+- Build-once release artifacts with checksums, SBOM, and clean-install evidence.
 
-## Product boundary
+## Architecture boundary
 
-RAGOps evaluates an existing RAG or agent. It does not replace orchestration,
-retrieval, generation, model observability, or human review. Synthetic evidence
-validates the harness, not semantic correctness, production security, customer
-adoption, or ROI.
+RAGOps evaluates an existing system. It does not replace orchestration,
+retrieval, generation, observability, or human approval. Optional APIs,
+providers, and collaboration surfaces remain outside the dependency-free core.
+
+## Limitations
+
+Synthetic evidence validates harness behavior, not semantic correctness,
+production security, customer adoption, or ROI. The reference ACL and local
+control-plane alpha are development fixtures, not production identity or
+multi-tenant infrastructure.
 
 ## Current recommendation
 
-Use v2.4.0 for offline evaluation and customer discovery. Convert real failures
-into reviewed regression fixtures before expanding into hosted collaboration.
+Use stable `2.4.0` for offline evaluation and discovery. Convert real failures
+into reviewed regression fixtures before expanding policy or hosted surfaces.

@@ -23,16 +23,17 @@ high-risk policy failures.
 
 ## Product wedge
 
-Start with a local-first, CI-friendly evaluation runner. It accepts portable
-JSON scenarios and responses, runs deterministic evaluators, and emits a
-stable report. Model-based judging, live tracing, and a hosted control plane
-are later layers—not prerequisites for value.
+Lead with a local-first, CI-friendly evaluation runner. It accepts portable
+scenarios, responses, traces, and optional external metrics; runs deterministic
+evaluators; and emits stable release evidence. Provider-backed judging and
+hosted collaboration remain optional layers, not prerequisites for value.
 
 ## Open-core direction
 
 The scenario format, runner, deterministic evaluators, CLI, and report schema
-remain open source under the MIT License. Potential commercial layers include team workspaces,
-managed datasets, trace ingestion, access controls, audit retention, trend
+remain open source under the MIT License. A complete release decision must stay
+possible without a hosted account. Potential commercial layers include managed
+workspaces, datasets, ingestion, access controls, audit retention, trend
 analysis, and enterprise integrations.
 
 ## North-star outcome

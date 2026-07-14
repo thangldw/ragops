@@ -1,54 +1,70 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="500" viewBox="0 0 1400 500" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1200 520">
   <title id="title">RAGOps evidence stack</title>
-  <desc id="desc">Four evidence layers combine quality, safety, operations, and regression comparison into a release decision with reviewable artifacts.</desc>
-  <rect width="1400" height="500" rx="28" fill="#101216"/>
-  <text x="64" y="66" fill="#5da2ff" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" letter-spacing="3">EVIDENCE, NOT A SINGLE SCORE</text>
-  <text x="64" y="112" fill="#f4f2ed" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="750">Four layers support one defensible release decision.</text>
+  <desc id="desc">A light collaborative board where quality, safety, operational budgets, and regression evidence connect to one defensible release decision.</desc>
+  <defs>
+    <pattern id="dots" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#d3cfc5"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#29231a" flood-opacity=".12"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#756f84"/>
+    </marker>
+  </defs>
 
-  <g font-family="Inter,Arial,sans-serif">
-    <g transform="translate(64 166)">
-      <rect width="260" height="210" rx="16" fill="#171a20" stroke="#303846"/>
-      <rect width="260" height="8" rx="4" fill="#5da2ff"/>
-      <text x="24" y="62" fill="#5da2ff" font-size="15" font-weight="700">QUALITY</text>
-      <text x="24" y="105" fill="#f4f2ed" font-size="20" font-weight="700">Grounded answers</text>
-      <text x="24" y="141" fill="#a7afbc" font-size="15">Citation coverage</text>
-      <text x="24" y="166" fill="#a7afbc" font-size="15">Citation precision</text>
-      <text x="24" y="191" fill="#a7afbc" font-size="15">Retrieval recall</text>
+  <rect width="1200" height="520" rx="26" fill="#f8f6f0"/>
+  <rect width="1200" height="520" rx="26" fill="url(#dots)"/>
+  <text x="54" y="52" fill="#5a3fe0" font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="14" font-weight="800" letter-spacing="2">EVIDENCE STACK</text>
+  <text x="54" y="88" fill="#17152f" font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="26" font-weight="750">Four evidence layers support one release decision.</text>
+
+  <g fill="none" stroke="#756f84" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round" marker-end="url(#arrow)">
+    <path d="M282 182C405 182 432 219 515 237"/>
+    <path d="M282 347C405 347 432 293 515 274"/>
+    <path d="M918 182C795 182 768 219 685 237"/>
+    <path d="M918 347C795 347 768 293 685 274"/>
+  </g>
+
+  <g filter="url(#shadow)" font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+    <g transform="translate(70 126) rotate(-1 106 58)">
+      <rect width="212" height="116" fill="#bfe8ff" stroke="#17152f" stroke-width="2"/>
+      <text x="22" y="36" font-size="10" font-weight="800" letter-spacing="1.4" fill="#3e4c54">QUALITY</text>
+      <text x="22" y="67" font-size="18" font-weight="750" fill="#17152f">Citations + support</text>
+      <text x="22" y="91" font-size="11" fill="#3e4c54">Case-level, inspectable scores</text>
     </g>
-    <g transform="translate(348 166)">
-      <rect width="260" height="210" rx="16" fill="#171a20" stroke="#303846"/>
-      <rect width="260" height="8" rx="4" fill="#8bb8ff"/>
-      <text x="24" y="62" fill="#8bb8ff" font-size="15" font-weight="700">SAFETY</text>
-      <text x="24" y="105" fill="#f4f2ed" font-size="20" font-weight="700">Policy findings</text>
-      <text x="24" y="141" fill="#a7afbc" font-size="15">Prompt injection</text>
-      <text x="24" y="166" fill="#a7afbc" font-size="15">Permission leakage</text>
-      <text x="24" y="191" fill="#a7afbc" font-size="15">Approval requirements</text>
+
+    <g transform="translate(70 298) rotate(1 106 58)">
+      <rect width="212" height="116" fill="#ffc0dd" stroke="#17152f" stroke-width="2"/>
+      <text x="22" y="36" font-size="10" font-weight="800" letter-spacing="1.4" fill="#6b4355">SAFETY</text>
+      <text x="22" y="67" font-size="18" font-weight="750" fill="#17152f">Critical findings</text>
+      <text x="22" y="91" font-size="11" fill="#6b4355">Fail closed before averages</text>
     </g>
-    <g transform="translate(632 166)">
-      <rect width="260" height="210" rx="16" fill="#171a20" stroke="#303846"/>
-      <rect width="260" height="8" rx="4" fill="#b8d5ff"/>
-      <text x="24" y="62" fill="#b8d5ff" font-size="15" font-weight="700">OPERATIONS</text>
-      <text x="24" y="105" fill="#f4f2ed" font-size="20" font-weight="700">Runtime budgets</text>
-      <text x="24" y="141" fill="#a7afbc" font-size="15">Latency</text>
-      <text x="24" y="166" fill="#a7afbc" font-size="15">Cost per task</text>
-      <text x="24" y="191" fill="#a7afbc" font-size="15">Failure drill-down</text>
+
+    <g transform="translate(918 126) rotate(1 106 58)">
+      <rect width="212" height="116" fill="#ffdc7c" stroke="#17152f" stroke-width="2"/>
+      <text x="22" y="36" font-size="10" font-weight="800" letter-spacing="1.4" fill="#62552e">BUDGETS</text>
+      <text x="22" y="67" font-size="18" font-weight="750" fill="#17152f">Latency + cost</text>
+      <text x="22" y="91" font-size="11" fill="#62552e">Explicit operational limits</text>
     </g>
-    <g transform="translate(916 166)">
-      <rect width="260" height="210" rx="16" fill="#171a20" stroke="#303846"/>
-      <rect width="260" height="8" rx="4" fill="#6f7b8b"/>
-      <text x="24" y="62" fill="#b8c0cc" font-size="15" font-weight="700">REGRESSION</text>
-      <text x="24" y="105" fill="#f4f2ed" font-size="20" font-weight="700">Baseline deltas</text>
-      <text x="24" y="141" fill="#a7afbc" font-size="15">Accepted behavior</text>
-      <text x="24" y="166" fill="#a7afbc" font-size="15">Candidate changes</text>
-      <text x="24" y="191" fill="#a7afbc" font-size="15">Named failed gates</text>
-    </g>
-    <path d="M1188 271H1232" stroke="#6f7b8b" stroke-width="3"/>
-    <g transform="translate(1236 188)">
-      <rect width="108" height="166" rx="16" fill="#25191c" stroke="#9b4d4b"/>
-      <text x="54" y="50" text-anchor="middle" fill="#ff847b" font-size="14" font-weight="700">DECISION</text>
-      <text x="54" y="91" text-anchor="middle" fill="#f4f2ed" font-size="24" font-weight="800">BLOCK</text>
-      <text x="54" y="125" text-anchor="middle" fill="#a7afbc" font-size="12">with reasons</text>
+
+    <g transform="translate(918 298) rotate(-1 106 58)">
+      <rect width="212" height="116" fill="#d8ceff" stroke="#17152f" stroke-width="2"/>
+      <text x="22" y="36" font-size="10" font-weight="800" letter-spacing="1.4" fill="#50486f">REGRESSION</text>
+      <text x="22" y="67" font-size="18" font-weight="750" fill="#17152f">Baseline + candidate</text>
+      <text x="22" y="91" font-size="11" fill="#50486f">Named deltas and tolerances</text>
     </g>
   </g>
-  <text x="64" y="438" fill="#a7afbc" font-family="Inter,Arial,sans-serif" font-size="15">Deterministic checks run first. Optional model-based judges can extend the stack with recorded provider/model metadata.</text>
+
+  <g font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+    <circle cx="600" cy="258" r="114" fill="#fffef9" stroke="#17152f" stroke-width="3"/>
+    <circle cx="600" cy="258" r="96" fill="#aee8c9"/>
+    <text x="600" y="221" text-anchor="middle" font-size="11" font-weight="800" letter-spacing="1.5" fill="#385246">RELEASE DECISION</text>
+    <text x="600" y="273" text-anchor="middle" font-size="42" font-weight="850" fill="#17152f">PASS / BLOCK</text>
+    <text x="600" y="306" text-anchor="middle" font-size="12" fill="#385246">with evidence and named reasons</text>
+  </g>
+
+  <g font-family="system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+    <rect x="352" y="430" width="496" height="48" rx="9" fill="#fffef9" stroke="#17152f" stroke-width="2"/>
+    <text x="600" y="459" text-anchor="middle" font-size="12" fill="#625f72">Deterministic checks first · optional recorded judges second</text>
+  </g>
 </svg>

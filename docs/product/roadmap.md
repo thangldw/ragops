@@ -1,124 +1,45 @@
 # Product roadmap
 
-## Project status
+## Current slice — v2.4.1 owner review
 
-The program is complete and active development is paused as of 2026-07-13.
-The repository remains public at stable release `2.4.0` for adoption and
-feedback. This capability map is retained for reference; resuming development
-requires a concrete user need, owner review, and a new scoped requirement.
+The owner resumed a bounded maintenance slice on 2026-07-14. The objective is
+to simplify active documentation, remove superseded presentation assets, adopt
+a lightweight local typography system, and refresh the GitHub Pages showcase.
 
-This file is a released-capability map, not an active implementation queue.
-There are no open repository milestones after v2.4; new work starts only after
-owner review of a concrete user need.
+This slice is presentation-only. It does not change schemas, metric meaning,
+release-gate behavior, CLI/API contracts, or the open-core boundary. See
+[requirements v2.4.1](requirements-v2.4.1.md).
 
-## 1.0 — stable local core (released)
+## Stable product
 
-Portable contracts, deterministic gates, baseline comparison, plugins, local
-history, CLI/API/workbench, CI, and container baseline.
+Release `2.4.0` remains the current published package. It provides:
 
-## 1.1 — credible benchmark (released)
+- A dependency-free offline evaluation core.
+- Versioned scenarios, response fixtures, traces, reports, and policies.
+- Deterministic quality, safety, budget, and regression gates.
+- Python and CLI surfaces plus optional API, browser, and provider adapters.
+- Portable external evaluator metrics and pull-request release-gate recipes.
+- Three credential-free demos and a synthetic reference deployment.
+- Local release verification with checksums, SBOM, and clean-install evidence.
 
-- Expand the Japanese troubleshooting scenario and publish its taxonomy.
-- Add claim-level citation precision and completeness.
-- Add attack-pack contracts for prompt injection and permission leakage.
-- Improve failure drill-down in HTML reports.
+The detailed evolution of these capabilities belongs in immutable
+[release notes](../releases/) and [acceptance records](../project/), not in this
+active roadmap.
 
-## 1.2 — real application adapters (released)
+## Next decisions
 
-- Reference RAG/agent application producing portable traces.
-- OpenTelemetry and generic HTTP/provider adapters.
-- Model, prompt, retriever, dataset, and build metadata.
-- Statistical summaries and evaluator calibration guidance.
+After the v2.4.1 presentation slice is accepted, further implementation requires
+a concrete user need and a new owner-approved requirement. Useful discovery
+questions include:
 
-## 1.3 — team workflow (released for local workspace)
-
-- Browser run explorer and metric trends.
-- Review status and accepted baseline workflow.
-- Scheduled benchmark/reference suite.
-
-PR comment integration and notifications remain hosted/integration work.
-
-## 1.4 — complete reference program (released)
-
-- Japanese Graph+ACL reference deployment with portable trace 0.4 output.
-- Thirty-case synthetic benchmark, attack metadata, and separated evidence.
-- Local team review/trend workflow and control-plane alpha boundary.
-- Optional HTTP and OpenAI Responses API adapters outside the core.
-
-## 1.5 — adoption-first developer experience (released)
-
-- Credential-free `ragops demo` command and reviewable report bundle.
-- Problem/solution/demo/evidence/limitations product showcase.
-- MIT licensing, contributor onboarding, and repository discovery assets.
-- PyPI distribution, PR-native GitHub Action, starter issues, and public
-  discovery assets.
-
-## 1.6 — pull-request adoption path (released)
-
-- Reusable read-only GitHub PR gate with evidence summary and artifact.
-- Print-ready standalone HTML comparison report.
-- Framework-neutral first-trace tutorial.
-- Dependency-free OpenTelemetry span-to-trace example.
-- Manual PyPI Trusted Publishing workflow with release 1.6.0 published through
-  GitHub OIDC.
-
-## 1.7 — broader adoption proof (released)
-
-- Second credential-free support-triage demo scenario.
-- Third credential-free proposal-review demo scenario.
-- Deterministic, configurable Unicode code-point answer-length evaluator.
-- GitHub discovery metadata, Discussions, and real starter issues.
-- GitLab CI release-gate recipe and reviewed least-privilege PR-comment design.
-
-## 1.8 — review visibility and measured adoption (released)
-
-- Isolated, write-enabled PR comment publisher with bounded artifact parsing,
-  exact metadata verification, pinned actions, and idempotent updates.
-- Portable design-partner manifest, JSONL observations, optional economics,
-  deterministic KPI/ROI report, and explicit evidence limits.
-- Synthetic rehearsal, consent/data-minimization runbook, and public design-
-  partner outreach pack.
-
-## 2.0 — trustworthy extensible release gates (released)
-
-- First-class opt-in custom metric and finding-severity gates.
-- Unified evaluator semantics across absolute evaluation and comparison.
-- Strict numeric validation and official response-list schema.
-- Fail-closed API authentication, bounded input, and explicit local dev mode.
-- Synthetic benchmark positioning and evidence-safe workbench error states.
-
-## 2.1 — portable external evaluator evidence (released)
-
-- Versioned per-case external metric envelope for Ragas, DeepEval, Langfuse,
-  and internal judges.
-- Shared absolute gate semantics and baseline/candidate deltas without provider
-  dependencies in the core.
-- Copyable downstream PR-comment publisher recipe with explicit trust boundary.
-
-## 2.2 — quota-independent release fallback (released)
-
-- Local quality gates, build-once packages, SBOM, checksums, and evidence.
-- Direct GitHub CLI publication and fail-closed project-token PyPI promotion.
-
-## 2.3 — release integrity and discoverability (released)
-
-- Installed CLI version diagnostics.
-- Clean-wheel smoke testing before tagging.
-- Dependency-free cross-platform checksum verification.
-
-## 2.4 — adoption experience refresh (released)
-
-- Decision-first README and five-minute install-to-evidence onboarding.
-- Interactive developer-proof showcase with implementation-derived screenshots.
-- Unified demo, portfolio, presentation, CV/LinkedIn, and launch copy.
-- Evidence-safe product claims and explicit measurement limits.
+- Which real workflow should become a reviewed regression fixture?
+- Which evaluator meaning is stable enough to gate a release?
+- Which CI or review surface creates the most adoption friction?
+- Which production controls are required before processing customer evidence?
 
 ## Deferred hypothesis — hosted control plane
 
-- Workspace isolation, SSO/RBAC, audit retention, managed ingestion, and
-  enterprise deployment options.
-
-The repository already contains a bounded local alpha with workspace-isolated
-stores, generated/digested keys, rotation, and audit events. A hosted product is
-not active roadmap work; it would require separate owner approval plus cloud,
-identity, legal, security, operations, and design-partner evidence.
+Hosted collaboration is not active roadmap work. It would require evidence of
+customer demand plus separate decisions for identity, tenant isolation, legal,
+security, retention, operations, and commercial boundaries. The existing local
+alpha is not production multi-tenant infrastructure.

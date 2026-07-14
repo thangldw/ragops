@@ -1,35 +1,47 @@
 # Ten-minute presentation outline
 
+**Audience:** engineering, platform, or product leaders responsible for RAG or
+AI-agent releases.
+
+**Decision:** whether to pilot RAGOps as a release gate around an existing
+system.
+
 ## 1. Release question — 60 seconds
 
-“We changed the RAG system. Is the candidate still good enough to release?”
-Show why isolated scores and manual review do not create a defensible baseline.
+Show how a candidate can remain fluent while citations, evidence support,
+latency, cost, or safety regress. Ask: “Is this change still good enough to
+release?”
 
 ## 2. Product thesis — 60 seconds
 
-RAGOps is a provider-independent release-policy and evidence layer for existing
-RAG and agents—not another orchestration framework.
+Position RAGOps as a provider-independent policy and evidence layer, not an
+orchestration framework, model host, or observability replacement.
 
-## 3. Five-minute path — 90 seconds
+## 3. Workflow — 90 seconds
 
-Show install → demo → PASS baseline → BLOCK candidate → portable report.
+Walk through record → evaluate → compare → gate. Use the board-style workflow
+visual so every transition names its input and output.
 
 ## 4. Live evidence — 180 seconds
 
 Run `ragops demo`, open the HTML report, and trace one aggregate regression to
-its case, citations, metric delta, and versioned policy rule.
+its case, citations, metric delta, and versioned policy rule. Demonstrate both
+the passing baseline and blocked candidate.
 
-## 5. Extensibility — 90 seconds
+## 5. Architecture — 90 seconds
 
-Map portable responses/traces and Ragas, DeepEval, Langfuse, or internal scores
-into the same gate. Keep provider semantics outside the dependency-free core.
+Map responses, traces, and optional external scores into the dependency-free
+core. Keep providers, API, browser, and collaboration surfaces outside it.
 
-## 6. Trust boundary — 90 seconds
+## 6. Limitations and rollout — 90 seconds
 
-Separate recorded synthetic evidence from production claims. Explain local-first
-execution, exact artifact promotion, known limits, and why hosted 3.0 requires
-real customer demand and operations.
+Separate synthetic evidence from production claims. Recommend one reviewed
+workflow fixture, one owner, and a human-approved release decision before
+expanding coverage.
 
 ## 7. Close — 30 seconds
 
 “Evaluate with evidence. Release with a reason.”
+
+Keep static fallbacks available: the two SVG infographics, benchmark report,
+and generated standalone HTML report.

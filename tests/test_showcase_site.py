@@ -7,6 +7,8 @@ class _ShowcaseParser(HTMLParser):
         super().__init__()
         self.ids: set[str] = set()
         self.links: list[str] = []
+        self.stylesheets: list[str] = []
+        self.scripts: list[str] = []
         self.has_viewport = False
         self.has_main = False
         self.has_h1 = False
@@ -17,6 +19,10 @@ class _ShowcaseParser(HTMLParser):
             self.ids.add(values["id"])
         if tag == "a" and "href" in values:
             self.links.append(values["href"])
+        if tag == "link" and values.get("rel") == "stylesheet":
+            self.stylesheets.append(values["href"])
+        if tag == "script" and "src" in values:
+            self.scripts.append(values["src"])
         if tag == "meta" and values.get("name") == "viewport":
             self.has_viewport = True
         self.has_main |= tag == "main"
@@ -29,24 +35,20 @@ def test_showcase_has_accessible_structure_and_valid_local_links() -> None:
     parser.feed((root / "index.html").read_text(encoding="utf-8"))
 
     assert parser.has_viewport and parser.has_main and parser.has_h1
-    assert {
-        "main",
-        "top",
-        "solution",
-        "evidence",
-        "limits",
-        "get-started",
-    } <= parser.ids
+    assert {"main", "top", "solution", "evidence", "limits", "get-started"} <= (
+        parser.ids
+    )
     for link in parser.links:
         if link.startswith("#"):
             assert link[1:] in parser.ids
+    assert parser.stylesheets == ["styles.css?v=20260714-1"]
+    assert parser.scripts == []
     assert (root / "styles.css").is_file()
     assert (root / "favicon.png").is_file()
     assert (root / "apple-touch-icon.png").is_file()
     for icon in (
         "github.svg",
         "clipboard-document.svg",
-        "shield-check.svg",
         "circle-stack.svg",
         "document-text.svg",
     ):
@@ -72,23 +74,36 @@ def test_showcase_separates_evidence_and_states_limits() -> None:
     assert "30-case synthetic harness benchmark" in page
     assert "Lexical groundedness is overlap, not entailment" in page
     assert "MIT License" in page
-    assert "pip install ragops==2.4.0" in page
-    assert "Catch RAG regressions" in page
-    assert "regression release gate for RAG &amp; AI agents" in page
-    assert "embedding model" in page
-    assert "Evidence formats" in page
+    assert "pip install <b>ragops==2.4.0</b>" in page
+    assert "Catch regressions" in page
+    assert "embedding" in page
+    assert "Portable evidence" in page
     assert "docs/demo/social-preview.png" in page
     assert page.count("#five-minute-proof") == 1
     assert "#quick-start" not in page
 
 
-def test_showcase_hero_actions_use_balanced_columns() -> None:
+def test_showcase_uses_local_lightweight_typography_and_board_visuals() -> None:
+    page = Path("site/index.html").read_text(encoding="utf-8")
+    styles = Path("site/styles.css").read_text(encoding="utf-8")
+    combined = (page + styles).lower()
+
+    assert "system-ui" in styles
+    assert "ui-monospace" in styles
+    assert "@font-face" not in combined
+    assert "fonts.googleapis" not in combined
+    assert "fonts.gstatic" not in combined
+    assert "board-grid" in page
+    assert "board-connectors" in page
+    assert page.count("workflow-card") == 4
+    assert "prefers-reduced-motion" in styles
+
+
+def test_showcase_has_explicit_responsive_layouts() -> None:
     styles = Path("site/styles.css").read_text(encoding="utf-8")
 
-    assert "grid-template-columns: repeat(2, minmax(0, 1fr));" in styles
-    assert ".hero-copy .actions { grid-template-columns: 1fr; }" in styles
-    assert ".flow b { margin: 18px 0 10px;" in styles
-    assert ".decision strong { margin: 12px 0 7px; font-size: 38px;" in styles
-    assert "padding: 64px 28px;" in styles
-    assert ".decision-pair { grid-template-columns: 1fr 1fr; gap: 8px; }" in styles
-    assert ".flow," in styles and ".limits-grid { grid-template-columns: 1fr 1fr; }" in styles
+    assert "@media (max-width: 1040px)" in styles
+    assert "@media (max-width: 720px)" in styles
+    assert ".workflow-board { grid-template-columns: 1fr 1fr; }" in styles
+    assert ".workflow-board," in styles
+    assert ".evidence-grid," in styles
