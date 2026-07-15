@@ -49,7 +49,7 @@ ragops demo --scenario proposal-review --output proposal-review-demo
 2. **Evaluate** quality, safety, operational budgets, and optional external
    metrics against a versioned scenario and policy.
 3. **Compare** the candidate with an accepted baseline using explicit
-   tolerances.
+   tolerances or uncertainty-aware repeated-run bounds.
 4. **Gate** the release with named reasons and case-level evidence.
 
 RAGOps evaluates your system. It does not replace LangChain, LlamaIndex, your
@@ -60,6 +60,10 @@ model, retriever, observability stack, or application.
 - Citation coverage and precision, lexical groundedness, retrieval, latency,
   cost, answer-length, and red-team checks.
 - Baseline-aware regression comparison with critical findings that fail closed.
+- Fixed and predeclared sequential statistical gates for repeated metric
+  observations, plus evaluator-drift and provenance diagnostics.
+- Content-addressed accepted-baseline manifests with optional offline SSH
+  signature verification.
 - JSON, Markdown, and standalone HTML reports for local review and CI.
 - Portable scenarios, response fixtures, JSONL traces, policies, and schemas.
 - A Python API, CLI, evaluator plugins, and optional adapters outside the core.
@@ -126,6 +130,19 @@ ragops compare \
 Use `--traces` instead of `--responses` when your application exports portable
 JSONL trace 0.4 records. Imported provider metrics keep the meaning defined by
 their producer and your reviewed policy.
+
+For repeated metric observations:
+
+```bash
+ragops compare-runs \
+  --baseline-bundle scenarios/statistical_gate/baseline.json \
+  --candidate-bundle scenarios/statistical_gate/candidate-pass.json \
+  --policy scenarios/statistical_gate/policy.toml
+```
+
+The statistical path remains opt-in; deterministic evaluation contracts are
+unchanged. See the [evaluation strategy](docs/evaluation/strategy.md) for
+sampling units, sequential error control, drift isolation, and limitations.
 
 ## Architecture
 

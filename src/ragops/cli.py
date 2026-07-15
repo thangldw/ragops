@@ -9,11 +9,32 @@ from ragops.adapters.external_metrics import (
     load_external_metric_evaluator,
     validate_external_metric_pair,
 )
+from ragops.adapters.repeated_runs import (
+    CommandMetricAdapter,
+    collect_repeated_runs,
+    load_repeated_run_plan,
+    load_resume_bundle,
+    write_replay_bundle,
+)
+from ragops.adapters.signing import sign_baseline_manifest, verify_baseline_signature
+from ragops.baseline import (
+    create_baseline_manifest,
+    load_baseline_manifest,
+    verify_baseline_manifest,
+    write_baseline_manifest,
+)
 from ragops.benchmarks import scenario_summary
-from ragops.config import load_evaluation_policy, load_regression_policy
+from ragops.config import (
+    load_evaluation_policy,
+    load_evaluator_drift_policy,
+    load_regression_policy,
+    load_sequential_policy,
+    load_statistical_policy,
+)
 from ragops.control_plane import ControlPlane
 from ragops.demo import DEFAULT_DEMO_SCENARIO, DEMO_BUNDLES, write_demo
 from ragops.engine import compare, evaluate
+from ragops.drift import detect_evaluator_drift
 from ragops.loader import ContractError, load_responses, load_scenario
 from ragops.plugins import (
     AnswerLengthBudgetEvaluator,
@@ -30,7 +51,17 @@ from ragops.pilot import (
     pilot_markdown,
     summarize_pilot,
 )
-from ragops.reporters import comparison_html, comparison_markdown, evaluation_markdown
+from ragops.provenance import diagnose_provenance
+from ragops.reporters import (
+    comparison_html,
+    comparison_markdown,
+    evaluation_markdown,
+    evaluator_drift_markdown,
+    sequential_comparison_markdown,
+    statistical_comparison_markdown,
+)
+from ragops.statistical import compare_replay_bundles, load_replay_bundle
+from ragops.sequential import compare_replay_bundles_sequentially
 from ragops.store import ExperimentStore
 from ragops.traces import load_trace_jsonl
 
@@ -122,6 +153,84 @@ def build_parser() -> argparse.ArgumentParser:
         default=500,
         help="Unicode code-point limit for answer_length_budget (default: 500)",
     )
+    compare_runs_parser = commands.add_parser(
+        "compare-runs",
+        help="Compare repeated metric observations with uncertainty-aware gates",
+    )
+    compare_runs_parser.add_argument("--baseline-bundle", required=True)
+    compare_runs_parser.add_argument("--candidate-bundle", required=True)
+    compare_runs_parser.add_argument("--policy", required=True)
+    compare_runs_parser.add_argument("--output")
+    compare_runs_parser.add_argument(
+        "--format", choices=("json", "markdown"), default="markdown"
+    )
+    collect_runs_parser = commands.add_parser(
+        "collect-runs",
+        help="Collect a resumable replay bundle from an explicit metric command",
+    )
+    collect_runs_parser.add_argument("--plan", required=True)
+    collect_runs_parser.add_argument("--output", required=True)
+    collect_runs_parser.add_argument("--resume", action="store_true")
+    collect_runs_parser.add_argument("--timeout-seconds", type=float, default=60.0)
+    collect_runs_parser.add_argument("--baseline-bundle")
+    collect_runs_parser.add_argument("--sequential-policy")
+    collect_runs_parser.add_argument("--sequential-report")
+    collect_runs_parser.add_argument(
+        "--command",
+        dest="runner_command",
+        nargs=argparse.REMAINDER,
+        required=True,
+        help="Command to run; receives RAGOPS_CASE_ID and RAGOPS_REPEAT_ID",
+    )
+    drift_parser = commands.add_parser(
+        "detect-evaluator-drift",
+        help="Compare frozen anchors across evaluator versions",
+    )
+    drift_parser.add_argument("--reference-bundle", required=True)
+    drift_parser.add_argument("--current-bundle", required=True)
+    drift_parser.add_argument("--policy", required=True)
+    drift_parser.add_argument("--output")
+    drift_parser.add_argument("--format", choices=("json", "markdown"), default="markdown")
+    sequential_parser = commands.add_parser(
+        "compare-sequential",
+        help="Apply predeclared sequential looks to repeated metric bundles",
+    )
+    sequential_parser.add_argument("--baseline-bundle", required=True)
+    sequential_parser.add_argument("--candidate-bundle", required=True)
+    sequential_parser.add_argument("--policy", required=True)
+    sequential_parser.add_argument("--output")
+    sequential_parser.add_argument(
+        "--format", choices=("json", "markdown"), default="markdown"
+    )
+    baseline_create = commands.add_parser(
+        "baseline-create", help="Create a content-addressed accepted-baseline manifest"
+    )
+    baseline_create.add_argument("--bundle", required=True)
+    baseline_create.add_argument("--policy", required=True)
+    baseline_create.add_argument("--owner", required=True)
+    baseline_create.add_argument("--accepted-at", required=True)
+    baseline_create.add_argument("--output", required=True)
+    baseline_sign = commands.add_parser(
+        "baseline-sign", help="Sign a baseline manifest with an SSH key"
+    )
+    baseline_sign.add_argument("--manifest", required=True)
+    baseline_sign.add_argument("--key", required=True)
+    baseline_sign.add_argument("--output", required=True)
+    baseline_verify = commands.add_parser(
+        "baseline-verify", help="Verify baseline integrity and optional SSH signature"
+    )
+    baseline_verify.add_argument("--manifest", required=True)
+    baseline_verify.add_argument("--bundle", required=True)
+    baseline_verify.add_argument("--policy", required=True)
+    baseline_verify.add_argument("--signature")
+    baseline_verify.add_argument("--allowed-signers")
+    baseline_verify.add_argument("--identity")
+    provenance_parser = commands.add_parser(
+        "diagnose-provenance",
+        help="Classify model, evaluator, dataset, and infrastructure changes",
+    )
+    provenance_parser.add_argument("--reference-bundle", required=True)
+    provenance_parser.add_argument("--current-bundle", required=True)
     history_parser = commands.add_parser("history", help="List saved experiment runs")
     history_parser.add_argument("--store", required=True)
     history_parser.add_argument("--limit", type=int, default=20)
@@ -217,6 +326,205 @@ def main() -> int:
             output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
         else:
             print(rendered.rstrip())
+        return 0
+    if args.command == "compare-runs":
+        try:
+            report = compare_replay_bundles(
+                load_replay_bundle(args.baseline_bundle),
+                load_replay_bundle(args.candidate_bundle),
+                load_statistical_policy(args.policy),
+            )
+        except (ContractError, ValueError) as exc:
+            raise SystemExit(f"contract error: {exc}") from exc
+        rendered = (
+            json.dumps(report.to_dict(), ensure_ascii=False, indent=2)
+            if args.format == "json"
+            else statistical_comparison_markdown(report)
+        )
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
+        else:
+            print(rendered.rstrip())
+        return 0 if report.passed else 2
+    if args.command == "collect-runs":
+        command = tuple(
+            args.runner_command[1:]
+            if args.runner_command[:1] == ["--"]
+            else args.runner_command
+        )
+        try:
+            plan = load_repeated_run_plan(args.plan)
+            existing = load_resume_bundle(args.output, resume=args.resume)
+            if bool(args.baseline_bundle) != bool(args.sequential_policy):
+                raise ContractError(
+                    "Sequential collection requires both --baseline-bundle and "
+                    "--sequential-policy"
+                )
+            sequential_reports = []
+            stop_when = None
+            if args.baseline_bundle:
+                sequential_baseline = load_replay_bundle(args.baseline_bundle)
+                sequential_policy = load_sequential_policy(args.sequential_policy)
+                if plan.repeats != sequential_policy.maximum_repeats:
+                    raise ContractError(
+                        "Repeated-run plan repeats must equal sequential maximum_repeats"
+                    )
+
+                def stop_when(current):
+                    if {record.case_id for record in current.records} != set(plan.case_ids):
+                        return False
+                    decision = compare_replay_bundles_sequentially(
+                        sequential_baseline,
+                        current,
+                        sequential_policy,
+                    )
+                    sequential_reports[:] = [decision]
+                    return decision.decision in {"pass", "block"}
+
+            bundle = collect_repeated_runs(
+                plan,
+                CommandMetricAdapter(command, timeout_seconds=args.timeout_seconds),
+                existing=existing,
+                checkpoint=lambda current: write_replay_bundle(args.output, current),
+                stop_when=stop_when,
+            )
+            write_replay_bundle(args.output, bundle)
+            if sequential_reports:
+                report_path = Path(
+                    args.sequential_report or f"{args.output}.sequential.json"
+                )
+                report_path.parent.mkdir(parents=True, exist_ok=True)
+                report_path.write_text(
+                    json.dumps(
+                        sequential_reports[-1].to_dict(), ensure_ascii=False, indent=2
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+        except (ContractError, ValueError) as exc:
+            raise SystemExit(f"collection error: {exc}") from exc
+        print(
+            json.dumps(
+                {
+                    "output": str(args.output),
+                    "cases": len(plan.case_ids),
+                    "repeats": plan.repeats,
+                    "observations": len(bundle.records),
+                    "sequential_decision": (
+                        sequential_reports[-1].decision if sequential_reports else None
+                    ),
+                },
+                ensure_ascii=False,
+            )
+        )
+        return (
+            2
+            if sequential_reports and sequential_reports[-1].decision != "pass"
+            else 0
+        )
+    if args.command == "detect-evaluator-drift":
+        try:
+            report = detect_evaluator_drift(
+                load_replay_bundle(args.reference_bundle),
+                load_replay_bundle(args.current_bundle),
+                load_evaluator_drift_policy(args.policy),
+            )
+        except (ContractError, ValueError) as exc:
+            raise SystemExit(f"drift contract error: {exc}") from exc
+        rendered = (
+            json.dumps(report.to_dict(), ensure_ascii=False, indent=2)
+            if args.format == "json"
+            else evaluator_drift_markdown(report)
+        )
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
+        else:
+            print(rendered.rstrip())
+        return 0 if report.passed else 2
+    if args.command == "compare-sequential":
+        try:
+            report = compare_replay_bundles_sequentially(
+                load_replay_bundle(args.baseline_bundle),
+                load_replay_bundle(args.candidate_bundle),
+                load_sequential_policy(args.policy),
+            )
+        except (ContractError, ValueError) as exc:
+            raise SystemExit(f"sequential contract error: {exc}") from exc
+        rendered = (
+            json.dumps(report.to_dict(), ensure_ascii=False, indent=2)
+            if args.format == "json"
+            else sequential_comparison_markdown(report)
+        )
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
+        else:
+            print(rendered.rstrip())
+        return 0 if report.passed else 2
+    if args.command == "baseline-create":
+        try:
+            manifest = create_baseline_manifest(
+                args.bundle,
+                args.policy,
+                owner=args.owner,
+                accepted_at=args.accepted_at,
+            )
+            write_baseline_manifest(args.output, manifest)
+        except ContractError as exc:
+            raise SystemExit(f"baseline contract error: {exc}") from exc
+        print(json.dumps({"manifest": str(args.output), "verified": True}))
+        return 0
+    if args.command == "baseline-sign":
+        try:
+            load_baseline_manifest(args.manifest)
+            sign_baseline_manifest(args.manifest, args.key, args.output)
+        except ContractError as exc:
+            raise SystemExit(f"baseline signing error: {exc}") from exc
+        print(json.dumps({"signature": str(args.output)}))
+        return 0
+    if args.command == "baseline-verify":
+        signature_options = (args.signature, args.allowed_signers, args.identity)
+        if any(signature_options) and not all(signature_options):
+            raise SystemExit(
+                "baseline contract error: signature verification requires --signature, "
+                "--allowed-signers, and --identity"
+            )
+        try:
+            manifest = load_baseline_manifest(args.manifest)
+            verify_baseline_manifest(manifest, args.bundle, args.policy)
+            if args.signature:
+                verify_baseline_signature(
+                    args.manifest,
+                    args.signature,
+                    args.allowed_signers,
+                    args.identity,
+                )
+        except ContractError as exc:
+            raise SystemExit(f"baseline verification error: {exc}") from exc
+        print(
+            json.dumps(
+                {
+                    "verified": True,
+                    "signature_verified": bool(args.signature),
+                    "owner": manifest.acceptance.owner,
+                }
+            )
+        )
+        return 0
+    if args.command == "diagnose-provenance":
+        try:
+            diagnosis = diagnose_provenance(
+                load_replay_bundle(args.reference_bundle),
+                load_replay_bundle(args.current_bundle),
+            )
+        except ContractError as exc:
+            raise SystemExit(f"provenance contract error: {exc}") from exc
+        print(json.dumps(diagnosis.to_dict(), ensure_ascii=False, indent=2))
         return 0
     if args.command == "history":
         runs = ExperimentStore(args.store).list_runs(limit=args.limit)

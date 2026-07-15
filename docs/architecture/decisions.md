@@ -52,6 +52,9 @@ remain available in Git history.
    not OIDC provenance.
 5. Git history and `CHANGELOG.md` are the project archive. Repository HEAD keeps
    only current guidance and current acceptance evidence.
+6. Intermediate subfeatures remain under `Unreleased`. Tags and package
+   publication occur only for an owner-approved major product milestone, not
+   for each implementation checkpoint.
 
 ## Compatibility rule
 
@@ -59,3 +62,37 @@ Any change to a schema, metric meaning, release-gate behavior, or open-core
 boundary requires a new decision record and explicit owner review. Presentation
 and documentation corrections remain compatible when runtime contracts do not
 change.
+
+## Pending owner acceptance: statistical regression milestone
+
+Opt-in fixed and sequential paths accept versioned replay bundles of per-case,
+per-repeat metrics. Fixed comparison applies one-sided paired hierarchical
+bootstrap bounds. Sequential comparison uses predeclared looks with Bonferroni
+error spending across looks, directions, and gated metrics. The existing
+`evaluate` and `compare` contracts remain unchanged.
+
+The proposed contract keeps recorded statistical evidence and decision
+semantics in the dependency-free core. Model execution, provider SDKs,
+OpenTelemetry collection, signing, and publication remain adapters. Baseline
+and candidate must use the same scenario ID and digest, dataset, evaluator,
+environment, case coverage, and metric names; application, model, model
+configuration, and recorded evidence provenance may differ. Environment or
+evaluator changes make a model-regression comparison fail closed.
+Insufficient distinct-case evidence blocks with a named policy reason rather
+than becoming an input error.
+
+Evaluator drift uses the same frozen dataset, evidence, application, model,
+configuration, and environment with different evaluator provenance. Its
+two-sided equivalence interval must remain within an explicit tolerance.
+Provenance diagnosis labels isolated axes but never claims causality for a
+confounded comparison.
+
+Accepted baseline manifests bind exact replay-bundle and policy bytes with
+SHA-256. Detached SSH signatures are optional adapters and use the
+`ragops-baseline` namespace. Integrity verification remains available without
+SSH; signature verification establishes identity when an approved
+allowed-signers file is supplied.
+
+Owner acceptance is required before these experimental schemas and gates become
+a released public commitment. Live provider calls, hosted storage, and automatic
+causal decomposition remain outside this decision.

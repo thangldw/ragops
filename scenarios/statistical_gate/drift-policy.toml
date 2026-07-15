@@ -1,0 +1,8 @@
+[drift]
+confidence = 0.95
+minimum_cases = 3
+resamples = 1000
+seed = 20260715
+
+[drift.metrics.citation_precision]
+max_absolute_change = 0.02

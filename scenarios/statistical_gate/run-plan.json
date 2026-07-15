@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.1",
+  "scenario_id": "statistical-citations",
+  "scenario_digest": "sha256:statistical-citations-demo-v1",
+  "case_ids": ["case-1", "case-2", "case-3"],
+  "repeats": 2,
+  "provenance": {
+    "dataset": "citation-suite-sha256:demo-v1",
+    "evidence": "sha256:candidate-pass-replay-demo-v1",
+    "evaluator": "citation-precision-v1",
+    "application": "support-agent-v2",
+    "model": "candidate-model-v2",
+    "model_config": "sha256:model-config-v2",
+    "environment": "offline-reference-v1"
+  }
+}

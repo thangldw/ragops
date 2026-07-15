@@ -5,6 +5,8 @@
 - The evaluated RAG or agent application is outside RAGOps.
 - Scenarios, responses, traces, reports, and CI artifacts may contain sensitive
   content and must be treated as data, never executable input.
+- Replay bundles can reveal score distributions, model/configuration identity,
+  dataset versions, and infrastructure names even when raw prompts are absent.
 - Provider adapters may transmit data; the offline core does not.
 - Pull-request code and artifacts are untrusted across any write-enabled
   publisher boundary.
@@ -22,6 +24,14 @@
 - Run containers as non-root with read-only filesystems where practical.
 - Keep PR evaluation read-only and isolate comment publication from untrusted
   code, caches, templates, and shell interpolation.
+- Treat `collect-runs --command` as explicit local code execution. It never uses
+  a shell, but the caller must not source the command from an untrusted pull
+  request or expose unnecessary credentials in its inherited environment.
+- Protect baseline signing keys outside the repository. Review SSH
+  allowed-signers changes, use the `ragops-baseline` namespace, and require both
+  content-digest and signature verification before relying on signer identity.
+- Keep replay API observation limits bounded alongside request bytes and
+  distinct case counts.
 
 ## Local control-plane boundary
 
