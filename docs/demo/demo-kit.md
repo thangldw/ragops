@@ -12,7 +12,7 @@ pilot RAGOps around an existing RAG or AI agent.
 2. Run:
 
    ```bash
-   pip install ragops==2.4.0
+   pip install ragops==2.5.0
    ragops demo --output ragops-demo
    ```
 

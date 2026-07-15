@@ -63,7 +63,7 @@ boundary requires a new decision record and explicit owner review. Presentation
 and documentation corrections remain compatible when runtime contracts do not
 change.
 
-## Pending owner acceptance: statistical regression milestone
+## Accepted in 2.5.0: statistical regression milestone
 
 Opt-in fixed and sequential paths accept versioned replay bundles of per-case,
 per-repeat metrics. Fixed comparison applies one-sided paired hierarchical
@@ -93,6 +93,6 @@ SHA-256. Detached SSH signatures are optional adapters and use the
 SSH; signature verification establishes identity when an approved
 allowed-signers file is supplied.
 
-Owner acceptance is required before these experimental schemas and gates become
-a released public commitment. Live provider calls, hosted storage, and automatic
+The owner accepted these experimental schemas and gates as the 2.5.0 public
+commitment on 2026-07-15. Live provider calls, hosted storage, and automatic
 causal decomposition remain outside this decision.

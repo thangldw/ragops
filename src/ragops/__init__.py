@@ -11,7 +11,7 @@ from ragops.statistical import (
 from ragops.provenance import diagnose_provenance
 from ragops.sequential import compare_replay_bundles_sequentially
 
-__version__ = "2.4.0"
+__version__ = "2.5.0"
 
 __all__ = [
     "compare",
