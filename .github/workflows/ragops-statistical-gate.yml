@@ -12,7 +12,7 @@ on:
         description: RAGOps Git revision or milestone tag to install
         required: false
         type: string
-        default: "v2.5.0"
+        default: "v1.0"
       mode:
         description: fixed or sequential statistical decision
         required: false

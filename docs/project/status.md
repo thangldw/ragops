@@ -3,6 +3,7 @@
 ## Current state
 
 - Stable package: `2.5.0`.
+- Public GitHub milestone: `v1.0` (new baseline).
 - Repository license: MIT.
 - Released runtime contract: `2.5.0`.
 - Current work: statistical regression milestone accepted by the owner on
@@ -70,6 +71,6 @@ Release acceptance checklist:
 
 ## Recommendation
 
-Go for the owner-approved 2.5.0 tag and GitHub artifact publication after the
-complete local release lane passes. PyPI remains a separate promotion of the
-exact GitHub Release artifacts through trusted publishing.
+The owner-approved GitHub milestone is published as `v1.0`; its verified Python
+distribution retains package version `2.5.0`. PyPI remains a separate operation
+and must not be promoted while that version mapping is being reset.
