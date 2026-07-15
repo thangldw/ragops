@@ -35,13 +35,21 @@ def test_showcase_has_accessible_structure_and_valid_local_links() -> None:
     parser.feed((root / "index.html").read_text(encoding="utf-8"))
 
     assert parser.has_viewport and parser.has_main and parser.has_h1
-    assert {"main", "top", "solution", "evidence", "limits", "get-started"} <= (
+    assert {
+        "main",
+        "top",
+        "solution",
+        "statistical",
+        "evidence",
+        "limits",
+        "get-started",
+    } <= (
         parser.ids
     )
     for link in parser.links:
         if link.startswith("#"):
             assert link[1:] in parser.ids
-    assert parser.stylesheets == ["styles.css?v=20260714-1"]
+    assert parser.stylesheets == ["styles.css?v=20260716-1"]
     assert parser.scripts == []
     assert (root / "styles.css").is_file()
     assert (root / "favicon.png").is_file()
@@ -72,12 +80,19 @@ def test_showcase_separates_evidence_and_states_limits() -> None:
 
     assert "4-case reference deployment" in page
     assert "30-case synthetic harness benchmark" in page
+    assert "3-case repeated-run acceptance fixture" in page
     assert "Lexical groundedness is overlap, not entailment" in page
     assert "MIT License" in page
     assert "pip install <b>ragops==1.0.0</b>" in page
     assert "Catch regressions" in page
     assert "embedding" in page
     assert "Portable evidence" in page
+    assert "ragops compare-runs" in page
+    assert "paired hierarchical bootstrap" in page
+    assert "predeclared sequential looks" in page
+    assert "Stopped at repeat</dt><dd>2" in page
+    assert "Repeats are not new cases" in page
+    assert "Provenance is not causality" in page
     assert "docs/demo/social-preview.png" in page
     assert page.count("#five-minute-proof") == 1
     assert "#quick-start" not in page
