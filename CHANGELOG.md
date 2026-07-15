@@ -5,6 +5,12 @@ the engineering evolution before the reset public baseline.
 
 ## [Unreleased]
 
+### Changed
+
+- Expanded the public showcase with the opt-in statistical regression workflow,
+  repeated-run fixture evidence, sequential stopping, evaluator drift, signed
+  baseline provenance, CI integration, and explicit uncertainty boundaries.
+
 ## [1.0.0] - 2026-07-15
 
 ### Added
