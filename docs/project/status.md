@@ -2,10 +2,10 @@
 
 ## Current state
 
-- Stable package: `2.5.0`.
+- Stable package: `1.0.0`.
 - Public GitHub milestone: `v1.0` (new baseline).
 - Repository license: MIT.
-- Released runtime contract: `2.5.0`.
+- Released runtime contract: `1.0.0`.
 - Current work: statistical regression milestone accepted by the owner on
   2026-07-15 and prepared for tag and artifact publication.
 
@@ -13,7 +13,7 @@
 
 Existing evaluation schemas, metric meanings, and deterministic PASS/BLOCK
 behavior remain compatible. New replay, statistical, sequential, drift,
-provenance, and baseline-manifest contracts are opt-in additions in 2.5.0. The
+provenance, and baseline-manifest contracts are opt-in additions in 1.0.0. The
 open-core boundary remains unchanged.
 
 ## Release readiness
@@ -37,10 +37,10 @@ The 2026-07-15 pre-acceptance lane completed on Python 3.12:
   JSON Schema by the test suite. `git diff --check`, package-content review,
   and the repository secret-pattern scan passed.
 - The showcase rendered at 1440px desktop and 390px mobile widths with the
-  2.5.0 command, complete local images, no horizontal overflow, and no browser
+  1.0.0 command, complete local images, no horizontal overflow, and no browser
   console warnings or errors.
 
-The owner accepted this evidence and authorized the 2.5.0 milestone release on
+The owner accepted this evidence and authorized the 1.0.0 milestone release on
 2026-07-15. Tag and artifact publication must still use the verified release
 pipeline described below.
 
@@ -71,6 +71,6 @@ Release acceptance checklist:
 
 ## Recommendation
 
-The owner-approved GitHub milestone is published as `v1.0`; its verified Python
-distribution retains package version `2.5.0`. PyPI remains a separate operation
-and must not be promoted while that version mapping is being reset.
+The owner-approved GitHub milestone is `v1.0` and maps to Python package
+`1.0.0`. Publish only the exact checksummed GitHub Release artifacts through
+PyPI Trusted Publishing.
