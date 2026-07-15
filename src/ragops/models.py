@@ -141,3 +141,226 @@ class ComparisonReport:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+@dataclass(frozen=True)
+class ReplayProvenance:
+    dataset: str
+    evidence: str
+    evaluator: str
+    application: str
+    model: str
+    model_config: str
+    environment: str
+
+
+@dataclass(frozen=True)
+class MetricObservation:
+    case_id: str
+    repeat_id: str
+    metrics: dict[str, float]
+
+
+@dataclass(frozen=True)
+class ReplayBundle:
+    schema_version: str
+    scenario_id: str
+    scenario_digest: str
+    provenance: ReplayProvenance
+    records: tuple[MetricObservation, ...]
+
+
+@dataclass(frozen=True)
+class StatisticalMetricGate:
+    direction: str
+    max_regression: float
+    minimum: float | None = None
+    maximum: float | None = None
+
+
+@dataclass(frozen=True)
+class StatisticalPolicy:
+    confidence: float
+    minimum_cases: int
+    resamples: int
+    seed: int
+    metric_gates: dict[str, StatisticalMetricGate]
+
+
+@dataclass(frozen=True)
+class StatisticalMetricResult:
+    direction: str
+    baseline_mean: float
+    candidate_mean: float
+    delta: float
+    candidate_bound: float | None
+    regression_bound: float | None
+    absolute_threshold: float
+    max_regression: float
+    passed: bool
+    failed_gates: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class StatisticalComparisonReport:
+    report_version: str
+    scenario_id: str
+    passed: bool
+    confidence: float
+    case_count: int
+    baseline_observations: int
+    candidate_observations: int
+    method: str
+    resamples: int
+    seed: int
+    failed_gates: tuple[str, ...]
+    metrics: dict[str, StatisticalMetricResult]
+    provenance: dict[str, Any]
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class EvaluatorDriftMetricGate:
+    max_absolute_change: float
+
+
+@dataclass(frozen=True)
+class EvaluatorDriftPolicy:
+    confidence: float
+    minimum_cases: int
+    resamples: int
+    seed: int
+    metric_gates: dict[str, EvaluatorDriftMetricGate]
+
+
+@dataclass(frozen=True)
+class EvaluatorDriftMetricResult:
+    reference_mean: float
+    current_mean: float
+    delta: float
+    lower_bound: float | None
+    upper_bound: float | None
+    max_absolute_change: float
+    passed: bool
+
+
+@dataclass(frozen=True)
+class EvaluatorDriftReport:
+    report_version: str
+    scenario_id: str
+    passed: bool
+    confidence: float
+    case_count: int
+    reference_observations: int
+    current_observations: int
+    method: str
+    resamples: int
+    seed: int
+    failed_gates: tuple[str, ...]
+    metrics: dict[str, EvaluatorDriftMetricResult]
+    provenance: dict[str, Any]
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class SequentialPolicy:
+    confidence: float
+    minimum_cases: int
+    minimum_repeats: int
+    maximum_repeats: int
+    look_every: int
+    resamples: int
+    seed: int
+    metric_gates: dict[str, StatisticalMetricGate]
+
+
+@dataclass(frozen=True)
+class SequentialMetricResult:
+    direction: str
+    baseline_mean: float
+    candidate_mean: float
+    delta: float
+    candidate_lower: float
+    candidate_upper: float
+    regression_lower: float
+    regression_upper: float
+    absolute_threshold: float
+    max_regression: float
+    decision: str
+    reasons: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class SequentialLookResult:
+    repeat_count: int
+    boundary_confidence: float
+    decision: str
+    failed_gates: tuple[str, ...]
+    metrics: dict[str, SequentialMetricResult]
+
+
+@dataclass(frozen=True)
+class SequentialComparisonReport:
+    report_version: str
+    scenario_id: str
+    passed: bool
+    decision: str
+    case_count: int
+    available_repeats: int
+    stopped_at_repeat: int | None
+    maximum_repeats: int
+    method: str
+    resamples: int
+    seed: int
+    failed_gates: tuple[str, ...]
+    looks: tuple[SequentialLookResult, ...]
+    provenance: dict[str, Any]
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ArtifactDigest:
+    sha256: str
+    bytes: int
+
+
+@dataclass(frozen=True)
+class BaselineAcceptance:
+    owner: str
+    accepted_at: str
+
+
+@dataclass(frozen=True)
+class BaselineManifest:
+    schema_version: str
+    scenario_id: str
+    scenario_digest: str
+    policy_kind: str
+    bundle: ArtifactDigest
+    policy: ArtifactDigest
+    provenance: ReplayProvenance
+    acceptance: BaselineAcceptance
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ProvenanceDiagnosis:
+    schema_version: str
+    scenario_id: str
+    classification: str
+    comparable: bool
+    changed_axes: tuple[str, ...]
+    causal_axes: tuple[str, ...]
+    evidence_changed: bool
+    message: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)

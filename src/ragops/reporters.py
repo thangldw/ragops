@@ -2,7 +2,13 @@ from __future__ import annotations
 
 import html
 
-from ragops.models import ComparisonReport, EvaluationReport
+from ragops.models import (
+    ComparisonReport,
+    EvaluationReport,
+    EvaluatorDriftReport,
+    SequentialComparisonReport,
+    StatisticalComparisonReport,
+)
 
 
 def evaluation_markdown(report: EvaluationReport) -> str:
@@ -95,6 +101,135 @@ portable release evidence for RAG and agent systems.</p></footer>
 </body></html>"""
 
 
+def statistical_comparison_markdown(report: StatisticalComparisonReport) -> str:
+    status = "PASS" if report.passed else "BLOCK"
+    confidence = f"{report.confidence:.1%}"
+    lines = [
+        f"# RAGOps statistical regression check: {status}",
+        "",
+        f"Scenario: `{report.scenario_id}`",
+        f"Evidence: {report.case_count} distinct cases, "
+        f"{report.baseline_observations} baseline observations, "
+        f"{report.candidate_observations} candidate observations",
+        f"Method: `{report.method}` at {confidence} confidence, "
+        f"{report.resamples} resamples, seed `{report.seed}`",
+        "",
+        "| Metric | Baseline | Candidate | Delta | Candidate bound | "
+        "Regression bound | Result |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
+    ]
+    for name, result in report.metrics.items():
+        result_label = "PASS" if result.passed else "BLOCK"
+        lines.append(
+            f"| {name} | {_format(result.baseline_mean)} | "
+            f"{_format(result.candidate_mean)} | {_signed(result.delta)} | "
+            f"{_optional(result.candidate_bound)} | "
+            f"{_optional(result.regression_bound)} | {result_label} |"
+        )
+    lines.extend(["", "## Failed gates", ""])
+    lines.extend(f"- `{gate}`" for gate in report.failed_gates)
+    if not report.failed_gates:
+        lines.append("None.")
+    lines.extend(
+        [
+            "",
+            "## Provenance",
+            "",
+            f"- Scenario digest: `{report.provenance['scenario_digest']}`",
+            f"- Changed axes: `{', '.join(report.provenance['changed_axes']) or 'none'}`",
+            f"- Dataset: `{report.provenance['baseline']['dataset']}`",
+            f"- Evaluator: `{report.provenance['baseline']['evaluator']}`",
+            f"- Baseline model: `{report.provenance['baseline']['model']}`",
+            f"- Candidate model: `{report.provenance['candidate']['model']}`",
+            f"- Environment: `{report.provenance['baseline']['environment']}`",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def evaluator_drift_markdown(report: EvaluatorDriftReport) -> str:
+    status = "PASS" if report.passed else "BLOCK"
+    lines = [
+        f"# RAGOps evaluator drift check: {status}",
+        "",
+        f"Scenario: `{report.scenario_id}`",
+        f"Evidence: {report.case_count} frozen anchor cases, "
+        f"{report.reference_observations} reference observations, "
+        f"{report.current_observations} current observations",
+        f"Method: `{report.method}` at {report.confidence:.1%} confidence",
+        "",
+        "| Metric | Reference | Current | Delta | Lower | Upper | Tolerance | Result |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
+    ]
+    for name, result in report.metrics.items():
+        lines.append(
+            f"| {name} | {_format(result.reference_mean)} | "
+            f"{_format(result.current_mean)} | {_signed(result.delta)} | "
+            f"{_optional(result.lower_bound)} | {_optional(result.upper_bound)} | "
+            f"±{_format(result.max_absolute_change)} | "
+            f"{'PASS' if result.passed else 'BLOCK'} |"
+        )
+    lines.extend(["", "## Failed gates", ""])
+    lines.extend(f"- `{gate}`" for gate in report.failed_gates)
+    if not report.failed_gates:
+        lines.append("None.")
+    lines.extend(
+        [
+            "",
+            "## Evaluator provenance",
+            "",
+            f"- Evidence: `{report.provenance['evidence']}`",
+            f"- Reference: `{report.provenance['reference_evaluator']}`",
+            f"- Current: `{report.provenance['current_evaluator']}`",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
+def sequential_comparison_markdown(report: SequentialComparisonReport) -> str:
+    status = report.decision.upper()
+    lines = [
+        f"# RAGOps sequential regression check: {status}",
+        "",
+        f"Scenario: `{report.scenario_id}`",
+        f"Evidence: {report.case_count} cases, {report.available_repeats} complete repeats",
+        f"Plan: maximum {report.maximum_repeats} repeats; method `{report.method}`",
+        "",
+        "| Look | Boundary confidence | Decision |",
+        "| ---: | ---: | --- |",
+    ]
+    lines.extend(
+        f"| {look.repeat_count} | {look.boundary_confidence:.3%} | "
+        f"{look.decision.upper()} |"
+        for look in report.looks
+    )
+    if not report.looks:
+        lines.append("| n/a | n/a | CONTINUE |")
+    if report.looks:
+        lines.extend(
+            [
+                "",
+                "## Latest metric bounds",
+                "",
+                "| Metric | Candidate interval | Regression interval | Decision |",
+                "| --- | ---: | ---: | --- |",
+            ]
+        )
+        for name, result in report.looks[-1].metrics.items():
+            lines.append(
+                f"| {name} | [{_format(result.candidate_lower)}, "
+                f"{_format(result.candidate_upper)}] | "
+                f"[{_format(result.regression_lower)}, "
+                f"{_format(result.regression_upper)}] | "
+                f"{result.decision.upper()} |"
+            )
+    lines.extend(["", "## Gate reasons", ""])
+    lines.extend(f"- `{gate}`" for gate in report.failed_gates)
+    if not report.failed_gates:
+        lines.append("None.")
+    return "\n".join(lines) + "\n"
+
+
 def _case_comparison_row(report: ComparisonReport, index: int) -> str:
     case = report.candidate.cases[index]
     finding_items = "".join(
@@ -122,3 +257,7 @@ def _format(value: float) -> str:
 
 def _signed(value: float) -> str:
     return f"{value:+.4f}".rstrip("0").rstrip(".")
+
+
+def _optional(value: float | None) -> str:
+    return "n/a" if value is None else _format(value)

@@ -6,6 +6,25 @@ remains available in Git.
 
 ## [Unreleased]
 
+### Added
+
+- Added an experimental, opt-in `compare-runs` command with versioned replay
+  bundles, provenance checks, deterministic paired hierarchical bootstrap
+  bounds, and uncertainty-aware absolute and regression gates.
+- Added JSON schemas for replay bundles and statistical comparison reports plus
+  credential-free PASS/BLOCK fixtures.
+- Added bounded, shell-free repeated-run collection with atomic checkpoints,
+  resume support, and sequential early stopping.
+- Added predeclared group-sequential gates, evaluator-drift equivalence checks,
+  and provenance diagnosis for model, evaluator, dataset, and infrastructure
+  changes.
+- Added content-addressed accepted-baseline manifests and optional detached SSH
+  signing and offline verification.
+- Added dependency-free recorded-score bridges for Ragas, DeepEval, and
+  OpenTelemetry GenAI evaluation events.
+- Added authenticated bounded statistical API endpoints and a reusable read-only
+  GitHub statistical gate with safe PR evidence publication.
+
 ### Changed
 
 - Consolidated product, architecture, engineering, evaluation, pilot, demo,

@@ -1,0 +1,28 @@
+name: RAGOps statistical gate smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ragops-statistical-gate.yml"
+      - ".github/workflows/ragops-statistical-gate-smoke.yml"
+      - "src/ragops/**"
+      - "scenarios/statistical_gate/**"
+      - "tests/test_github_workflows.py"
+  pull_request:
+    paths:
+      - ".github/workflows/ragops-statistical-gate.yml"
+      - ".github/workflows/ragops-statistical-gate-smoke.yml"
+      - "src/ragops/**"
+      - "scenarios/statistical_gate/**"
+      - "tests/test_github_workflows.py"
+  workflow_dispatch:
+
+jobs:
+  passing-statistical-reference:
+    uses: ./.github/workflows/ragops-statistical-gate.yml
+    with:
+      ragops-version: ${{ github.event.pull_request.head.sha || github.sha }}
+      baseline-bundle: scenarios/statistical_gate/baseline.json
+      candidate-bundle: scenarios/statistical_gate/candidate-pass.json
+      policy: scenarios/statistical_gate/policy.toml

@@ -44,7 +44,53 @@ ragops compare \
 - Exit `2`: policy blocks the candidate.
 - Other non-zero: input, configuration, installation, or contract error.
 
-## 4. Integrate the gate
+## 4. Compare repeated metric observations
+
+Use the experimental statistical path when baseline and candidate bundles
+contain multiple recorded metric observations per scenario case:
+
+```bash
+ragops compare-runs \
+  --baseline-bundle scenarios/statistical_gate/baseline.json \
+  --candidate-bundle scenarios/statistical_gate/candidate-pass.json \
+  --policy scenarios/statistical_gate/policy.toml \
+  --format markdown
+```
+
+This path gates both the absolute candidate confidence bound and the
+uncertainty-aware baseline delta. It returns exit `2` for a measured regression,
+an absolute failure, or insufficient distinct-case evidence.
+
+Use predeclared sequential looks when additional repeats are expensive:
+
+```bash
+ragops compare-sequential \
+  --baseline-bundle scenarios/statistical_gate/baseline.json \
+  --candidate-bundle scenarios/statistical_gate/candidate-pass.json \
+  --policy scenarios/statistical_gate/sequential-policy.toml
+```
+
+Before promoting a baseline, bind its exact bundle and policy bytes. Signing is
+an explicit owner operation:
+
+```bash
+ragops baseline-create \
+  --bundle baseline.bundle.json \
+  --policy statistical-policy.toml \
+  --owner thang \
+  --accepted-at 2026-07-15T21:00:00+09:00 \
+  --output baseline-manifest.json
+
+ragops baseline-sign \
+  --manifest baseline-manifest.json \
+  --key path/to/ssh-signing-key \
+  --output baseline-manifest.sig
+```
+
+`baseline-verify` always checks bundle and policy digests. Add the signature,
+allowed-signers file, and identity arguments together to verify owner identity.
+
+## 5. Integrate the gate
 
 - [CI and pull-request gates](engineering/ci-gates.md)
 - [Trace, provider, and external-metric adapters](engineering/integrations.md)

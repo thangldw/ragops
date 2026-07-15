@@ -28,6 +28,13 @@ The dependency-free example under
 maps already-exported spans into trace 0.4 JSONL. It does not initialize an SDK,
 contact a collector, or add OpenTelemetry to the core.
 
+For repeated evaluation events,
+`otel_evaluation_events_to_observations` maps `gen_ai.evaluation.name` and
+`gen_ai.evaluation.score.value` plus `ragops.case.id` and
+`ragops.repeat.id` into replay observations. The GenAI conventions are still
+moving, so the replay evaluator provenance must record the convention and
+adapter version. See the [OpenTelemetry GenAI attribute registry](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/).
+
 ## External evaluator metrics
 
 Export finite per-case scores from Ragas, DeepEval, Langfuse, or an internal
@@ -46,6 +53,42 @@ judge into the `external-metrics-0.1` envelope:
 RAGOps validates coverage, namespaces aggregate keys as
 `<provider>.<metric>`, and applies the reviewed policy. It does not reinterpret
 direction, scale, calibration, or meaning.
+
+For repeated statistical runs, dependency-free bridges accept recorded
+provider structures:
+
+- `ragas_scores_to_observations` maps ordered
+  [`EvaluationResult.scores`](https://docs.ragas.io/en/latest/references/evaluation_schema/)
+  rows to explicit case IDs and one repeat ID.
+- `deepeval_scores_to_observations` maps recorded metric names and numeric
+  [DeepEval `metric.score`](https://deepeval.com/docs/metrics-introduction)
+  values while preserving repeat IDs.
+
+These functions do not import provider packages. The application owns SDK
+execution, score extraction, redaction, evaluator identity, prompt/model
+provenance, and the mapping review.
+
+## Repeated-run command adapter
+
+A run plan declares bounded case IDs, repeat count, scenario digest, and full
+provenance. The explicit command emits one JSON object per invocation:
+
+```json
+{"metrics":{"citation_precision":0.94}}
+```
+
+```bash
+ragops collect-runs \
+  --plan scenarios/statistical_gate/run-plan.json \
+  --output candidate.bundle.json \
+  --command -- python your_metric_runner.py
+```
+
+The command inherits the caller environment and receives case/repeat IDs in
+environment variables. Do not pass untrusted commands or secrets into a pull
+request job. Use `--resume` to continue an interrupted bundle. Add
+`--baseline-bundle` and `--sequential-policy` to stop after a terminal complete
+round.
 
 ## OpenAI Responses adapter
 

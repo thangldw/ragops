@@ -2,7 +2,7 @@ name: RAGOps PR comment publisher
 
 on:
   workflow_run:
-    workflows: ["RAGOps reusable gate smoke"]
+    workflows: ["RAGOps reusable gate smoke", "RAGOps statistical gate smoke"]
     types: [completed]
 
 permissions:
@@ -23,5 +23,5 @@ jobs:
       - name: Validate evidence and publish one idempotent comment
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          RAGOPS_SOURCE_WORKFLOW: RAGOps reusable gate smoke
+          RAGOPS_SOURCE_WORKFLOW: ${{ github.event.workflow_run.name }}
         run: python apps/github_pr_comment.py

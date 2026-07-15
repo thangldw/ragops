@@ -6,18 +6,29 @@ from pathlib import Path
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from ragops import __version__
 from ragops.control_plane import ControlPlane
+from ragops.drift import detect_evaluator_drift
 from ragops.engine import compare, evaluate
 from ragops.loader import ContractError, responses_from_data, scenario_from_dict
+from ragops.models import (
+    EvaluatorDriftMetricGate,
+    EvaluatorDriftPolicy,
+    SequentialPolicy,
+    StatisticalMetricGate,
+    StatisticalPolicy,
+)
+from ragops.sequential import compare_replay_bundles_sequentially
+from ragops.statistical import compare_replay_bundles, replay_bundle_from_dict
 from ragops.store import ExperimentStore
 
 app = FastAPI(title="RAGOps API", version=__version__)
 
 DEFAULT_MAX_REQUEST_BYTES = 2 * 1024 * 1024
 DEFAULT_MAX_CASES = 1000
+DEFAULT_MAX_REPLAY_OBSERVATIONS = 100_000
 
 
 class EvaluateRequest(BaseModel):
@@ -33,6 +44,22 @@ class CompareRequest(BaseModel):
     scenario: dict
     baseline: list[dict]
     candidate: list[dict]
+
+
+class StrictRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class StatisticalCompareRequest(StrictRequest):
+    baseline: dict
+    candidate: dict
+    policy: dict
+
+
+class EvaluatorDriftRequest(StrictRequest):
+    reference: dict
+    current: dict
+    policy: dict
 
 
 class ReviewRequest(BaseModel):
@@ -124,6 +151,28 @@ def _validate_collection_limits(scenario: dict, *response_sets: list[dict]) -> N
         )
 
 
+def _validate_replay_limits(*bundles: dict) -> None:
+    maximum_cases = _positive_env_int("RAGOPS_MAX_CASES", DEFAULT_MAX_CASES)
+    maximum_observations = _positive_env_int(
+        "RAGOPS_MAX_REPLAY_OBSERVATIONS", DEFAULT_MAX_REPLAY_OBSERVATIONS
+    )
+    for bundle in bundles:
+        records = bundle.get("records", [])
+        if not isinstance(records, list):
+            continue
+        case_ids = {
+            record.get("case_id") for record in records if isinstance(record, dict)
+        }
+        if len(records) > maximum_observations or len(case_ids) > maximum_cases:
+            raise HTTPException(
+                status_code=413,
+                detail=(
+                    f"Replay bundles are limited to {maximum_cases} cases and "
+                    f"{maximum_observations} observations"
+                ),
+            )
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok", "version": __version__}
@@ -153,6 +202,45 @@ def compare_endpoint(payload: CompareRequest) -> dict:
         baseline = responses_from_data(payload.baseline)
         candidate = responses_from_data(payload.candidate)
         return compare(scenario, baseline, candidate).to_dict()
+    except (ContractError, KeyError, TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/v1/statistical/compare", dependencies=[Depends(require_api_key)])
+def statistical_compare_endpoint(payload: StatisticalCompareRequest) -> dict:
+    try:
+        _validate_replay_limits(payload.baseline, payload.candidate)
+        return compare_replay_bundles(
+            replay_bundle_from_dict(payload.baseline),
+            replay_bundle_from_dict(payload.candidate),
+            _statistical_policy(payload.policy),
+        ).to_dict()
+    except (ContractError, KeyError, TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/v1/statistical/sequential", dependencies=[Depends(require_api_key)])
+def sequential_compare_endpoint(payload: StatisticalCompareRequest) -> dict:
+    try:
+        _validate_replay_limits(payload.baseline, payload.candidate)
+        return compare_replay_bundles_sequentially(
+            replay_bundle_from_dict(payload.baseline),
+            replay_bundle_from_dict(payload.candidate),
+            _sequential_policy(payload.policy),
+        ).to_dict()
+    except (ContractError, KeyError, TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/v1/evaluator-drift", dependencies=[Depends(require_api_key)])
+def evaluator_drift_endpoint(payload: EvaluatorDriftRequest) -> dict:
+    try:
+        _validate_replay_limits(payload.reference, payload.current)
+        return detect_evaluator_drift(
+            replay_bundle_from_dict(payload.reference),
+            replay_bundle_from_dict(payload.current),
+            _drift_policy(payload.policy),
+        ).to_dict()
     except (ContractError, KeyError, TypeError, ValueError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
@@ -212,3 +300,79 @@ def evaluate_and_save(
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     run_id = store.save(report, label=payload.label)
     return {"run_id": run_id, "report": report.to_dict()}
+
+
+def _statistical_metric_gates(raw: object) -> dict[str, StatisticalMetricGate]:
+    if not isinstance(raw, dict) or not raw:
+        raise ContractError("Statistical API policy metrics must be a non-empty object")
+    gates = {}
+    for name, value in raw.items():
+        if not isinstance(name, str) or not name or not isinstance(value, dict):
+            raise ContractError("Statistical API metric gates must be named objects")
+        if set(value) - {"direction", "minimum", "maximum", "max_regression"}:
+            raise ContractError(f"Statistical API metric {name!r} has unknown fields")
+        gates[name] = StatisticalMetricGate(
+            direction=value["direction"],
+            minimum=value.get("minimum"),
+            maximum=value.get("maximum"),
+            max_regression=value["max_regression"],
+        )
+    return gates
+
+
+def _statistical_policy(raw: dict) -> StatisticalPolicy:
+    expected = {"confidence", "minimum_cases", "resamples", "seed", "metrics"}
+    if set(raw) != expected:
+        raise ContractError("Statistical API policy fields do not match the fixed policy contract")
+    return StatisticalPolicy(
+        confidence=raw["confidence"],
+        minimum_cases=raw["minimum_cases"],
+        resamples=raw["resamples"],
+        seed=raw["seed"],
+        metric_gates=_statistical_metric_gates(raw["metrics"]),
+    )
+
+
+def _sequential_policy(raw: dict) -> SequentialPolicy:
+    expected = {
+        "confidence",
+        "minimum_cases",
+        "minimum_repeats",
+        "maximum_repeats",
+        "look_every",
+        "resamples",
+        "seed",
+        "metrics",
+    }
+    if set(raw) != expected:
+        raise ContractError("Statistical API policy fields do not match the sequential contract")
+    return SequentialPolicy(
+        confidence=raw["confidence"],
+        minimum_cases=raw["minimum_cases"],
+        minimum_repeats=raw["minimum_repeats"],
+        maximum_repeats=raw["maximum_repeats"],
+        look_every=raw["look_every"],
+        resamples=raw["resamples"],
+        seed=raw["seed"],
+        metric_gates=_statistical_metric_gates(raw["metrics"]),
+    )
+
+
+def _drift_policy(raw: dict) -> EvaluatorDriftPolicy:
+    expected = {"confidence", "minimum_cases", "resamples", "seed", "metrics"}
+    if set(raw) != expected or not isinstance(raw["metrics"], dict):
+        raise ContractError("Evaluator drift API policy fields do not match the contract")
+    gates = {}
+    for name, value in raw["metrics"].items():
+        if not isinstance(value, dict) or set(value) != {"max_absolute_change"}:
+            raise ContractError(
+                f"Evaluator drift API metric {name!r} must define max_absolute_change"
+            )
+        gates[name] = EvaluatorDriftMetricGate(value["max_absolute_change"])
+    return EvaluatorDriftPolicy(
+        confidence=raw["confidence"],
+        minimum_cases=raw["minimum_cases"],
+        resamples=raw["resamples"],
+        seed=raw["seed"],
+        metric_gates=gates,
+    )

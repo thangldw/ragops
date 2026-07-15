@@ -1,0 +1,10 @@
+[statistical]
+confidence = 0.95
+minimum_cases = 3
+resamples = 1000
+seed = 20260715
+
+[statistical.metrics.citation_precision]
+direction = "higher"
+minimum = 0.90
+max_regression = 0.03
