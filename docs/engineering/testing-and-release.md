@@ -49,8 +49,8 @@ When GitHub Actions is unavailable:
 
 ```bash
 python -m pip install -e '.[dev]' build cyclonedx-bom==7.3.0 twine
-python scripts/local_release.py verify --tag vX.Y.Z
-python scripts/local_release.py publish-github --tag vX.Y.Z --yes
+python scripts/local_release.py verify --tag vX.Y
+python scripts/local_release.py publish-github --tag vX.Y --yes
 ```
 
 Emergency PyPI publication requires a short-lived project-scoped token and must

@@ -33,8 +33,16 @@ jobs:
 
           tag = sys.argv[1]
           version = tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"]
-          if tag != f"v{version}":
-              raise SystemExit(f"tag {tag!r} does not match package version v{version}")
+          parts = version.split(".")
+          if len(parts) != 3 or not all(part.isdigit() for part in parts):
+              raise SystemExit("package version must use numeric MAJOR.MINOR.PATCH")
+          major, minor, patch = parts
+          expected_tag = f"v{major}.{minor}"
+          if patch != "0" or tag != expected_tag:
+              raise SystemExit(
+                  f"tag {tag!r} does not match milestone {expected_tag!r} "
+                  f"for package version {version!r}"
+              )
           print(f"publishing ragops {version}")
           PY
       - name: Download promoted GitHub Release artifacts

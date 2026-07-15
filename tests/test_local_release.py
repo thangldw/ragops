@@ -9,7 +9,7 @@ SPEC.loader.exec_module(local_release)
 
 
 def test_tag_must_match_package_version() -> None:
-    assert local_release.assert_tag(f"v{local_release.version()}") == f"v{local_release.version()}"
+    assert local_release.assert_tag(local_release.milestone_tag()) == "v1.0"
 
 
 def test_checksum_manifest_is_deterministic(tmp_path, monkeypatch) -> None:
@@ -49,7 +49,7 @@ def test_checksum_verification_rejects_path_traversal(tmp_path) -> None:
 def test_pypi_requires_explicit_token(monkeypatch) -> None:
     monkeypatch.delenv("PYPI_API_TOKEN", raising=False)
     try:
-        local_release.pypi(f"v{local_release.version()}", True)
+        local_release.pypi(local_release.milestone_tag(), True)
     except SystemExit as error:
         assert "PYPI_API_TOKEN" in str(error)
     else:
