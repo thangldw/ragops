@@ -8,7 +8,7 @@ retriever, generator, or orchestration layer.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install ragops==2.4.0
+pip install ragops==2.5.0
 ragops demo --output ragops-demo
 ```
 

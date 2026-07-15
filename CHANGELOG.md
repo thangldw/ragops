@@ -6,6 +6,8 @@ remains available in Git.
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-07-15
+
 ### Added
 
 - Added an experimental, opt-in `compare-runs` command with versioned replay

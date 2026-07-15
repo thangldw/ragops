@@ -2,18 +2,18 @@
 
 ## Current state
 
-- Stable package: `2.4.0`.
+- Stable package: `2.5.0`.
 - Repository license: MIT.
-- Released runtime contract: `2.4.0` remains unchanged.
-- Current work: prepare the opt-in statistical regression milestone for owner
-  acceptance; all changes remain under `Unreleased`.
+- Released runtime contract: `2.5.0`.
+- Current work: statistical regression milestone accepted by the owner on
+  2026-07-15 and prepared for tag and artifact publication.
 
 ## Compatibility
 
 Existing evaluation schemas, metric meanings, and deterministic PASS/BLOCK
 behavior remain compatible. New replay, statistical, sequential, drift,
-provenance, and baseline-manifest contracts are opt-in and pending owner
-acceptance. The open-core boundary remains unchanged.
+provenance, and baseline-manifest contracts are opt-in additions in 2.5.0. The
+open-core boundary remains unchanged.
 
 ## Release readiness
 
@@ -35,12 +35,15 @@ The 2026-07-15 pre-acceptance lane completed on Python 3.12:
 - Serialized contract fixtures and reports were validated against every new
   JSON Schema by the test suite. `git diff --check`, package-content review,
   and the repository secret-pattern scan passed.
+- The showcase rendered at 1440px desktop and 390px mobile widths with the
+  2.5.0 command, complete local images, no horizontal overflow, and no browser
+  console warnings or errors.
 
-This is implementation evidence, not an owner acceptance or release approval.
-The release-only publication and browser-render lane remains intentionally
-deferred until a large milestone is approved.
+The owner accepted this evidence and authorized the 2.5.0 milestone release on
+2026-07-15. Tag and artifact publication must still use the verified release
+pipeline described below.
 
-Before owner acceptance:
+Release acceptance checklist:
 
 1. Run `ruff check .` and the full test suite.
 2. Reproduce a passing baseline and blocked regression.
@@ -67,6 +70,6 @@ Before owner acceptance:
 
 ## Recommendation
 
-Hold release, tag, and package publication until the owner reviews the final
-diff and acceptance evidence. Documentation and Pages publication may proceed
-only after the complete local verification lane passes.
+Go for the owner-approved 2.5.0 tag and GitHub artifact publication after the
+complete local release lane passes. PyPI remains a separate promotion of the
+exact GitHub Release artifacts through trusted publishing.
