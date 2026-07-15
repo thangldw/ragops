@@ -37,8 +37,18 @@ def version() -> str:
     return str(data["project"]["version"])
 
 
+def milestone_tag() -> str:
+    parts = version().split(".")
+    if len(parts) != 3 or any(not part.isdigit() for part in parts):
+        raise SystemExit("package version must use numeric MAJOR.MINOR.PATCH")
+    major, minor, patch = parts
+    if patch != "0":
+        raise SystemExit("milestone releases require a zero patch component")
+    return f"v{major}.{minor}"
+
+
 def assert_tag(tag: str) -> str:
-    expected = f"v{version()}"
+    expected = milestone_tag()
     if tag != expected:
         raise SystemExit(f"tag {tag!r} does not match package version {expected!r}")
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")

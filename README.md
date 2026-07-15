@@ -23,7 +23,7 @@ dependency-free, offline, and provider-independent.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install ragops==2.5.0
+pip install ragops==1.0.0
 ragops demo --output ragops-demo
 ```
 

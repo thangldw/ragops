@@ -70,7 +70,7 @@ def test_pypi_workflow_is_manual_oidc_and_commit_pinned() -> None:
     assert "workflow_dispatch:" in workflow
     assert "environment: pypi" in workflow
     assert "id-token: write" in workflow
-    assert "tag {tag!r} does not match package version" in workflow
+    assert "tag {tag!r} does not match milestone" in workflow
     assert "@release/v1" not in workflow
     assert re.search(r"pypa/gh-action-pypi-publish@[0-9a-f]{40}", workflow)
     assert "gh release download" in workflow
