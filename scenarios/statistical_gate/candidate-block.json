@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "scenario_id": "statistical-citations",
+  "scenario_digest": "sha256:statistical-citations-demo-v1",
+  "provenance": {
+    "dataset": "citation-suite-sha256:demo-v1",
+    "evidence": "sha256:candidate-block-replay-demo-v1",
+    "evaluator": "citation-precision-v1",
+    "application": "support-agent-v2",
+    "model": "candidate-model-regressed",
+    "model_config": "sha256:model-config-regressed",
+    "environment": "offline-reference-v1"
+  },
+  "records": [
+    {"case_id": "case-1", "repeat_id": "run-1", "metrics": {"citation_precision": 0.87}},
+    {"case_id": "case-1", "repeat_id": "run-2", "metrics": {"citation_precision": 0.88}},
+    {"case_id": "case-2", "repeat_id": "run-1", "metrics": {"citation_precision": 0.86}},
+    {"case_id": "case-2", "repeat_id": "run-2", "metrics": {"citation_precision": 0.87}},
+    {"case_id": "case-3", "repeat_id": "run-1", "metrics": {"citation_precision": 0.88}},
+    {"case_id": "case-3", "repeat_id": "run-2", "metrics": {"citation_precision": 0.87}}
+  ]
+}

@@ -8,9 +8,10 @@ evidence support, latency, cost, or safety. Teams need a repeatable answer to:
 
 ## Product thesis
 
-RAGOps is a local-first regression release gate for systems teams already
-operate. It evaluates recorded responses, portable traces, and optional external
-metrics against versioned scenarios and policies, then returns an explainable
+RAGOps is a local-first regression release gate for teams that already operate
+RAG or AI-agent systems. It evaluates recorded responses, portable traces,
+repeated metric observations, and optional external metrics against versioned
+scenarios and policies, then returns an explainable
 `PASS` or `BLOCK` with case-level evidence.
 
 ## Users and jobs
@@ -39,6 +40,10 @@ outside evaluation semantics.
 
 - Versioned, portable release contracts rather than isolated dashboard scores.
 - Absolute readiness and baseline regression gates in one decision.
+- Effect size plus uncertainty for stochastic systems, with valid predeclared
+  sequential stopping.
+- Provenance isolation for model, evaluator, dataset, and infrastructure
+  changes, plus content-addressed accepted baselines.
 - Deterministic evidence visible before optional model-based judgments.
 - Offline execution with provider-neutral adapter boundaries.
 - Critical policy findings that cannot be averaged away.

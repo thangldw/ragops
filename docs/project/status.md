@@ -4,16 +4,41 @@
 
 - Stable package: `2.4.0`.
 - Repository license: MIT.
-- Runtime contract: unchanged by the documentation cleanup.
-- Current work: simplify repository HEAD and make `main` the only Pages source.
+- Released runtime contract: `2.4.0` remains unchanged.
+- Current work: prepare the opt-in statistical regression milestone for owner
+  acceptance; all changes remain under `Unreleased`.
 
 ## Compatibility
 
-The cleanup changes documentation URLs and GitHub Pages operations only. Public
-schemas, metric meaning, PASS/BLOCK behavior, Python/CLI/API contracts, and the
-open-core boundary remain compatible.
+Existing evaluation schemas, metric meanings, and deterministic PASS/BLOCK
+behavior remain compatible. New replay, statistical, sequential, drift,
+provenance, and baseline-manifest contracts are opt-in and pending owner
+acceptance. The open-core boundary remains unchanged.
 
 ## Release readiness
+
+### Current implementation evidence
+
+The 2026-07-15 pre-acceptance lane completed on Python 3.12:
+
+- `ruff check .` and 202 tests passed with third-party pytest plugin autoload
+  disabled.
+- Wheel and source archive builds succeeded. A clean wheel install passed
+  `pip check`, exposed every new CLI command, and reproduced the offline demo.
+- Deterministic and fixed statistical fixtures reproduced PASS and BLOCK exit
+  behavior; the sequential fixture stopped with PASS at its first eligible
+  predeclared look.
+- Frozen-anchor evaluator drift passed within tolerance, and baseline
+  integrity plus a real detached Ed25519 SSH signature verified successfully.
+- API health returned the package version, missing credentials returned 401,
+  and an authenticated statistical comparison passed.
+- Serialized contract fixtures and reports were validated against every new
+  JSON Schema by the test suite. `git diff --check`, package-content review,
+  and the repository secret-pattern scan passed.
+
+This is implementation evidence, not an owner acceptance or release approval.
+The release-only publication and browser-render lane remains intentionally
+deferred until a large milestone is approved.
 
 Before owner acceptance:
 
@@ -26,6 +51,8 @@ Before owner acceptance:
    and repository status.
 7. Render desktop and 390px mobile Pages views with no overflow or console
    errors.
+8. Reproduce fixed PASS/BLOCK, sequential early PASS/BLOCK, evaluator drift,
+   baseline integrity/signature verification, and bounded API requests.
 
 ## Current limitations
 
@@ -35,6 +62,8 @@ Before owner acceptance:
 - The control plane is a local development alpha, not hosted multi-tenant SaaS.
 - Provider-backed evaluators own their reproducibility, privacy, calibration,
   and availability guarantees.
+- Generic bootstrap and provenance diagnostics do not replace domain-specific
+  power analysis, labeled calibration, or controlled causal experiments.
 
 ## Recommendation
 

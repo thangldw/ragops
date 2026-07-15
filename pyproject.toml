@@ -32,7 +32,7 @@ Changelog = "https://github.com/thangldw/ragops/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 api = ["fastapi>=0.115", "uvicorn>=0.30"]
-dev = ["pytest>=8.0", "ruff>=0.6", "fastapi>=0.115"]
+dev = ["pytest>=8.0", "ruff>=0.6", "fastapi>=0.115", "jsonschema>=4.23"]
 
 [project.scripts]
 ragops = "ragops.cli:main"

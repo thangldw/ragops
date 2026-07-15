@@ -14,6 +14,12 @@ Tests cover contracts, evaluator boundaries, engine integration, adapters,
 reports, supported schemas, passing baselines, and blocked regressions. Core
 tests remain offline and credential-free.
 
+Statistical acceptance additionally exercises fixed PASS/BLOCK, insufficient
+evidence, sequential early PASS/BLOCK/CONTINUE, evaluator equivalence/drift,
+provenance confounding, repeated-run resume/early stop, baseline digest and SSH
+signature verification, provider mappings, bounded API requests, and reusable
+workflow trust boundaries.
+
 ## Release checklist
 
 1. Link the current requirement and architecture decisions.
@@ -26,6 +32,10 @@ tests remain offline and credential-free.
    evidence from those exact artifacts.
 6. Obtain owner acceptance before tag, GitHub Release, PyPI, or other public
    publication.
+
+Intermediate implementation checkpoints are not releases. Keep them under
+`Unreleased` and prepare a version/tag only when the owner declares a major
+product milestone accepted.
 
 ## GitHub release path
 

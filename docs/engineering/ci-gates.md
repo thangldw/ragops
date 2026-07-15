@@ -19,6 +19,29 @@ The caller owns fixtures and branch protection. The reusable workflow has
 read-only repository permissions, preserves the CLI exit code, writes Markdown
 to the Step Summary, and uploads evidence even when the candidate is blocked.
 
+## Statistical pull-request gate
+
+Repeated metric bundles use the separate reusable statistical workflow:
+
+```yaml
+jobs:
+  ragops-statistical:
+    uses: thangldw/ragops/.github/workflows/ragops-statistical-gate.yml@<milestone-tag>
+    with:
+      mode: fixed # or sequential
+      baseline-bundle: evals/baseline.bundle.json
+      candidate-bundle: evals/candidate.bundle.json
+      policy: evals/statistical-policy.toml
+      baseline-manifest: evals/baseline-manifest.json
+```
+
+The manifest is optional during adoption but recommended for accepted
+baselines. Supplying any SSH signature input requires the signature,
+allowed-signers file, and signer identity together. The workflow verifies the
+baseline before comparison, runs with `contents: read`, preserves exit `0` or
+`2`, and publishes the same bounded artifact contract used by the isolated
+default-branch PR-comment publisher.
+
 ## Safe pull-request comments
 
 Evaluation and publication are separate trust boundaries:
