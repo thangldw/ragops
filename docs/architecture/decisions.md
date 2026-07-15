@@ -55,6 +55,10 @@ remain available in Git history.
 6. Intermediate subfeatures remain under `Unreleased`. Tags and package
    publication occur only for an owner-approved major product milestone, not
    for each implementation checkpoint.
+7. The reset public line uses two-part GitHub milestone tags (`v1.0`, `v1.1`)
+   and three-part Python package versions (`1.0.0`, `1.1.0`). The owner-approved
+   reset removes pre-baseline release listings while Git commit history remains
+   the engineering archive.
 
 ## Compatibility rule
 
@@ -63,7 +67,7 @@ boundary requires a new decision record and explicit owner review. Presentation
 and documentation corrections remain compatible when runtime contracts do not
 change.
 
-## Accepted in 2.5.0: statistical regression milestone
+## Accepted in 1.0.0: statistical regression milestone
 
 Opt-in fixed and sequential paths accept versioned replay bundles of per-case,
 per-repeat metrics. Fixed comparison applies one-sided paired hierarchical
@@ -93,6 +97,6 @@ SHA-256. Detached SSH signatures are optional adapters and use the
 SSH; signature verification establishes identity when an approved
 allowed-signers file is supplied.
 
-The owner accepted these experimental schemas and gates as the 2.5.0 public
+The owner accepted these experimental schemas and gates as the 1.0.0 public
 commitment on 2026-07-15. Live provider calls, hosted storage, and automatic
 causal decomposition remain outside this decision.
