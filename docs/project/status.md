@@ -6,8 +6,8 @@
 - Public GitHub milestone: `v1.0` (new baseline).
 - Repository license: MIT.
 - Released runtime contract: `1.0.0`.
-- Current work: statistical regression milestone accepted by the owner on
-  2026-07-15 and prepared for tag and artifact publication.
+- Current work: statistical regression milestone accepted and published as the
+  `v1.0` GitHub Release and `1.0.0` Python package on 2026-07-15.
 
 ## Compatibility
 
@@ -16,9 +16,9 @@ behavior remain compatible. New replay, statistical, sequential, drift,
 provenance, and baseline-manifest contracts are opt-in additions in 1.0.0. The
 open-core boundary remains unchanged.
 
-## Release readiness
+## Released baseline
 
-### Current implementation evidence
+### Acceptance evidence
 
 The 2026-07-15 pre-acceptance lane completed on Python 3.12:
 
@@ -41,10 +41,12 @@ The 2026-07-15 pre-acceptance lane completed on Python 3.12:
   console warnings or errors.
 
 The owner accepted this evidence and authorized the 1.0.0 milestone release on
-2026-07-15. Tag and artifact publication must still use the verified release
-pipeline described below.
+2026-07-15. The verified pipeline published tag and GitHub Release `v1.0`, the
+checksummed wheel and source archive, SBOM and release evidence, and Python
+package `1.0.0` through PyPI Trusted Publishing. GitHub Pages reflects the
+released statistical workflow and keeps the package command at `1.0.0`.
 
-Release acceptance checklist:
+Acceptance checklist for the next milestone:
 
 1. Run `ruff check .` and the full test suite.
 2. Reproduce a passing baseline and blocked regression.
@@ -71,6 +73,6 @@ Release acceptance checklist:
 
 ## Recommendation
 
-The owner-approved GitHub milestone is `v1.0` and maps to Python package
-`1.0.0`. Publish only the exact checksummed GitHub Release artifacts through
-PyPI Trusted Publishing.
+The current public baseline is GitHub milestone `v1.0` and Python package
+`1.0.0`. Keep subsequent compatible work under `Unreleased`; create `v1.1` and
+publish `1.1.0` only after a new owner-approved acceptance lane.

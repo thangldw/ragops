@@ -10,6 +10,8 @@ the engineering evolution before the reset public baseline.
 - Expanded the public showcase with the opt-in statistical regression workflow,
   repeated-run fixture evidence, sequential stopping, evaluator drift, signed
   baseline provenance, CI integration, and explicit uncertainty boundaries.
+- Updated project status to record the completed `v1.0` GitHub Release,
+  `1.0.0` PyPI publication, and the acceptance rule for the next milestone.
 
 ## [1.0.0] - 2026-07-15
 
