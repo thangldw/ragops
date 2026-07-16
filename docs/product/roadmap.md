@@ -13,10 +13,8 @@
 
 - Identify which CI/review surface creates the most adoption friction.
 - Calibrate evaluator policies against qualified human labels.
-- Calibrate fixed and sequential statistical policies on design-partner replay
+- Calibrate fixed and sequential statistical policies on reviewed replay
   bundles; measure false-pass, false-block, cost, and stopping behavior.
-- Measure repeat use, task success, time saved, disagreement, and critical
-  incidents in a consented design-partner pilot.
 - Review supported Python versions, provider adapters, and release automation
   for drift before the next package version.
 
