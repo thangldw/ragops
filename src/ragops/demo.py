@@ -12,8 +12,8 @@ from ragops.reporters import comparison_html, comparison_markdown
 
 DEMO_SCENARIO = {
     "schema_version": "0.2",
-    "id": "ragops-five-minute-demo",
-    "name": "RAGOps five-minute release-gate demo",
+    "id": "ragops-three-minute-demo",
+    "name": "RAGOps three-minute release-gate demo",
     "thresholds": {
         "citation_coverage": 1.0,
         "citation_precision": 1.0,

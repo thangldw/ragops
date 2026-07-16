@@ -5,15 +5,14 @@
 Use this kit with engineers or product/platform leaders deciding whether to
 pilot RAGOps around an existing RAG or AI agent.
 
-## Five-minute walkthrough
+## Three-minute walkthrough
 
 1. Ask: “After this prompt, retriever, embedding, dataset, or evaluator change,
    is the candidate still good enough to release?”
 2. Run:
 
    ```bash
-   pip install ragops==1.0.0
-   ragops demo --output ragops-demo
+   uvx ragops demo
    ```
 
 3. Open `ragops-demo/release-report.html` and show the passing baseline and
@@ -21,6 +20,11 @@ pilot RAGOps around an existing RAG or AI agent.
 4. Trace one aggregate regression to its case, citation, metric delta, and
    policy rule.
 5. Replace demo responses with the adopter's recorded responses or JSONL traces.
+
+The 45-second repository GIF is a real terminal recording of the same baseline
+→ candidate → BLOCK sequence. Regenerate it with `asciinema`,
+`scripts/record_demo.sh`, and `agg`; the script runs the public `uvx` command and
+reads the generated report rather than embedding result values.
 
 ## Ten-minute presentation
 

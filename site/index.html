@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Catch deterministic and statistical RAG regressions before they ship with an offline, provider-independent PASS/BLOCK release gate.">
+  <meta name="description" content="Catch RAG and agent regressions before they reach production with an offline PASS/BLOCK release gate.">
   <link rel="canonical" href="https://thangldw.github.io/ragops/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="RAGOps — Release RAG changes with evidence">
-  <meta property="og:description" content="Gate RAG changes with deterministic checks, uncertainty-aware comparisons, and portable PASS/BLOCK evidence.">
+  <meta property="og:title" content="RAGOps — Catch regressions before production">
+  <meta property="og:description" content="One command turns a passing baseline and regressed candidate into portable PASS/BLOCK evidence.">
   <meta property="og:url" content="https://thangldw.github.io/ragops/">
   <meta property="og:image" content="https://raw.githubusercontent.com/thangldw/ragops/main/docs/demo/social-preview.png">
   <meta property="og:image:width" content="1280">
@@ -16,7 +16,7 @@
   <meta name="theme-color" content="#f7f5ef">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <title>RAGOps — Release RAG changes with evidence</title>
+  <title>RAGOps — Catch regressions before production</title>
   <link rel="stylesheet" href="styles.css?v=20260716-1">
 </head>
 <body>
@@ -42,13 +42,12 @@
       <div class="hero-layout page-width">
         <div class="hero-copy">
           <p class="kicker"><span class="status-dot"></span>Open source · offline · provider-independent</p>
-          <h1>Release RAG changes <span>with evidence.</span></h1>
+          <h1>Catch regressions <span>before production.</span></h1>
           <p class="hero-lede">Catch regressions in prompts, retrievers, embeddings, datasets, and evaluators before they ship. Compare a candidate with an accepted baseline and get an explainable <strong>PASS</strong> or <strong>BLOCK</strong>.</p>
 
           <div class="quickstart" aria-label="Credential-free quickstart">
-            <div class="quickstart-head"><span>Five-minute proof</span><span>No account · no API key</span></div>
-            <pre><code>pip install <b>ragops==1.0.0</b>
-ragops demo --output <b>ragops-demo</b></code></pre>
+            <div class="quickstart-head"><span>Three-minute proof</span><span>No clone · no account · no API key</span></div>
+            <pre><code>uvx <b>ragops demo</b></code></pre>
             <button class="copy-button" id="copy-demo" type="button" aria-label="Copy quickstart commands">
               <img src="assets/clipboard-document.svg" alt="">Copy
             </button>
@@ -200,7 +199,7 @@ ragops demo --output <b>ragops-demo</b></code></pre>
     <section class="closing-section board-grid" id="get-started">
       <div class="closing page-width">
         <div><p class="kicker">MIT License · zero hosted fonts · local-first</p><h2>Make the next RAG change prove it is ready.</h2></div>
-        <div class="hero-actions"><a class="button button-primary" href="https://github.com/thangldw/ragops#five-minute-proof">Run the demo</a><a class="button button-paper" href="https://github.com/thangldw/ragops"><img src="assets/github.svg" alt="">Star or fork</a></div>
+        <div class="hero-actions"><a class="button button-primary" href="https://github.com/thangldw/ragops#three-minute-proof">Run the demo</a><a class="button button-paper" href="https://github.com/thangldw/ragops"><img src="assets/github.svg" alt="">Star or fork</a></div>
       </div>
     </section>
   </main>
@@ -208,7 +207,7 @@ ragops demo --output <b>ragops-demo</b></code></pre>
   <footer class="page-width"><span>RAGOps · MIT License</span><span>Regression release gates for RAG and AI agents.</span></footer>
 
   <script>
-    const demoCommands = 'pip install ragops==1.0.0\nragops demo --output ragops-demo';
+    const demoCommands = 'uvx ragops demo';
     const copyStatus = document.querySelector('#copy-status');
 
     async function copyDemo() {

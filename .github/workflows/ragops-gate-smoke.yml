@@ -8,10 +8,6 @@ on:
       - ".github/workflows/ragops-gate-smoke.yml"
       - "tests/test_github_workflows.py"
   pull_request:
-    paths:
-      - ".github/workflows/ragops-gate.yml"
-      - ".github/workflows/ragops-gate-smoke.yml"
-      - "tests/test_github_workflows.py"
   workflow_dispatch:
 
 jobs:

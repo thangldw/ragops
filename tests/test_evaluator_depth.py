@@ -1,12 +1,16 @@
+from dataclasses import replace
+
 from ragops.engine import evaluate
 from ragops.loader import scenario_from_dict
 from ragops.models import EvaluationPolicy, MetricGate, RecordedResponse
 import pytest
 
 from ragops.plugins import (
+    AbstentionContractEvaluator,
     AnswerLengthBudgetEvaluator,
     CitationCorrectnessEvaluator,
     ClaimSupportEvaluator,
+    SourceFreshnessEvaluator,
 )
 
 
@@ -156,3 +160,43 @@ def test_answer_length_budget_rejects_nonpositive_limit(limit: int) -> None:
 def test_answer_length_budget_rejects_boolean_limit() -> None:
     with pytest.raises(TypeError, match="integer"):
         AnswerLengthBudgetEvaluator(max_characters=True)
+
+
+def test_source_freshness_checks_exact_current_source_contract() -> None:
+    case = replace(_scenario().cases[0], tags=("freshness",))
+    scenario = replace(_scenario(), cases=(case,))
+    stale = RecordedResponse("q1", "Stop the machine.", ("manual-old",), 1, 0)
+
+    report = evaluate(scenario, (stale,), evaluators=(SourceFreshnessEvaluator(),))
+
+    assert report.metrics["source_freshness.score"] == 0.0
+    assert report.cases[0].findings[0].rule == "stale_source_contract_violation"
+
+
+def test_abstention_contract_requires_cited_lexical_support() -> None:
+    case = replace(
+        _scenario().cases[0],
+        evidence=("No approved repair procedure is available.",),
+        tags=("abstain",),
+    )
+    scenario = replace(_scenario(), cases=(case,))
+    invented = RecordedResponse("q1", "Replace the controller immediately.", (), 1, 0)
+
+    report = evaluate(scenario, (invented,), evaluators=(AbstentionContractEvaluator(),))
+
+    assert report.metrics["abstention_contract.score"] == 0.0
+    assert report.cases[0].findings[0].rule == "abstention_contract_violation"
+
+
+def test_specialized_contract_evaluators_are_neutral_for_untagged_cases() -> None:
+    response = RecordedResponse("q1", "Anything", (), 1, 0)
+
+    report = evaluate(
+        _scenario(),
+        (response,),
+        evaluators=(SourceFreshnessEvaluator(), AbstentionContractEvaluator()),
+    )
+
+    assert report.metrics["source_freshness.score"] == 1.0
+    assert report.metrics["abstention_contract.score"] == 1.0
+    assert report.cases[0].findings == ()

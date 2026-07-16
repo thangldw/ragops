@@ -12,7 +12,7 @@ on:
         description: RAGOps Git revision or milestone tag to install
         required: false
         type: string
-        default: "v1.0"
+        default: "v1.1"
       mode:
         description: fixed or sequential statistical decision
         required: false
@@ -129,6 +129,23 @@ jobs:
               echo '```'
             } >ragops-report.md
           fi
+          RAGOPS_REPORT_TITLE="RAGOps statistical release report" python - <<'PY'
+          import html
+          import os
+          from pathlib import Path
+
+          report = Path("ragops-report.md").read_text(encoding="utf-8")
+          title = os.environ["RAGOPS_REPORT_TITLE"]
+          Path("ragops-report.html").write_text(
+              "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">"
+              "<meta name=\"viewport\" content=\"width=device-width\">"
+              f"<title>{html.escape(title)}</title>"
+              "<style>body{font:15px/1.55 system-ui;max-width:960px;margin:40px auto;"
+              "padding:0 20px;color:#172033}pre{white-space:pre-wrap}</style></head>"
+              f"<body><h1>{html.escape(title)}</h1><pre>{html.escape(report)}</pre></body></html>\n",
+              encoding="utf-8",
+          )
+          PY
           echo "exit_code=$gate_exit" >>"$GITHUB_OUTPUT"
       - name: Write bounded evidence manifest
         if: always()
@@ -170,6 +187,7 @@ jobs:
           name: ragops-release-evidence
           path: |
             ragops-report.md
+            ragops-report.html
             ragops-command.log
             ragops-evidence.json
       - name: Enforce statistical release decision

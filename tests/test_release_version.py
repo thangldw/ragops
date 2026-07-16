@@ -11,4 +11,4 @@ def test_package_and_release_metadata_versions_match() -> None:
 
     assert version == __version__
     assert f"## [{version}]" in changelog
-    assert not Path("docs/releases").exists()
+    assert Path("docs/releases/v1.1.md").is_file()

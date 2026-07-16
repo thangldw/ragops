@@ -37,11 +37,13 @@ from ragops.engine import compare, evaluate
 from ragops.drift import detect_evaluator_drift
 from ragops.loader import ContractError, load_responses, load_scenario
 from ragops.plugins import (
+    AbstentionContractEvaluator,
     AnswerLengthBudgetEvaluator,
     CaseEvaluator,
     CitationCorrectnessEvaluator,
     ClaimSupportEvaluator,
     RetrievalRecallEvaluator,
+    SourceFreshnessEvaluator,
 )
 from ragops.pilot import (
     PilotContractError,
@@ -105,6 +107,8 @@ def build_parser() -> argparse.ArgumentParser:
             "citation_correctness",
             "claim_support",
             "answer_length_budget",
+            "source_freshness",
+            "abstention_contract",
         ),
         default=[],
     )
@@ -144,6 +148,8 @@ def build_parser() -> argparse.ArgumentParser:
             "citation_correctness",
             "claim_support",
             "answer_length_budget",
+            "source_freshness",
+            "abstention_contract",
         ),
         default=[],
     )
@@ -650,6 +656,8 @@ def _evaluators_from_names(
         "answer_length_budget": lambda: AnswerLengthBudgetEvaluator(
             max_characters=answer_length_limit
         ),
+        "source_freshness": SourceFreshnessEvaluator,
+        "abstention_contract": AbstentionContractEvaluator,
     }
     return tuple(factories[name]() for name in names)
 

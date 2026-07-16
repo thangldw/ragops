@@ -6,15 +6,17 @@ retriever, generator, or orchestration layer.
 ## 1. Run the credential-free proof
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install ragops==1.0.0
-ragops demo --output ragops-demo
+uvx ragops demo
 ```
 
 Open `ragops-demo/release-report.html`. The accepted baseline passes and the
 intentionally regressed candidate is blocked with named reasons. The bundle
 contains the scenario, fixtures, JSON, Markdown, and standalone HTML evidence.
+
+`uvx` downloads the published CLI into an isolated cache, so this path needs no
+clone, virtual environment, account, or model credential. If `uv` is not
+installed, use `pipx run ragops demo` or the virtual-environment path in
+`CONTRIBUTING.md`.
 
 ## 2. Evaluate recorded responses
 

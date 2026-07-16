@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           repository: thangldw/ragops
-          ref: e3139cc03ffcf522803e2e3e4ef141f37ee4fbf8 # v2.0.0
+          ref: b0ceb321abb04b8552c067682b702da9c67f002f # v1.1 publisher
           path: .ragops-publisher
           persist-credentials: false
       - name: Validate evidence and publish one idempotent comment
