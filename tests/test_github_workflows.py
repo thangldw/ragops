@@ -24,7 +24,7 @@ def test_pr_comment_publisher_is_isolated_bounded_and_commit_pinned() -> None:
 
     assert "workflow_run:" in workflow
     assert "RAGOps reusable gate smoke" in workflow
-    assert "RAGOps statistical gate smoke" in workflow
+    assert "RAGOps statistical gate smoke" not in workflow
     assert "actions: read" in workflow
     assert "contents: read" in workflow
     assert "pull-requests: write" in workflow
