@@ -98,6 +98,15 @@ def test_repository_smoke_calls_the_reusable_gate() -> None:
     assert "benchmark-baseline.json" in workflow
 
 
+def test_reusable_gates_publish_downloadable_html_evidence() -> None:
+    for path in (
+        ".github/workflows/ragops-gate.yml",
+        ".github/workflows/ragops-statistical-gate.yml",
+    ):
+        workflow = Path(path).read_text(encoding="utf-8")
+        assert "ragops-report.html" in workflow
+
+
 def test_ci_covers_every_declared_python_minor() -> None:
     workflow = Path(".github/workflows/ci.yml").read_text(encoding="utf-8")
 

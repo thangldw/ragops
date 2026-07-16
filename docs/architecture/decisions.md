@@ -100,3 +100,18 @@ allowed-signers file is supplied.
 The owner accepted these experimental schemas and gates as the 1.0.0 public
 commitment on 2026-07-15. Live provider calls, hosted storage, and automatic
 causal decomposition remain outside this decision.
+
+## Proposed for the next milestone: tagged evidence contracts
+
+Two opt-in deterministic plugins make named Failure Zoo evidence more direct
+without changing default evaluation. `source_freshness` applies only to cases
+tagged `freshness` and compares supplied citation IDs with the exact current IDs
+declared by the scenario. `abstention_contract` applies only to cases tagged
+`abstain` and combines required-citation coverage with transparent lexical
+overlap against the declared evidence. Untagged cases return a neutral score.
+
+These metrics remain diagnostic unless an evaluation policy gates them. A
+contract violation emits a high finding, so the caller must opt into both the
+evaluator and an appropriate finding policy. Neither evaluator infers document
+dates, semantic entailment, or safe abstention. This compatible plugin addition
+requires owner acceptance before inclusion in the next public milestone.

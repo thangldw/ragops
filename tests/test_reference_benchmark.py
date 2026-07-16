@@ -1,9 +1,12 @@
 from ragops.benchmarks import scenario_summary
 from ragops.engine import evaluate
+from ragops.config import load_evaluation_policy
 from ragops.loader import load_responses, load_scenario
+from ragops.plugins import AbstentionContractEvaluator, SourceFreshnessEvaluator
 
 SCENARIO = "scenarios/japanese_troubleshooting/benchmark-v0.2.json"
 BASELINE = "scenarios/japanese_troubleshooting/benchmark-baseline.json"
+FAILURE_ZOO = "scenarios/japanese_troubleshooting/failure-zoo-candidate.json"
 
 
 def test_reference_benchmark_meets_published_taxonomy() -> None:
@@ -23,3 +26,25 @@ def test_reference_benchmark_baseline_passes() -> None:
     assert report.metrics["citation_coverage"] == 1.0
     assert report.metrics["citation_precision"] == 1.0
     assert report.metrics["critical_findings"] == 0.0
+
+
+def test_failure_zoo_candidate_is_blocked_with_critical_and_quality_evidence() -> None:
+    report = evaluate(
+        load_scenario(SCENARIO),
+        load_responses(FAILURE_ZOO),
+        evaluators=(SourceFreshnessEvaluator(), AbstentionContractEvaluator()),
+        policy=load_evaluation_policy(
+            "scenarios/japanese_troubleshooting/failure-zoo-policy.toml"
+        ),
+    )
+
+    assert report.passed is False
+    assert report.metrics["critical_findings"] == 3.0
+    assert "critical_redteam_finding" in report.failed_gates
+    assert "citation_coverage" in report.failed_gates
+    assert "citation_precision" in report.failed_gates
+    assert "metric_minimum:source_freshness" in report.failed_gates
+    assert "metric_minimum:abstention_contract" in report.failed_gates
+    rules = {finding.rule for case in report.cases for finding in case.findings}
+    assert "stale_source_contract_violation" in rules
+    assert "abstention_contract_violation" in rules

@@ -1,0 +1,8 @@
+[metrics.source_freshness]
+minimum = 1.0
+
+[metrics.abstention_contract]
+minimum = 1.0
+
+[findings]
+fail_on_severity = "high"

@@ -1,6 +1,6 @@
 # RAGOps
 
-**Regression tests and explainable release gates for RAG and AI agents.**
+**Catch RAG and agent regressions before they reach production.**
 
 [![PyPI](https://img.shields.io/pypi/v/ragops.svg)](https://pypi.org/project/ragops/)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml)
@@ -18,19 +18,20 @@ dependency-free, offline, and provider-independent.
   <a href="https://thangldw.github.io/ragops/"><strong>Open the product showcase →</strong></a>
 </p>
 
-## Five-minute proof
+## Three-minute proof
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install ragops==1.0.0
-ragops demo --output ragops-demo
+uvx ragops demo
 ```
 
 Open `ragops-demo/release-report.html`. The accepted baseline passes; the
 intentionally regressed candidate is blocked with named reasons. The generated
 bundle contains portable JSON, Markdown, and standalone HTML evidence and needs
 no model API or hosted service.
+
+<p align="center">
+  <img src="docs/demo/ragops-demo.gif" alt="Terminal demo: an accepted baseline passes, a candidate loses citation coverage, and RAGOps blocks the release" width="900">
+</p>
 
 Try the other credential-free scenarios:
 
@@ -86,6 +87,9 @@ four questions and release contract.
 The separate 30-case synthetic benchmark covers nine failure families,
 including stale evidence, permission leakage, prompt injection, abstention, and
 consequential actions.
+
+See the [RAG Failure Zoo](docs/evaluation/benchmark.md#rag-failure-zoo) for the
+failing examples and the exact gates that catch them.
 
 <p align="center">
   <img src="docs/demo/infographics/evidence-stack.svg" alt="RAGOps evidence stack: quality, safety, operational budgets, and regression comparison support one release decision" width="100%">
@@ -209,6 +213,13 @@ complete release decision without them.
 The reference ACL is a role-list simulation. The local control plane is a
 single-workspace development surface. Consequential actions still require human
 approval.
+
+## Why this instead of X?
+
+RAGOps is the small offline release-decision layer, not a replacement for a
+metric library or observability platform. See the
+[honest comparison with Ragas, DeepEval, Phoenix, and LangSmith](docs/product/overview.md#why-this-instead-of-x),
+including when one of those tools is the better fit.
 
 ## Documentation
 

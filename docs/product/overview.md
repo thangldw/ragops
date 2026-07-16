@@ -51,6 +51,26 @@ outside evaluation semantics.
 This positioning is a product hypothesis, not a claim that other products lack
 these capabilities.
 
+## Why this instead of X?
+
+Choose the tool around the job you need most. This table reflects the linked
+official documentation reviewed on 2026-07-16; products evolve, and RAGOps can
+consume recorded scores from other evaluators rather than replace them.
+
+| Tool | Strongest fit | What RAGOps adds when used beside it |
+| --- | --- | --- |
+| [Ragas](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/) | A broad library of RAG and agent metrics, experiments, and test-data generation | An offline release contract over recorded Ragas scores, with accepted-baseline integrity, critical non-compensating gates, and standalone evidence |
+| [DeepEval](https://deepeval.com/docs/evaluation-unit-testing-in-ci-cd) | Pytest-native LLM evaluation and CI assertions, with optional hosted reports | Provider-neutral recorded-evidence replay, uncertainty-aware repeated-run comparison, and a bounded PR publication path |
+| [Phoenix](https://arize.com/docs/phoenix) | OpenTelemetry tracing, evaluator debugging, datasets, experiments, and a visual workbench | A small dependency-free decision core that can gate exported evidence without running an observability service |
+| [LangSmith](https://docs.langchain.com/langsmith/evaluation) | Managed offline/online evaluation, traces, datasets, human review, and experiment comparison | A fully local PASS/BLOCK artifact and versioned portable contracts that do not require a workspace |
+| **RAGOps** | Reviewable release decisions from already-recorded evidence | It is intentionally not a tracing platform, model runner, hosted collaboration product, or large judge-metric library |
+
+Use Ragas or DeepEval when evaluator breadth is the main need. Use Phoenix or
+LangSmith when tracing, exploration, annotation, and a shared UI are central.
+Use RAGOps when the final release decision must be reproducible offline and
+auditable as repository evidence. Combining them is a supported path, not a
+compromise.
+
 ## Success evidence
 
 Repository evidence includes deterministic fixtures, reproducible PASS/BLOCK

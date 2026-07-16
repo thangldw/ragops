@@ -70,6 +70,18 @@ jobs:
           fi
           "${command[@]}" >ragops-command.log 2>&1
           gate_exit=$?
+          html_command=(
+            ragops compare
+            --scenario "$RAGOPS_SCENARIO"
+            --baseline "$RAGOPS_BASELINE"
+            --candidate "$RAGOPS_CANDIDATE"
+            --format html
+            --output ragops-report.html
+          )
+          if [[ -n "$RAGOPS_POLICY" ]]; then
+            html_command+=(--policy "$RAGOPS_POLICY")
+          fi
+          "${html_command[@]}" >>ragops-command.log 2>&1
           set -e
           if [[ ! -f ragops-report.md ]]; then
             {
@@ -119,6 +131,7 @@ jobs:
           name: ragops-release-evidence
           path: |
             ragops-report.md
+            ragops-report.html
             ragops-command.log
             ragops-evidence.json
       - name: Enforce release decision

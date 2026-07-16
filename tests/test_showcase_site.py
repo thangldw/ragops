@@ -83,7 +83,7 @@ def test_showcase_separates_evidence_and_states_limits() -> None:
     assert "3-case repeated-run acceptance fixture" in page
     assert "Lexical groundedness is overlap, not entailment" in page
     assert "MIT License" in page
-    assert "pip install <b>ragops==1.0.0</b>" in page
+    assert "uvx <b>ragops demo</b>" in page
     assert "Catch regressions" in page
     assert "embedding" in page
     assert "Portable evidence" in page
@@ -94,7 +94,7 @@ def test_showcase_separates_evidence_and_states_limits() -> None:
     assert "Repeats are not new cases" in page
     assert "Provenance is not causality" in page
     assert "docs/demo/social-preview.png" in page
-    assert page.count("#five-minute-proof") == 1
+    assert page.count("#three-minute-proof") == 1
     assert "#quick-start" not in page
 
 

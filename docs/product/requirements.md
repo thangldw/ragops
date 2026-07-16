@@ -19,6 +19,10 @@ The dependency-free core continues to evaluate recorded evidence only. Model
 execution, provider SDKs, OpenTelemetry collection, SSH signing, CI, and PR
 publication remain adapters.
 
+The Unreleased flagship-adoption slice adds opt-in source-freshness and
+abstention-contract evaluators over existing scenario tags and evidence. It
+does not change default evaluation behavior or any existing metric meaning.
+
 ## Acceptance criteria
 
 - Fixed-sample comparison applies one-sided absolute and non-inferiority bounds
@@ -42,6 +46,9 @@ publication remain adapters.
   without changing direction, scale, calibration, or meaning.
 - CLI, authenticated bounded API, reusable GitHub workflow, Markdown/JSON
   reports, PASS/BLOCK fixtures, schemas, tests, and current guidance agree.
+- `source_freshness` checks exact current-source IDs only for cases tagged
+  `freshness`; `abstention_contract` checks cited lexical support only for cases
+  tagged `abstain`; untagged cases remain neutral.
 - Ruff, full tests, schema checks, affected CLI/API paths, package build, clean
   install, and security review pass before owner acceptance.
 
@@ -52,6 +59,8 @@ publication remain adapters.
 - No ordinary fixed-sample confidence interval may be repeatedly inspected as a
   sequential stopping rule.
 - No provider score is reinterpreted as ground truth or silently recalibrated.
+- No source date is inferred and no lexical abstention score is described as
+  semantic understanding or proof that an answer safely abstains.
 - No hosted-service, live credential, customer-data, or production-security
   claim is introduced.
 - No tag, package publication, or public deployment occurs for intermediate

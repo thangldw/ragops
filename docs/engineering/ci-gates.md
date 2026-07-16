@@ -12,12 +12,12 @@ jobs:
       scenario: scenarios/release.json
       baseline: scenarios/baseline.json
       candidate: scenarios/candidate.json
-      ragops-version: "v1.0"
 ```
 
-The caller owns fixtures and branch protection. The reusable workflow has
+That is seven YAML lines. The caller owns fixtures and branch protection. The reusable workflow has
 read-only repository permissions, preserves the CLI exit code, writes Markdown
-to the Step Summary, and uploads evidence even when the candidate is blocked.
+to the Step Summary, and uploads Markdown plus standalone HTML evidence even
+when the candidate is blocked.
 
 ## Statistical pull-request gate
 
@@ -70,6 +70,15 @@ The publisher uses `workflow_run`, `actions: read`, `contents: read`, and
 checkout the pull request, execute artifacts, or interpolate untrusted data into
 shell commands. It updates the `<!-- ragops-release-gate -->` marker comment and
 fails closed on ambiguous, expired, oversized, paginated, or rate-limited data.
+
+The resulting PR comment includes the baseline/candidate metric table, named
+block reasons, and an **HTML report** link to the workflow artifact section.
+The two workflows are deliberately separate: contributors experience one
+direct PR comment, while untrusted PR code never receives comment permission.
+
+RAGOps uses this same path on its own repository. The
+`ragops-gate-smoke.yml` caller runs on every pull request, installs the PR SHA,
+and gates the passing reference fixture against the repository's own scenario.
 
 Use the copyable [publisher recipe](../examples/github-pr-comment.yml) when the
 adopting repository accepts this permission boundary.

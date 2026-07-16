@@ -5,6 +5,20 @@ the engineering evolution before the reset public baseline.
 
 ## [Unreleased]
 
+![RAGOps demo showing a blocked candidate](docs/demo/ragops-demo-screenshot.png)
+
+### Added
+
+- Added a no-clone `uvx ragops demo` quickstart, a 45-second recorded demo, and
+  a named RAG Failure Zoo covering permission leakage, stale evidence, wrong
+  citations, prompt injection, failure to abstain, and excessive agency.
+- Added downloadable HTML evidence to reusable GitHub gates and linked it from
+  the bounded PR comment alongside metric deltas and named block reasons.
+- Added an evidence-linked comparison with Ragas, DeepEval, Phoenix, and
+  LangSmith.
+- Added opt-in tagged evidence evaluators for exact current-source IDs and
+  cited lexical abstention contracts, with explicit non-semantic boundaries.
+
 ### Changed
 
 - Expanded the public showcase with the opt-in statistical regression workflow,
@@ -12,6 +26,7 @@ the engineering evolution before the reset public baseline.
   baseline provenance, CI integration, and explicit uncertainty boundaries.
 - Updated project status to record the completed `v1.0` GitHub Release,
   `1.0.0` PyPI publication, and the acceptance rule for the next milestone.
+- Made the repository's own reusable RAGOps gate run on every pull request.
 
 ## [1.0.0] - 2026-07-15
 
