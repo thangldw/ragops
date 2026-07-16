@@ -19,7 +19,7 @@ The dependency-free core continues to evaluate recorded evidence only. Model
 execution, provider SDKs, OpenTelemetry collection, SSH signing, CI, and PR
 publication remain adapters.
 
-The Unreleased flagship-adoption slice adds opt-in source-freshness and
+The 1.1.0 flagship-adoption slice adds opt-in source-freshness and
 abstention-contract evaluators over existing scenario tags and evidence. It
 does not change default evaluation behavior or any existing metric meaning.
 

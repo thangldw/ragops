@@ -7,7 +7,7 @@ The reusable workflow is an adapter around the existing CLI:
 ```yaml
 jobs:
   ragops:
-    uses: thangldw/ragops/.github/workflows/ragops-gate.yml@v1.0
+    uses: thangldw/ragops/.github/workflows/ragops-gate.yml@v1.1
     with:
       scenario: scenarios/release.json
       baseline: scenarios/baseline.json

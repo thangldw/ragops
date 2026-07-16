@@ -85,6 +85,8 @@ def test_release_builds_once_with_sbom_checksums_and_provenance() -> None:
     assert "cyclonedx-bom==7.3.0" in workflow
     assert "--output-reproducible" in workflow
     assert "SHA256SUMS" in workflow
+    assert '--notes-file "$notes_file"' in workflow
+    assert "--generate-notes" not in workflow
     assert re.search(r"actions/attest-build-provenance@[0-9a-f]{40}", workflow)
     for action in ("actions/checkout", "actions/setup-python", "actions/upload-artifact"):
         assert re.search(rf"{action}@[0-9a-f]{{40}}", workflow)

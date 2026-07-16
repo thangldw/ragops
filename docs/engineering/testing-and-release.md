@@ -40,8 +40,9 @@ product milestone accepted.
 ## GitHub release path
 
 The preferred workflow uses OIDC provenance and promotes already-verified
-artifacts. Release notes are generated from Git history and `CHANGELOG.md`; HEAD
-does not maintain duplicate per-version Markdown files.
+artifacts. `CHANGELOG.md` remains the canonical release history. A concise,
+image-bearing GitHub Release body may live at `docs/releases/vX.Y.md`; it must
+summarize the milestone rather than duplicate the complete changelog.
 
 ## Local fallback
 

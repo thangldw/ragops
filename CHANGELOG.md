@@ -5,6 +5,8 @@ the engineering evolution before the reset public baseline.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-07-16
+
 ![RAGOps pull-request comment showing a blocked candidate](docs/demo/ragops-pr-comment.png)
 
 ### Added
