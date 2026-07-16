@@ -2,23 +2,49 @@
 
 ## Current state
 
-- Stable package: `1.0.0`.
-- Public GitHub milestone: `v1.0` (new baseline).
+- Stable package: `1.1.0`.
+- Public GitHub milestone: `v1.1`.
 - Repository license: MIT.
-- Released runtime contract: `1.0.0`.
-- Current work: statistical regression milestone accepted and published as the
-  `v1.0` GitHub Release and `1.0.0` Python package on 2026-07-15.
+- Released runtime contract: `1.1.0`.
+- Current work: the three-minute adoption milestone was accepted and published
+  as the `v1.1` GitHub Release and `1.1.0` Python package on 2026-07-16.
 
 ## Compatibility
 
 Existing evaluation schemas, metric meanings, and deterministic PASS/BLOCK
 behavior remain compatible. New replay, statistical, sequential, drift,
-provenance, and baseline-manifest contracts are opt-in additions in 1.0.0. The
-open-core boundary remains unchanged.
+provenance, and baseline-manifest contracts remain compatible. Source-freshness
+and abstention-contract evaluation are opt-in additions in 1.1.0. The open-core
+boundary remains unchanged.
 
 ## Released baseline
 
-### Acceptance evidence
+### v1.1 acceptance evidence
+
+The 2026-07-16 acceptance lane completed on local and GitHub-hosted runners:
+
+- `ruff check .` and 208 tests passed with third-party pytest plugin autoload
+  disabled; CI passed on Python 3.11, 3.12, and 3.13.
+- A clean, credential-free `uvx ragops demo` run from outside the repository
+  installed `1.1.0`, produced a BLOCK decision, and wrote Markdown and HTML
+  reports.
+- The repository's reusable gate blocked the intentional regression and then
+  passed the restored candidate. The same pull-request comment reported metric
+  deltas, named block reasons, and the HTML artifact link.
+- Wheel and source archive builds, clean-wheel execution, deterministic and
+  statistical PASS/BLOCK paths, sequential decisions, evaluator drift,
+  baseline integrity/signature verification, API authentication/body bounds,
+  secret review, and desktop/mobile visual checks passed.
+- The release workflow produced checksums, a reproducible CycloneDX SBOM, and
+  build provenance. PyPI Trusted Publishing promoted the exact GitHub Release
+  distributions without rebuilding.
+- GitHub Pages deployed the merge commit and exposes the one-command demo,
+  result screenshots, honest comparison, Failure Zoo, and concise roadmap.
+
+The owner accepted this evidence and authorized release `v1.1` and package
+`1.1.0` on 2026-07-16.
+
+### v1.0 acceptance evidence
 
 The 2026-07-15 pre-acceptance lane completed on Python 3.12:
 
@@ -73,6 +99,6 @@ Acceptance checklist for the next milestone:
 
 ## Recommendation
 
-The current public baseline is GitHub milestone `v1.0` and Python package
-`1.0.0`. Keep subsequent compatible work under `Unreleased`; create `v1.1` and
-publish `1.1.0` only after a new owner-approved acceptance lane.
+The current public baseline is GitHub milestone `v1.1` and Python package
+`1.1.0`. Keep subsequent compatible work under `Unreleased`; publish another
+version only after a new owner-approved acceptance lane.
