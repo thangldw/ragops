@@ -15,7 +15,8 @@ from typing import Any
 
 ARTIFACT_NAME = "ragops-release-evidence"
 MARKER = "<!-- ragops-release-gate -->"
-ALLOWED_FILES = frozenset({"ragops-report.md", "ragops-command.log", "ragops-evidence.json"})
+REQUIRED_FILES = frozenset({"ragops-report.md", "ragops-command.log", "ragops-evidence.json"})
+OPTIONAL_FILES = frozenset({"ragops-report.html"})
 MAX_ARCHIVE_BYTES = 256_000
 MAX_TOTAL_UNCOMPRESSED_BYTES = 128_000
 MAX_REPORT_BYTES = 55_000
@@ -121,7 +122,8 @@ def read_evidence_archive(archive: bytes, source: SourceRun) -> str:
         with zipfile.ZipFile(io.BytesIO(archive)) as bundle:
             infos = bundle.infolist()
             names = [info.filename for info in infos]
-            if len(names) != len(set(names)) or set(names) != ALLOWED_FILES:
+            allowed_sets = {REQUIRED_FILES, REQUIRED_FILES | OPTIONAL_FILES}
+            if len(names) != len(set(names)) or frozenset(names) not in allowed_sets:
                 raise PublisherContractError("artifact file allowlist mismatch")
             total_size = 0
             for info in infos:
@@ -167,13 +169,19 @@ def read_evidence_archive(archive: bytes, source: SourceRun) -> str:
     return report.rstrip()
 
 
-def build_comment(report: str, source: SourceRun) -> str:
+def build_comment(report: str, source: SourceRun, *, has_html: bool = True) -> str:
     decision = "PASS" if source.conclusion == "success" else "BLOCK"
+    html_link = (
+        f" · [HTML report]({source.html_url}#artifacts) (`ragops-report.html`)"
+        if has_html
+        else ""
+    )
     body = (
         f"{MARKER}\n"
         f"## RAGOps release gate: {decision}\n\n"
         f"{report}\n\n"
-        f"---\nCanonical evidence: [workflow run]({source.html_url}) · "
+        f"---\nCanonical evidence: [workflow run]({source.html_url})"
+        f"{html_link} · "
         f"head `{source.head_sha[:12]}`\n"
     )
     if len(body.encode("utf-8")) > 60_000:
@@ -278,8 +286,9 @@ def publish_comment(*, event_path: Path, repository: str, workflow: str, token: 
     artifact = select_artifact(artifacts)
     if not artifact["archive_download_url"].startswith(f"{base}/actions/artifacts/"):
         raise PublisherContractError("artifact download URL does not belong to the repository")
-    report = read_evidence_archive(client.request_bytes(artifact["archive_download_url"]), source)
-    body = build_comment(report, source)
+    archive = client.request_bytes(artifact["archive_download_url"])
+    report = read_evidence_archive(archive, source)
+    body = build_comment(report, source, has_html=_archive_has_html(archive))
     comments = client.request_list_pages(f"{base}/issues/{source.pull_request_number}/comments")
     comment_id = marker_comment_id(comments)
     if comment_id is None:
@@ -298,6 +307,11 @@ def publish_comment(*, event_path: Path, repository: str, workflow: str, token: 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: ANN001
         return None
+
+
+def _archive_has_html(archive: bytes) -> bool:
+    with zipfile.ZipFile(io.BytesIO(archive)) as bundle:
+        return "ragops-report.html" in bundle.namelist()
 
 
 def validate_artifact_redirect_url(url: str) -> None:
