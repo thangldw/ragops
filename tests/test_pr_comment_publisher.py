@@ -40,7 +40,9 @@ def source_event(*, conclusion: str = "failure", pull_requests: list | None = No
     }
 
 
-def evidence_archive(*, gate_exit_code: int = 2, extra_file: bool = False) -> bytes:
+def evidence_archive(
+    *, gate_exit_code: int = 2, extra_file: bool = False, include_html: bool = True
+) -> bytes:
     manifest = {
         "schema_version": "ragops-github-evidence-0.1",
         "repository": REPOSITORY,
@@ -54,6 +56,8 @@ def evidence_archive(*, gate_exit_code: int = 2, extra_file: bool = False) -> by
     output = io.BytesIO()
     with zipfile.ZipFile(output, "w") as bundle:
         bundle.writestr("ragops-report.md", "# Result\n\nRelease blocked.\n")
+        if include_html:
+            bundle.writestr("ragops-report.html", "<!doctype html><title>BLOCK</title>")
         bundle.writestr("ragops-command.log", "exit 2\n")
         bundle.writestr("ragops-evidence.json", json.dumps(manifest))
         if extra_file:
@@ -71,6 +75,19 @@ def test_validated_blocked_evidence_builds_bounded_comment() -> None:
     assert comment.startswith(MARKER)
     assert "RAGOps release gate: BLOCK" in comment
     assert "actions/runs/123" in comment
+    assert "HTML report" in comment
+    assert "ragops-report.html" in comment
+
+
+def test_legacy_evidence_without_html_remains_publishable_during_rollout() -> None:
+    source = validate_source_event(
+        source_event(), expected_repository=REPOSITORY, expected_workflow=WORKFLOW
+    )
+    report = read_evidence_archive(evidence_archive(include_html=False), source)
+    comment = build_comment(report, source, has_html=False)
+
+    assert "RAGOps release gate: BLOCK" in comment
+    assert "HTML report" not in comment
 
 
 def test_source_event_rejects_ambiguous_pr_association() -> None:
@@ -156,6 +173,7 @@ def test_archive_rejects_unexpected_or_non_regular_files() -> None:
     with zipfile.ZipFile(output, "w") as bundle:
         for name, value in (
             ("ragops-report.md", "report"),
+            ("ragops-report.html", "<title>report</title>"),
             ("ragops-command.log", "log"),
             ("ragops-evidence.json", "{}"),
         ):
