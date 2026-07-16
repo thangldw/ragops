@@ -26,6 +26,7 @@
 | Pilot | [Design-partner pilot](gtm/pilot.md) |
 | Demo | [Demo and presentation kit](demo/demo-kit.md) |
 | Project | [Status and acceptance](project/status.md) |
+| Current release | [v1.1 release notes](releases/v1.1.md) |
 
 Git history and [the changelog](../CHANGELOG.md) retain released evolution. HEAD
 contains only current guidance so milestone snapshots cannot be mistaken for

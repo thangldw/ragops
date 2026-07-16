@@ -69,8 +69,9 @@ The 2026-07-15 pre-acceptance lane completed on Python 3.12:
 The owner accepted this evidence and authorized the 1.0.0 milestone release on
 2026-07-15. The verified pipeline published tag and GitHub Release `v1.0`, the
 checksummed wheel and source archive, SBOM and release evidence, and Python
-package `1.0.0` through PyPI Trusted Publishing. GitHub Pages reflects the
-released statistical workflow and keeps the package command at `1.0.0`.
+package `1.0.0` through PyPI Trusted Publishing. At that milestone, GitHub
+Pages reflected the released statistical workflow and used the `1.0.0` package
+command.
 
 Acceptance checklist for the next milestone:
 
