@@ -2,7 +2,7 @@
 
 ## Start here
 
-1. [Run the five-minute proof](getting-started.md).
+1. [Run the three-minute proof](getting-started.md).
 2. [Understand the product and its boundary](product/overview.md).
 3. [Review the system architecture](architecture/system-overview.md).
 4. [Choose an integration path](engineering/integrations.md).

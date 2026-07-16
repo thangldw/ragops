@@ -43,6 +43,10 @@ Critical findings are non-compensating.
 - `answer_length_budget` counts Python Unicode code points, including whitespace
   and punctuation, without normalization. Equal-to-limit passes; over-limit
   emits a medium diagnostic finding.
+- `source_freshness` checks exact required source IDs for cases tagged
+  `freshness`; it does not infer source dates or inspect document revisions.
+- `abstention_contract` checks required citations plus lexical evidence overlap
+  for cases tagged `abstain`; it is not semantic abstention detection.
 
 ## Evaluation policy
 

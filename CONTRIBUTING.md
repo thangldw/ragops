@@ -52,3 +52,14 @@ ragops demo --output /tmp/ragops-demo
 
 For usage questions see [SUPPORT.md](SUPPORT.md); report vulnerabilities through
 [SECURITY.md](SECURITY.md).
+
+## Good first contributions
+
+These open issues are intentionally bounded for a first contribution:
+
+1. [Add a retrieval-poisoning Failure Zoo specimen](https://github.com/thangldw/ragops/issues/22).
+2. [Add a Phoenix recorded-score adapter example](https://github.com/thangldw/ragops/issues/23).
+3. [Verify the no-clone demo on Windows](https://github.com/thangldw/ragops/issues/24).
+
+Comment on the issue before starting so the owner can confirm the fixture and
+expected gate.

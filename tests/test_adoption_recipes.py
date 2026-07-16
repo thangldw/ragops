@@ -5,7 +5,7 @@ from pathlib import Path
 def test_gitlab_recipe_preserves_evidence_and_exit_code() -> None:
     recipe = Path("docs/examples/gitlab-ci-ragops.yml").read_text(encoding="utf-8")
 
-    assert 'RAGOPS_VERSION: "1.0.0"' in recipe
+    assert 'RAGOPS_VERSION: "1.1.0"' in recipe
     assert 'if: \'$CI_PIPELINE_SOURCE == "merge_request_event"\'' in recipe
     assert "gate_exit=$?" in recipe
     assert 'exit "$gate_exit"' in recipe

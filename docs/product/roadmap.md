@@ -1,11 +1,13 @@
 # Roadmap
 
-## Current maintenance
+## Next outcomes
 
-- Keep documentation and GitHub Pages aligned with `main`.
-- Preserve dependency-free, offline PASS/BLOCK behavior.
-- Prepare the opt-in statistical regression milestone for owner acceptance.
-- Convert real incidents or workflow failures into reviewed regression fixtures.
+- **Activate:** a new user reaches a reviewable blocked regression in under
+  three minutes with `uvx ragops demo`.
+- **Adopt:** a repository adds the gate in 5–10 YAML lines and receives useful
+  metric, block-reason, and HTML evidence on its pull request.
+- **Trust:** the Failure Zoo grows from reviewed incidents while every specimen
+  keeps a passing control and an explicit claim boundary.
 
 ## Discovery priorities
 

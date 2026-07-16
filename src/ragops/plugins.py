@@ -149,5 +149,75 @@ class AnswerLengthBudgetEvaluator:
         )
 
 
+class SourceFreshnessEvaluator:
+    """Check the explicit current-source ID contract for tagged cases.
+
+    This evaluator does not infer recency from dates or document content. A
+    scenario author marks a case with ``freshness`` and declares the complete
+    current source set through ``required_citation_ids``.
+    """
+
+    name = "source_freshness"
+
+    def evaluate(self, case: EvalCase, response: RecordedResponse) -> PluginResult:
+        if "freshness" not in case.tags:
+            return PluginResult(metrics={"score": 1.0, "applicable": 0.0})
+        required = set(case.required_citation_ids)
+        supplied = set(response.citation_ids)
+        union = required | supplied
+        score = len(required & supplied) / len(union) if union else 1.0
+        findings = ()
+        if score < 1.0:
+            findings = (
+                Finding(
+                    rule="stale_source_contract_violation",
+                    severity="high",
+                    message="Response does not cite exactly the scenario's current source IDs",
+                ),
+            )
+        return PluginResult(metrics={"score": score, "applicable": 1.0}, findings=findings)
+
+
+class AbstentionContractEvaluator:
+    """Check a transparent lexical abstention contract for tagged cases."""
+
+    name = "abstention_contract"
+
+    def __init__(self, *, min_overlap: float = 0.5) -> None:
+        if not 0 <= min_overlap <= 1:
+            raise ValueError("min_overlap must be between 0 and 1")
+        self.min_overlap = min_overlap
+
+    def evaluate(self, case: EvalCase, response: RecordedResponse) -> PluginResult:
+        if "abstain" not in case.tags:
+            return PluginResult(metrics={"score": 1.0, "applicable": 0.0})
+        required = set(case.required_citation_ids)
+        supplied = set(response.citation_ids)
+        citation_score = (
+            len(required & supplied) / len(required) if required else 1.0
+        )
+        evidence_tokens = _meaningful_tokens(" ".join(case.evidence))
+        answer_tokens = _meaningful_tokens(response.answer)
+        overlap = (
+            len(answer_tokens & evidence_tokens) / len(answer_tokens)
+            if answer_tokens
+            else 0.0
+        )
+        score = min(citation_score, overlap)
+        findings = ()
+        if citation_score < 1.0 or overlap < self.min_overlap:
+            findings = (
+                Finding(
+                    rule="abstention_contract_violation",
+                    severity="high",
+                    message=(
+                        "Response does not satisfy the case's cited lexical "
+                        "abstention contract"
+                    ),
+                ),
+            )
+        return PluginResult(metrics={"score": score, "applicable": 1.0}, findings=findings)
+
+
 def _meaningful_tokens(value: str) -> set[str]:
     return {token.casefold() for token in re.findall(r"[\w\-]+", value) if len(token) > 1}
