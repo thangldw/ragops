@@ -1,6 +1,6 @@
 # RAGOps
 
-**Catch RAG and agent regressions before they reach production.**
+**Know whether an AI change is safe to ship.**
 
 [![PyPI](https://img.shields.io/pypi/v/ragops.svg)](https://pypi.org/project/ragops/)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml)
@@ -36,8 +36,8 @@ no model API or hosted service.
 Try the other credential-free scenarios:
 
 ```bash
-ragops demo --scenario support-triage --output support-triage-demo
-ragops demo --scenario proposal-review --output proposal-review-demo
+uvx ragops demo --scenario support-triage --output support-triage-demo
+uvx ragops demo --scenario proposal-review --output proposal-review-demo
 ```
 
 ## Pull-request evidence
