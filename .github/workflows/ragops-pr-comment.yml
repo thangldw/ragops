@@ -2,7 +2,7 @@ name: RAGOps PR comment publisher
 
 on:
   workflow_run:
-    workflows: ["RAGOps reusable gate smoke", "RAGOps statistical gate smoke"]
+    workflows: ["RAGOps reusable gate smoke"]
     types: [completed]
 
 permissions:
