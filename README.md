@@ -40,6 +40,17 @@ ragops demo --scenario support-triage --output support-triage-demo
 ragops demo --scenario proposal-review --output proposal-review-demo
 ```
 
+## Pull-request evidence
+
+This comment was published by the isolated default-branch publisher from a
+deliberately regressed revision of [PR #26](https://github.com/thangldw/ragops/pull/26).
+It shows the measured deltas, every block reason, and the downloadable HTML
+report without giving untrusted pull-request code a write token.
+
+<p align="center">
+  <img src="docs/demo/ragops-pr-comment.png" alt="GitHub pull-request comment from RAGOps showing a blocked release, metric deltas, six failed gates, and an HTML report link" width="800">
+</p>
+
 ## Release workflow
 
 <p align="center">

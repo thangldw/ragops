@@ -5,7 +5,7 @@ the engineering evolution before the reset public baseline.
 
 ## [Unreleased]
 
-![RAGOps demo showing a blocked candidate](docs/demo/ragops-demo-screenshot.png)
+![RAGOps pull-request comment showing a blocked candidate](docs/demo/ragops-pr-comment.png)
 
 ### Added
 

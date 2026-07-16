@@ -79,6 +79,9 @@ direct PR comment, while untrusted PR code never receives comment permission.
 RAGOps uses this same path on its own repository. The
 `ragops-gate-smoke.yml` caller runs on every pull request, installs the PR SHA,
 and gates the passing reference fixture against the repository's own scenario.
+The immutable [blocked acceptance run](https://github.com/thangldw/ragops/actions/runs/29495688732)
+and [captured PR comment](../demo/ragops-pr-comment.png) exercise the
+failure path with a deliberately regressed candidate.
 
 Use the copyable [publisher recipe](../examples/github-pr-comment.yml) when the
 adopting repository accepts this permission boundary.

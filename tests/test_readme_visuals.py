@@ -18,6 +18,11 @@ def test_readme_visual_assets_exist_and_are_referenced() -> None:
         assert path.stat().st_size > 0
         assert asset in readme
 
+    pr_comment = Path("docs/demo/ragops-pr-comment.png")
+    assert pr_comment.is_file()
+    assert pr_comment.stat().st_size > 0
+    assert str(pr_comment) in readme
+
 
 def test_readme_infographics_are_well_formed_accessible_svg() -> None:
     namespace = {"svg": "http://www.w3.org/2000/svg"}

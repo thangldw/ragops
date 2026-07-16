@@ -17,4 +17,4 @@ jobs:
       ragops-version: ${{ github.event.pull_request.head.sha || github.sha }}
       scenario: scenarios/japanese_troubleshooting/benchmark-v0.2.json
       baseline: scenarios/japanese_troubleshooting/benchmark-baseline.json
-      candidate: scenarios/japanese_troubleshooting/benchmark-regressed.json
+      candidate: scenarios/japanese_troubleshooting/benchmark-baseline.json
