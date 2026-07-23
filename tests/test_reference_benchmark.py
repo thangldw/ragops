@@ -2,12 +2,16 @@ from ragops.benchmarks import scenario_summary
 from ragops.engine import evaluate
 from ragops.config import load_evaluation_policy
 from ragops.loader import load_responses, load_scenario
-from ragops.plugins import AbstentionContractEvaluator, SourceFreshnessEvaluator
+from ragops.plugins import (
+    AbstentionContractEvaluator,
+    CitationCorrectnessEvaluator,
+    ClaimSupportEvaluator,
+    SourceFreshnessEvaluator,)
 
 SCENARIO = "scenarios/japanese_troubleshooting/benchmark-v0.2.json"
 BASELINE = "scenarios/japanese_troubleshooting/benchmark-baseline.json"
 FAILURE_ZOO = "scenarios/japanese_troubleshooting/failure-zoo-candidate.json"
-
+RETRIEVAL_POISONING = "scenarios/japanese_troubleshooting/retrieval-poisoning-candidate.json"
 
 def test_reference_benchmark_meets_published_taxonomy() -> None:
     summary = scenario_summary(load_scenario(SCENARIO))
@@ -48,3 +52,27 @@ def test_failure_zoo_candidate_is_blocked_with_critical_and_quality_evidence() -
     rules = {finding.rule for case in report.cases for finding in case.findings}
     assert "stale_source_contract_violation" in rules
     assert "abstention_contract_violation" in rules
+
+
+def test_retrieval_poisoning_candidate_is_blocked() -> None:
+    report = evaluate(
+        load_scenario(SCENARIO),
+        load_responses(RETRIEVAL_POISONING),
+        evaluators=(
+            CitationCorrectnessEvaluator(),
+            ClaimSupportEvaluator(),
+        ),
+        policy=load_evaluation_policy(
+            "scenarios/japanese_troubleshooting/evaluation-policy.toml"
+        ),
+    )
+
+    assert report.passed is False
+    assert "citation_coverage" in report.failed_gates
+    assert "citation_precision" in report.failed_gates
+    assert "finding_severity:high" in report.failed_gates
+
+    rules = {finding.rule for case in report.cases for finding in case.findings}
+    assert "unsupported_citation" in rules
+    assert "unsupported_claim" in rules
+    assert "forbidden_output_term" in rules
