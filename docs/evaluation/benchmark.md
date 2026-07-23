@@ -54,6 +54,22 @@ abstention check is lexical. The checks demonstrate that configured examples
 are caught; they do not prove resistance to unseen attacks, source recency from
 content, semantic correctness, or safe abstention.
 
+### Retrieval-poisoning specimen
+
+```bash
+ragops compare \
+  --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json \
+  --baseline scenarios/japanese_troubleshooting/benchmark-baseline.json \
+  --candidate scenarios/japanese_troubleshooting/retrieval-poisoning-candidate.json \
+  --evaluator citation_correctness \
+  --evaluator claim_support \
+  --evaluation-policy scenarios/japanese_troubleshooting/evaluation-policy.toml \
+  --format html \
+  --output retrieval-poisoning-report.html
+```
+
+The expected exit is `2`. This synthetic specimen demonstrates a retrieval-poisoning failure in which a response follows instructions embedded in retrieved content. It intentionally triggers unsupported citations and unsupported claims for evaluation purposes. It does not demonstrate real-world security guarantees.
+
 ## Recorded results
 
 | Metric | Baseline | Regressed | Adversarial |
