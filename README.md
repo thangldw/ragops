@@ -14,9 +14,7 @@ It compares recorded candidate behavior with an accepted baseline, applies a
 versioned policy, and returns an explainable `PASS` or `BLOCK`. The core is
 dependency-free, offline, and provider-independent.
 
-<p align="center">
-  <a href="https://thangldw.github.io/ragops/"><strong>Open the product showcase →</strong></a>
-</p>
+[thangldw/ragops](https://github.com/thangldw/ragops)
 
 ## Three-minute proof
 
