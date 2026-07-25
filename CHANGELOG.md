@@ -5,6 +5,11 @@ the engineering evolution before the reset public baseline.
 
 ## [Unreleased]
 
+### Removed
+
+- Removed the retired GitHub Pages showcase, its deployment workflow, and its
+  page-only regression tests and assets.
+
 ### Changed
 
 - Synchronized plain-language positioning, support, quickstart,

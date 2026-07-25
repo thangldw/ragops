@@ -54,5 +54,3 @@ candidate behavior with an accepted baseline, apply versioned quality and
 operational policy, and produce an explainable `PASS` or `BLOCK` locally.
 
 Repository: <https://github.com/thangldw/ragops>
-
-Showcase: <https://thangldw.github.io/ragops/>

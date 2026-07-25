@@ -127,17 +127,3 @@ def test_integration_guides_are_linked_from_readme() -> None:
     for guide in guides:
         assert Path(guide).is_file()
         assert guide in readme
-
-
-def test_pages_deploys_site_from_main_with_pinned_actions() -> None:
-    workflow = Path(".github/workflows/pages.yml").read_text(encoding="utf-8")
-
-    assert "branches: [main]" in workflow
-    assert "path: site" in workflow
-    for action in (
-        "actions/checkout",
-        "actions/configure-pages",
-        "actions/upload-pages-artifact",
-        "actions/deploy-pages",
-    ):
-        assert re.search(rf"{action}@[0-9a-f]{{40}}", workflow)
