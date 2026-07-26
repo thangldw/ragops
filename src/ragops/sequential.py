@@ -21,7 +21,6 @@ from ragops.statistical import (
     classify_provenance_changes,
 )
 
-
 METHOD = "predeclared_group_sequential_bonferroni_bootstrap"
 
 

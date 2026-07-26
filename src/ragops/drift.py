@@ -12,7 +12,6 @@ from ragops.models import (
 )
 from ragops.statistical import _bootstrap_metric, _group_values, _quantile
 
-
 METHOD = "paired_hierarchical_bootstrap_two_sided_equivalence"
 
 

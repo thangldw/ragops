@@ -20,7 +20,6 @@ from ragops.models import (
 )
 from ragops.statistical import load_replay_bundle
 
-
 MAX_BUNDLE_BYTES = 100_000_000
 MAX_POLICY_BYTES = 1_000_000
 MAX_MANIFEST_BYTES = 1_000_000

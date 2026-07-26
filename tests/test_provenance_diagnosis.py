@@ -3,7 +3,6 @@ from dataclasses import replace
 from ragops.provenance import diagnose_provenance
 from ragops.statistical import load_replay_bundle
 
-
 FIXTURES = "scenarios/statistical_gate"
 
 

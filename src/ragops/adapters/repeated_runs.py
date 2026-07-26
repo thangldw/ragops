@@ -14,7 +14,6 @@ from ragops.loader import ContractError
 from ragops.models import MetricObservation, ReplayBundle, ReplayProvenance
 from ragops.statistical import load_replay_bundle
 
-
 MAX_CASES = 10_000
 MAX_REPEATS = 1_000
 MAX_OBSERVATIONS = 100_000

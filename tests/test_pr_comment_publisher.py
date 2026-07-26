@@ -13,8 +13,8 @@ from apps.github_pr_comment import (
     marker_comment_id,
     read_evidence_archive,
     select_artifact,
-    validate_source_event,
     validate_artifact_redirect_url,
+    validate_source_event,
 )
 
 REPOSITORY = "thangldw/ragops"

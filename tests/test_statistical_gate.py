@@ -8,7 +8,6 @@ from ragops.loader import ContractError
 from ragops.models import StatisticalMetricGate, StatisticalPolicy
 from ragops.statistical import compare_replay_bundles, replay_bundle_from_dict
 
-
 FIXTURES = "scenarios/statistical_gate"
 
 

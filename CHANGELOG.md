@@ -1,77 +1,23 @@
-# Changelog
+# RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
-RAGOps follows [Semantic Versioning](https://semver.org/). Git history preserves
-the engineering evolution before the reset public baseline.
+## [1.0.0] - 2026-07-26
 
-## [Unreleased]
+### English
 
-### Removed
+- Consolidated deterministic and statistical evaluation, policy comparison, provenance diagnosis, offline evidence and API/CLI adapters into one stable baseline.
+- Retained only the two reusable read-only release-gate workflows; removed scheduled, push, smoke, publishing and release automation.
+- Standardized the public tag and package version at `v1.0.0`.
 
-- Removed the retired GitHub Pages showcase, its deployment workflow, and its
-  page-only regression tests and assets.
+### Tiếng Việt
 
-### Changed
+- Hợp nhất đánh giá xác định/thống kê, so sánh policy, chẩn đoán provenance, bằng chứng offline và adapter API/CLI vào một baseline ổn định.
+- Chỉ giữ hai reusable workflow chỉ đọc; xóa workflow chạy lịch, push, smoke, publish và release.
+- Chuẩn hóa tag public và package version thành `v1.0.0`.
 
-- Synchronized plain-language positioning, support, quickstart,
-  release-navigation, and historical status documentation with the published
-  `1.1.0` baseline.
+### 日本語
 
-## [1.1.0] - 2026-07-16
+- 決定的・統計的評価、ポリシー比較、来歴診断、オフライン証拠、API/CLI アダプターを1つの安定版へ統合しました。
+- 読み取り専用の再利用可能ゲート2つだけを残し、schedule、push、smoke、publish、release 自動化を削除しました。
+- 公開タグとパッケージ版を `v1.0.0` に統一しました。
 
-![RAGOps pull-request comment showing a blocked candidate](docs/demo/ragops-pr-comment.png)
-
-### Added
-
-- Added a no-clone `uvx ragops demo` quickstart, a 45-second recorded demo, and
-  a named RAG Failure Zoo covering permission leakage, stale evidence, wrong
-  citations, prompt injection, failure to abstain, and excessive agency.
-- Added downloadable HTML evidence to reusable GitHub gates and linked it from
-  the bounded PR comment alongside metric deltas and named block reasons.
-- Added an evidence-linked comparison with Ragas, DeepEval, Phoenix, and
-  LangSmith.
-- Added opt-in tagged evidence evaluators for exact current-source IDs and
-  cited lexical abstention contracts, with explicit non-semantic boundaries.
-
-### Changed
-
-- Expanded the public showcase with the opt-in statistical regression workflow,
-  repeated-run fixture evidence, sequential stopping, evaluator drift, signed
-  baseline provenance, CI integration, and explicit uncertainty boundaries.
-- Updated project status to record the completed `v1.0` GitHub Release,
-  `1.0.0` PyPI publication, and the acceptance rule for the next milestone.
-- Made the repository's own reusable RAGOps gate run on every pull request.
-
-## [1.0.0] - 2026-07-15
-
-### Added
-
-- Added portable scenarios, traces, deterministic evaluators, comparison
-  policies, machine-readable reports, CLI/API adapters, and offline PASS/BLOCK
-  release decisions.
-- Added an opt-in statistical regression path with versioned replay bundles,
-  per-case repeated observations, paired hierarchical bootstrap bounds, effect
-  sizes, and uncertainty-aware absolute and non-inferiority gates.
-- Added bounded, shell-free repeated-run collection with atomic checkpoints,
-  resume support, and predeclared sequential early stopping.
-- Added evaluator-drift equivalence checks and provenance diagnosis for model,
-  evaluator, dataset, infrastructure, and stochastic variance changes.
-- Added content-addressed accepted-baseline manifests with optional detached SSH
-  signing and offline verification.
-- Added recorded-score bridges for Ragas, DeepEval, and OpenTelemetry GenAI
-  evaluation events without provider dependencies in the core.
-- Added authenticated bounded statistical API endpoints, reusable read-only
-  GitHub gates, safe PR evidence publication, JSON Schemas, and reference
-  PASS/BLOCK fixtures.
-
-### Changed
-
-- Reset the public product line to GitHub milestone `v1.0` and Python package
-  `1.0.0`; superseded public release listings were removed by owner decision.
-- Consolidated product, architecture, engineering, evaluation, showcase, and
-  acceptance guidance around the current evidence-first workflow.
-
-### Security
-
-- Protected API endpoints fail closed without authentication, request and
-  collection sizes are bounded, repeated commands never invoke a shell, and PR
-  evaluation is isolated from trusted comment publication.
+[1.0.0]: https://github.com/thangldw/ragops/releases/tag/v1.0.0

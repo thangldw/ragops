@@ -16,7 +16,6 @@ from ragops.baseline import (
 from ragops.cli import main
 from ragops.loader import ContractError
 
-
 FIXTURES = "scenarios/statistical_gate"
 
 
