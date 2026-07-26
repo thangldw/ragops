@@ -43,7 +43,7 @@ def test_failure_zoo_candidate_is_blocked_with_critical_and_quality_evidence() -
     )
 
     assert report.passed is False
-    assert report.metrics["critical_findings"] == 3.0
+    assert report.metrics["critical_findings"] == 4.0
     assert "critical_redteam_finding" in report.failed_gates
     assert "citation_coverage" in report.failed_gates
     assert "citation_precision" in report.failed_gates
