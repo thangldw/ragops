@@ -24,7 +24,7 @@ flowchart LR
 
 ## English
 
-RAGOps compares recorded candidate behavior with an accepted baseline, applies versioned release policy and returns explainable `PASS`, `WARN` or `FAIL` evidence. The dependency-free core works offline; optional adapters expose API and UI surfaces. Two reusable GitHub workflows remain because they are product interfaces and do not run on push or schedule.
+RAGOps compares recorded candidate behavior with an accepted baseline, applies versioned release policy and returns explainable `PASS`, `WARN` or `FAIL` evidence. The dependency-free core works offline; optional adapters expose API and UI surfaces. Repository-owned GitHub Actions are intentionally absent; integrations run through the local CLI or API.
 
 Requirements: Python 3.11+.
 
@@ -40,13 +40,13 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/pytest -q
 
 ## Tiếng Việt
 
-RAGOps so sánh hành vi ứng viên đã ghi lại với baseline được chấp nhận, áp dụng policy phát hành có version và trả về bằng chứng giải thích được ở trạng thái `PASS`, `WARN` hoặc `FAIL`. Core không có dependency và chạy offline; adapter tùy chọn cung cấp API/UI. Hai reusable workflow được giữ vì là giao diện sản phẩm và không tự chạy theo push hoặc lịch.
+RAGOps so sánh hành vi ứng viên đã ghi lại với baseline được chấp nhận, áp dụng policy phát hành có version và trả về bằng chứng giải thích được ở trạng thái `PASS`, `WARN` hoặc `FAIL`. Core không có dependency và chạy offline; adapter tùy chọn cung cấp API/UI. Repo chủ động không chứa GitHub Actions; tích hợp được thực hiện qua CLI hoặc API cục bộ.
 
 Yêu cầu: Python 3.11+. Dùng các lệnh ở phần English để cài đặt, kiểm tra scenario, lint và test.
 
 ## 日本語
 
-RAGOps は、記録済みの候補動作を承認済みベースラインと比較し、バージョン管理されたリリースポリシーを適用して、説明可能な `PASS`・`WARN`・`FAIL` の根拠を返します。依存関係のないコアはオフラインで動作し、任意のアダプターが API と UI を提供します。残した2つの再利用可能ワークフローは製品インターフェースであり、push やスケジュールでは自動実行されません。
+RAGOps は、記録済みの候補動作を承認済みベースラインと比較し、バージョン管理されたリリースポリシーを適用して、説明可能な `PASS`・`WARN`・`FAIL` の根拠を返します。依存関係のないコアはオフラインで動作し、任意のアダプターが API と UI を提供します。リポジトリ所有の GitHub Actions は意図的に置かず、CLI またはローカル API から統合します。
 
 必要環境は Python 3.11 以上です。セットアップ、lint、テストには English セクションのコマンドを使用してください。
 
