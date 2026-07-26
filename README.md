@@ -1,253 +1,53 @@
 # RAGOps
 
-**Know whether an AI change is safe to ship.**
+[English](#english) · [Tiếng Việt](#tiếng-việt) · [日本語](#日本語)
 
-[![PyPI](https://img.shields.io/pypi/v/ragops.svg)](https://pypi.org/project/ragops/)
-[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB)](pyproject.toml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-7357FF.svg)](LICENSE)
+Regression tests and explainable release gates for RAG systems and AI agents.
 
-RAGOps answers one release question: after changing a prompt, retriever,
-embedding model, dataset, or evaluator, is the candidate still good enough to
-ship?
-
-It compares recorded candidate behavior with an accepted baseline, applies a
-versioned policy, and returns an explainable `PASS` or `BLOCK`. The core is
-dependency-free, offline, and provider-independent.
-
-[thangldw/ragops](https://github.com/thangldw/ragops)
-
-## Three-minute proof
-
-```bash
-uvx ragops demo
+```mermaid
+%%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","fontFamily":"Arial, sans-serif","lineColor":"#667085","primaryTextColor":"#172B4D"}}}%%
+flowchart LR
+    S["Scenario<br/>Kịch bản / シナリオ"]:::yellow
+    B["Accepted baseline<br/>Mốc chuẩn / 基準"]:::blue
+    C["Candidate traces<br/>Ứng viên / 候補"]:::purple
+    E["Evaluators & policy<br/>Đánh giá / 評価"]:::green
+    G{"PASS / WARN / FAIL"}:::pink
+    S --> E
+    B --> E
+    C --> E --> G
+    classDef yellow fill:#FFF4A3,stroke:#C9A227,stroke-width:2px,color:#172B4D
+    classDef blue fill:#D9EAFD,stroke:#4C78A8,stroke-width:2px,color:#172B4D
+    classDef purple fill:#E9DDF7,stroke:#8064A2,stroke-width:2px,color:#172B4D
+    classDef green fill:#DDF5E3,stroke:#4F9D69,stroke-width:2px,color:#172B4D
+    classDef pink fill:#FFE1E6,stroke:#C96A7B,stroke-width:2px,color:#172B4D
 ```
 
-Open `ragops-demo/release-report.html`. The accepted baseline passes; the
-intentionally regressed candidate is blocked with named reasons. The generated
-bundle contains portable JSON, Markdown, and standalone HTML evidence and needs
-no model API or hosted service.
+## English
 
-<p align="center">
-  <img src="docs/demo/ragops-demo.gif" alt="Terminal demo: an accepted baseline passes, a candidate loses citation coverage, and RAGOps blocks the release" width="900">
-</p>
+RAGOps compares recorded candidate behavior with an accepted baseline, applies versioned release policy and returns explainable `PASS`, `WARN` or `FAIL` evidence. The dependency-free core works offline; optional adapters expose API and UI surfaces. Two reusable GitHub workflows remain because they are product interfaces and do not run on push or schedule.
 
-Try the other credential-free scenarios:
+Requirements: Python 3.11+.
 
-```bash
-uvx ragops demo --scenario support-triage --output support-triage-demo
-uvx ragops demo --scenario proposal-review --output proposal-review-demo
-```
-
-## Pull-request evidence
-
-This comment was published by the isolated default-branch publisher from a
-deliberately regressed revision of [PR #26](https://github.com/thangldw/ragops/pull/26).
-It shows the measured deltas, every block reason, and the downloadable HTML
-report without giving untrusted pull-request code a write token.
-
-<p align="center">
-  <img src="docs/demo/ragops-pr-comment.png" alt="GitHub pull-request comment from RAGOps showing a blocked release, metric deltas, six failed gates, and an HTML report link" width="800">
-</p>
-
-## Release workflow
-
-<p align="center">
-  <img src="docs/demo/infographics/release-gate-flow.svg" alt="RAGOps workflow: record portable evidence, evaluate it against versioned checks, compare candidate with baseline, then return an explainable pass or block decision" width="100%">
-</p>
-
-1. **Record** responses or traces from the application you already operate.
-2. **Evaluate** quality, safety, operational budgets, and optional external
-   metrics against a versioned scenario and policy.
-3. **Compare** the candidate with an accepted baseline using explicit
-   tolerances or uncertainty-aware repeated-run bounds.
-4. **Gate** the release with named reasons and case-level evidence.
-
-RAGOps evaluates your system. It does not replace LangChain, LlamaIndex, your
-model, retriever, observability stack, or application.
-
-## What the core provides
-
-- Citation coverage and precision, lexical groundedness, retrieval, latency,
-  cost, answer-length, and red-team checks.
-- Baseline-aware regression comparison with critical findings that fail closed.
-- Fixed and predeclared sequential statistical gates for repeated metric
-  observations, plus evaluator-drift and provenance diagnostics.
-- Content-addressed accepted-baseline manifests with optional offline SSH
-  signature verification.
-- JSON, Markdown, and standalone HTML reports for local review and CI.
-- Portable scenarios, response fixtures, JSONL traces, policies, and schemas.
-- A Python API, CLI, evaluator plugins, and optional adapters outside the core.
-- A provider-neutral envelope for scores exported by Ragas, DeepEval, Langfuse,
-  or internal judges.
-
-## Recorded evidence
-
-The included Japanese troubleshooting reference deployment compares an
-ACL-first, graph-assisted baseline with a lexical-only candidate under the same
-four questions and release contract.
-
-| Recorded metric | Graph + ACL | Lexical only | Delta |
-| --- | ---: | ---: | ---: |
-| Citation coverage | 100% | 75% | −25.00% |
-| Citation precision | 100% | 75% | −25.00% |
-| Lexical groundedness | 100% | 78.12% | −21.88% |
-| Release decision | Pass | **Block** | Hold release |
-
-The separate 30-case synthetic benchmark covers nine failure families,
-including stale evidence, permission leakage, prompt injection, abstention, and
-consequential actions.
-
-See the [RAG Failure Zoo](docs/evaluation/benchmark.md#rag-failure-zoo) for the
-failing examples and the exact gates that catch them.
-
-<p align="center">
-  <img src="docs/demo/infographics/evidence-stack.svg" alt="RAGOps evidence stack: quality, safety, operational budgets, and regression comparison support one release decision" width="100%">
-</p>
-
-These fixtures validate the harness and the recorded architecture comparison.
-They do not establish Japanese semantic quality, production security, customer
-adoption, or ROI.
-
-## Evaluate your own evidence
-
-Requires Python 3.11 or newer.
+Current technical references: [architecture](docs/ARCHITECTURE.md), [operations](docs/OPERATIONS.md), [security](SECURITY.md) and [v1.0.0 release notes](docs/releases/v1.0.0.md).
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate
-pip install -e '.[dev,api]'
-
-ragops evaluate \
-  --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json \
-  --responses scenarios/japanese_troubleshooting/benchmark-baseline.json \
-  --evaluator citation_correctness \
-  --evaluator claim_support
+.venv/bin/pip install -e '.[dev]'
+.venv/bin/ragops inspect --scenario scenarios/japanese_troubleshooting/benchmark-v0.2.json
+.venv/bin/ruff check .
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/pytest -q
 ```
 
-Compare a candidate with a baseline:
+## Tiếng Việt
 
-```bash
-ragops compare \
-  --scenario path/to/scenario.json \
-  --baseline path/to/baseline.json \
-  --candidate path/to/candidate.json \
-  --evaluation-policy path/to/evaluation-policy.toml \
-  --format html \
-  --output release-report.html
-```
+RAGOps so sánh hành vi ứng viên đã ghi lại với baseline được chấp nhận, áp dụng policy phát hành có version và trả về bằng chứng giải thích được ở trạng thái `PASS`, `WARN` hoặc `FAIL`. Core không có dependency và chạy offline; adapter tùy chọn cung cấp API/UI. Hai reusable workflow được giữ vì là giao diện sản phẩm và không tự chạy theo push hoặc lịch.
 
-- Exit `0`: evaluation completed and the candidate passes.
-- Exit `2`: evaluation completed and policy blocks the candidate.
-- Any other non-zero exit: invalid input, configuration, or contract.
+Yêu cầu: Python 3.11+. Dùng các lệnh ở phần English để cài đặt, kiểm tra scenario, lint và test.
 
-Use `--traces` instead of `--responses` when your application exports portable
-JSONL trace 0.4 records. Imported provider metrics keep the meaning defined by
-their producer and your reviewed policy.
+## 日本語
 
-For repeated metric observations:
+RAGOps は、記録済みの候補動作を承認済みベースラインと比較し、バージョン管理されたリリースポリシーを適用して、説明可能な `PASS`・`WARN`・`FAIL` の根拠を返します。依存関係のないコアはオフラインで動作し、任意のアダプターが API と UI を提供します。残した2つの再利用可能ワークフローは製品インターフェースであり、push やスケジュールでは自動実行されません。
 
-```bash
-ragops compare-runs \
-  --baseline-bundle scenarios/statistical_gate/baseline.json \
-  --candidate-bundle scenarios/statistical_gate/candidate-pass.json \
-  --policy scenarios/statistical_gate/policy.toml
-```
+必要環境は Python 3.11 以上です。セットアップ、lint、テストには English セクションのコマンドを使用してください。
 
-The statistical path remains opt-in; deterministic evaluation contracts are
-unchanged. See the [evaluation strategy](docs/evaluation/strategy.md) for
-sampling units, sequential error control, drift isolation, and limitations.
-
-## Architecture
-
-```mermaid
-%%{init: {"theme":"base","fontFamily":"system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"background":"#f8f6f0","primaryColor":"#ffdc7c","primaryTextColor":"#17152f","primaryBorderColor":"#17152f","secondaryColor":"#bfe8ff","tertiaryColor":"#d8ceff","lineColor":"#756f84","edgeLabelBackground":"#fffef9","clusterBkg":"#fffef9","clusterBorder":"#b9b4aa"}}}%%
-flowchart LR
-    APP["RAG / AI agent<br/>existing application"]
-    TRACE["Portable evidence<br/>responses · traces · metrics"]
-
-    subgraph CORE["LOCAL OPEN-SOURCE CORE"]
-        LOAD["Load<br/>scenario · policy"]
-        CHECK["Evaluate<br/>checks · findings"]
-        COMPARE["Compare<br/>baseline · candidate"]
-        REPORT["Evidence<br/>JSON · Markdown · HTML"]
-        LOAD --> CHECK --> COMPARE --> REPORT
-    end
-
-    GATE{"Release gate"}
-    PASS["PASS<br/>continue"]
-    BLOCK["BLOCK<br/>fix and re-run"]
-    REVIEW["Engineer · CI · pull request"]
-
-    APP -->|records| TRACE --> LOAD
-    REPORT --> GATE
-    GATE -->|meets policy| PASS
-    GATE -->|named gates fail| BLOCK
-    REPORT --> REVIEW
-
-    classDef source fill:#bfe8ff,stroke:#17152f,color:#17152f,stroke-width:2px;
-    classDef core fill:#ffdc7c,stroke:#17152f,color:#17152f,stroke-width:2px;
-    classDef report fill:#d8ceff,stroke:#17152f,color:#17152f,stroke-width:2px;
-    classDef pass fill:#aee8c9,stroke:#17152f,color:#17152f,stroke-width:2px;
-    classDef block fill:#ffc0dd,stroke:#17152f,color:#8d2037,stroke-width:2px;
-
-    class APP,TRACE source;
-    class LOAD,CHECK,COMPARE core;
-    class REPORT,GATE,REVIEW report;
-    class PASS pass;
-    class BLOCK block;
-```
-
-```text
-src/ragops/    Dependency-free evaluation core
-apps/          Optional API and browser adapters
-scenarios/     Portable fixtures, policies, and expected evidence
-examples/      Reference deployments outside the core
-schemas/       Public JSON Schema contracts
-docs/          Current guides and immutable project records
-```
-
-Solid arrows are the required offline path. Optional providers, external
-evaluators, and hosted integrations remain adapters; the core can make a
-complete release decision without them.
-
-## Product boundary
-
-| RAGOps provides | RAGOps does not claim |
-| --- | --- |
-| Local, repeatable release evidence | Semantic correctness from lexical overlap |
-| Portable scenarios, traces, and reports | Proof of production security or compliance |
-| Baseline-aware regression gates | Customer adoption or business ROI |
-| Extensible deterministic evaluators | A production multi-tenant hosted service |
-
-The reference ACL is a role-list simulation. The local control plane is a
-single-workspace development surface. Consequential actions still require human
-approval.
-
-## Why this instead of X?
-
-RAGOps is the small offline release-decision layer, not a replacement for a
-metric library or observability platform. See the
-[honest comparison with Ragas, DeepEval, Phoenix, and LangSmith](docs/product/overview.md#why-this-instead-of-x),
-including when one of those tools is the better fit.
-
-## Documentation
-
-- [Documentation map](docs/README.md)
-- [Getting started](docs/getting-started.md)
-- [System architecture](docs/architecture/system-overview.md)
-- [Evaluation strategy](docs/evaluation/strategy.md)
-- [CI and pull-request gates](docs/engineering/ci-gates.md)
-- [Trace, provider, and metric integrations](docs/engineering/integrations.md)
-- [Testing and release workflow](docs/engineering/testing-and-release.md)
-- [Reference benchmark](docs/evaluation/benchmark.md)
-- [Contributing](CONTRIBUTING.md), [support](SUPPORT.md), and
-  [security](SECURITY.md)
-
-Git history and the changelog preserve released evolution. Repository HEAD keeps
-one current source per topic so milestone snapshots are not mistaken for active
-requirements.
-
-## License
-
-MIT. See [LICENSE](LICENSE). Previously published Apache-2.0 releases retain
-their original license.
+Released under the [MIT License](LICENSE).

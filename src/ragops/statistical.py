@@ -18,7 +18,6 @@ from ragops.models import (
     StatisticalPolicy,
 )
 
-
 METHOD = "paired_hierarchical_bootstrap_one_sided"
 
 

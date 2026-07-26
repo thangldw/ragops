@@ -33,9 +33,17 @@ from ragops.config import (
 )
 from ragops.control_plane import ControlPlane
 from ragops.demo import DEFAULT_DEMO_SCENARIO, DEMO_BUNDLES, write_demo
-from ragops.engine import compare, evaluate
 from ragops.drift import detect_evaluator_drift
+from ragops.engine import compare, evaluate
 from ragops.loader import ContractError, load_responses, load_scenario
+from ragops.pilot import (
+    PilotContractError,
+    load_pilot_economics,
+    load_pilot_manifest,
+    load_pilot_observations,
+    pilot_markdown,
+    summarize_pilot,
+)
 from ragops.plugins import (
     AbstentionContractEvaluator,
     AnswerLengthBudgetEvaluator,
@@ -44,14 +52,6 @@ from ragops.plugins import (
     ClaimSupportEvaluator,
     RetrievalRecallEvaluator,
     SourceFreshnessEvaluator,
-)
-from ragops.pilot import (
-    PilotContractError,
-    load_pilot_economics,
-    load_pilot_manifest,
-    load_pilot_observations,
-    pilot_markdown,
-    summarize_pilot,
 )
 from ragops.provenance import diagnose_provenance
 from ragops.reporters import (
@@ -62,8 +62,8 @@ from ragops.reporters import (
     sequential_comparison_markdown,
     statistical_comparison_markdown,
 )
-from ragops.statistical import compare_replay_bundles, load_replay_bundle
 from ragops.sequential import compare_replay_bundles_sequentially
+from ragops.statistical import compare_replay_bundles, load_replay_bundle
 from ragops.store import ExperimentStore
 from ragops.traces import load_trace_jsonl
 

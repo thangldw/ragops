@@ -9,7 +9,6 @@ from ragops.engine import compare
 from ragops.loader import responses_from_data, scenario_from_dict
 from ragops.reporters import comparison_html, comparison_markdown
 
-
 DEMO_SCENARIO = {
     "schema_version": "0.2",
     "id": "ragops-three-minute-demo",

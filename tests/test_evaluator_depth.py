@@ -1,10 +1,10 @@
 from dataclasses import replace
 
+import pytest
+
 from ragops.engine import evaluate
 from ragops.loader import scenario_from_dict
 from ragops.models import EvaluationPolicy, MetricGate, RecordedResponse
-import pytest
-
 from ragops.plugins import (
     AbstentionContractEvaluator,
     AnswerLengthBudgetEvaluator,

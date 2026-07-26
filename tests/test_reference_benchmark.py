@@ -1,6 +1,6 @@
 from ragops.benchmarks import scenario_summary
-from ragops.engine import evaluate
 from ragops.config import load_evaluation_policy
+from ragops.engine import evaluate
 from ragops.loader import load_responses, load_scenario
 from ragops.plugins import AbstentionContractEvaluator, SourceFreshnessEvaluator
 

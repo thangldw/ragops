@@ -6,7 +6,6 @@ from collections import defaultdict
 from ragops.loader import ContractError
 from ragops.models import MetricObservation
 
-
 OTEL_EVALUATION_NAME = "gen_ai.evaluation.name"
 OTEL_EVALUATION_SCORE = "gen_ai.evaluation.score.value"
 RAGOPS_CASE_ID = "ragops.case.id"

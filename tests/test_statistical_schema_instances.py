@@ -15,7 +15,6 @@ from ragops.provenance import diagnose_provenance
 from ragops.sequential import compare_replay_bundles_sequentially
 from ragops.statistical import compare_replay_bundles, load_replay_bundle
 
-
 FIXTURES = Path("scenarios/statistical_gate")
 SCHEMAS = Path("schemas")
 

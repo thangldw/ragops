@@ -8,7 +8,6 @@ from pathlib import Path
 
 from ragops.loader import ContractError
 
-
 SIGNING_NAMESPACE = "ragops-baseline"
 MAX_SIGNED_BYTES = 1_000_000
 MAX_SIGNATURE_BYTES = 100_000

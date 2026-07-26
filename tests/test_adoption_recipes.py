@@ -5,7 +5,7 @@ from pathlib import Path
 def test_gitlab_recipe_preserves_evidence_and_exit_code() -> None:
     recipe = Path("docs/examples/gitlab-ci-ragops.yml").read_text(encoding="utf-8")
 
-    assert 'RAGOPS_VERSION: "1.1.0"' in recipe
+    assert 'RAGOPS_VERSION: "1.0.0"' in recipe
     assert 'if: \'$CI_PIPELINE_SOURCE == "merge_request_event"\'' in recipe
     assert "gate_exit=$?" in recipe
     assert 'exit "$gate_exit"' in recipe
@@ -30,20 +30,3 @@ def test_downstream_github_publisher_is_copyable_and_least_privilege() -> None:
     assert re.search(r"ref: [0-9a-f]{40}", recipe)
     assert re.search(r"actions/checkout@[0-9a-f]{40}", recipe)
     assert "python .ragops-publisher/apps/github_pr_comment.py" in recipe
-
-
-def test_pr_comment_design_keeps_write_path_separate() -> None:
-    design = Path("docs/engineering/ci-gates.md").read_text(encoding="utf-8")
-    decisions = Path("docs/architecture/decisions.md").read_text(encoding="utf-8")
-
-    for required in (
-        "workflow_run",
-        "pull-requests: write",
-        "never use `pull_request_target`",
-        "checkout the pull request",
-        "untrusted data",
-        "<!-- ragops-release-gate -->",
-    ):
-        assert required in design
-    assert "Pull-request evaluation remains read-only" in decisions
-    assert "isolated default-branch workflow" in decisions

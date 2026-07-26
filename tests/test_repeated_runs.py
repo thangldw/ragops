@@ -17,7 +17,6 @@ from ragops.loader import ContractError
 from ragops.models import MetricObservation, ReplayBundle, ReplayProvenance
 from ragops.statistical import load_replay_bundle
 
-
 FIXTURES = "scenarios/statistical_gate"
 
 

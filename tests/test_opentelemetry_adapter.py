@@ -13,7 +13,6 @@ from examples.opentelemetry_trace_adapter.adapter import (
 )
 from ragops.traces import load_trace_jsonl
 
-
 FIXTURE = Path("examples/opentelemetry_trace_adapter/spans.jsonl")
 
 
