@@ -12,11 +12,12 @@ from __future__ import annotations
 
 import json
 import sys
-from pathlib import Path
-from typing import Any
 
 # Add parent of ragops/src to path
 import sys as _sys
+from pathlib import Path
+from typing import Any
+
 _sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent / "src"))
 
 from ragops.engine import compare
@@ -93,13 +94,13 @@ def run_demo(*, verbose: bool = False) -> dict[str, Any]:
     md_report = comparison_markdown(report)
     md_path = OUTPUT_DIR / "release-report.md"
     md_path.write_text(md_report, encoding="utf-8")
-    print(f"  Markdown: output/release-report.md")
+    print("  Markdown: output/release-report.md")
 
     # HTML report
     html_report = comparison_html(report)
     html_path = OUTPUT_DIR / "release-report.html"
     html_path.write_text(html_report, encoding="utf-8")
-    print(f"  HTML:     output/release-report.html")
+    print("  HTML:     output/release-report.html")
     print()
 
     # Step 6: Business impact summary
@@ -153,7 +154,7 @@ def run_demo(*, verbose: bool = False) -> dict[str, Any]:
     no_citations = sum(1 for r in candidate_responses if not r["citation_ids"])
     print("Without RAGops:")
     print(f"  - {no_citations} responses without citations would reach production (hallucination risk)")
-    print(f"  - 1 redteam violation: external action without approval (compliance risk)")
+    print("  - 1 redteam violation: external action without approval (compliance risk)")
     print(f"  - {len(report.failed_gates)} regression gates tripped before merge")
     print("  - Estimated cost: $50,000+ in compliance + customer trust damage")
     print()

@@ -30,6 +30,8 @@ Requirements: Python 3.11+.
 
 Current technical references: [architecture](docs/ARCHITECTURE.md), [operations](docs/OPERATIONS.md), [security](SECURITY.md) and [v1.0.0 release notes](docs/releases/v1.0.0.md).
 
+The repository is also a skills-only plugin for ChatGPT, Codex, Claude Code and Cowork. It does not include a hosted MCP connector. See the [directory submission package](docs/submission/DIRECTORY_SUBMISSION.md), [privacy policy](PRIVACY.md), [terms](TERMS.md), and [support guidance](SUPPORT.md).
+
 ```bash
 python -m venv .venv
 .venv/bin/pip install -e '.[dev]'
