@@ -15,7 +15,7 @@
     "displayName": "RAGOps",
     "shortDescription": "Gate AI releases with evidence",
     "longDescription": "Compare candidate AI behavior with an accepted baseline, explain failed gates, and produce reviewable release evidence without requiring a model provider.",
-    "developerName": "Thang Luu",
+    "developerName": "DUC THANG LUU",
     "category": "Productivity",
     "capabilities": ["Read"],
     "websiteURL": "https://github.com/thangldw/ragops",

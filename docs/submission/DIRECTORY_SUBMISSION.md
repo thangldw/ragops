@@ -14,7 +14,7 @@ Prepared: 2026-08-02
 - Category: Developer Tools / Productivity
 - Short description: Gate RAG and agent releases with evidence.
 - Long description: RAGOps compares recorded candidate behavior with an accepted baseline, applies versioned evaluation and regression policies, and returns explainable PASS, WARN, or BLOCK evidence. Use it to inspect benchmark coverage, catch citation or retrieval regressions, and create review-ready release reports without requiring an AI provider.
-- Developer: Thang Luu
+- Developer: DUC THANG LUU
 - Website: https://github.com/thangldw/ragops
 - Support: https://github.com/thangldw/ragops/blob/main/SUPPORT.md
 - Privacy: https://github.com/thangldw/ragops/blob/main/PRIVACY.md
