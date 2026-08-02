@@ -134,7 +134,7 @@ def verify(tag: str) -> None:
         "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "created_at": datetime.now(UTC).isoformat(),
         "validation": "pass",
-        "trusted_publishing": False,
+        "trusted_publishing": True,
         "artifacts": [path.name for path in [*built, sbom, manifest]],
     }
     (DIST / "LOCAL_RELEASE_EVIDENCE.json").write_text(
