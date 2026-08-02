@@ -13,7 +13,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "RAGOps",
-    "shortDescription": "Gate RAG and agent releases with evidence",
+    "shortDescription": "Gate AI releases with evidence",
     "longDescription": "Compare candidate AI behavior with an accepted baseline, explain failed gates, and produce reviewable release evidence without requiring a model provider.",
     "developerName": "Thang Luu",
     "category": "Productivity",
@@ -26,7 +26,7 @@
       "Explain why this RAG release is blocked.",
       "Create a review-ready release gate report."
     ],
-    "logo": "./assets/plugin-icon.svg",
-    "composerIcon": "./assets/plugin-icon.svg"
+    "logo": "./assets/plugin-icon.png",
+    "composerIcon": "./assets/plugin-icon.png"
   }
 }
