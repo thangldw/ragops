@@ -26,10 +26,7 @@
       "Explain why this RAG release is blocked.",
       "Create a review-ready release gate report."
     ],
-    "logo": "./docs/demo/social-preview.png",
-    "screenshots": [
-      "./docs/demo/ragops-demo-screenshot.png",
-      "./docs/demo/ragops-pr-comment.png"
-    ]
+    "logo": "./assets/plugin-icon.svg",
+    "composerIcon": "./assets/plugin-icon.svg"
   }
 }
