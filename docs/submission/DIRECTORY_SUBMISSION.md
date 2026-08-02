@@ -2,6 +2,8 @@
 
 Prepared: 2026-08-02
 
+Published on the OpenAI Plugin Directory: https://chatgpt.com/plugins/plugins_6a6ed9e25c60819194c48f4233ae507e
+
 ## Submission choice
 
 - OpenAI: skills-only plugin for the universal ChatGPT and Codex directory.
