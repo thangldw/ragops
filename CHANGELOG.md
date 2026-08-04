@@ -24,9 +24,19 @@
 
 ### English
 
+
 - Consolidated deterministic and statistical evaluation, policy comparison, provenance diagnosis, offline evidence and API/CLI adapters into one stable baseline.
 - Removed all repository-owned GitHub Actions; release gates remain available through the local CLI and API.
 - Standardized the public tag and package version at `v1.0.0`.
+
+### Added
+
+- Added a synthetic retrieval-poisoning Failure Zoo specimen for the Japanese troubleshooting benchmark.
+
+
+### Changed
+
+- Update Failure Zoo and changelog for retrieval poisoning
 
 ### Tiếng Việt
 
