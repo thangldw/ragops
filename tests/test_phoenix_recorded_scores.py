@@ -64,6 +64,14 @@ def test_phoenix_example_requires_complete_case_coverage() -> None:
             lambda data: data["data"][0]["metadata"].update(ragops_case_id="support-999"),
             "coverage mismatch",
         ),
+        (
+            lambda data: data["data"][0]["metadata"].update(ragops_case_id=" support-001"),
+            "surrounding whitespace",
+        ),
+        (
+            lambda data: data["data"][0]["metadata"].update(ragops_case_id="support-001 "),
+            "surrounding whitespace",
+        ),
         (lambda data: data["data"].append(data["data"][0].copy()), "case IDs must be unique"),
         (lambda data: data.update(next_cursor="next-page"), "pagination cursor"),
     ],
@@ -76,5 +84,14 @@ def test_phoenix_example_rejects_invalid_or_partial_records(change, message: str
         convert_annotations(
             payload,
             ["support-001", "support-002"],
+            annotation_name="answer_quality",
+        )
+
+
+def test_phoenix_example_rejects_non_canonical_expected_case_ids() -> None:
+    with pytest.raises(PhoenixAnnotationError, match="surrounding whitespace"):
+        convert_annotations(
+            _load("annotations.json"),
+            ["support-001 ", "support-002"],
             annotation_name="answer_quality",
         )

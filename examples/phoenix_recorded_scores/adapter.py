@@ -48,10 +48,12 @@ def _case_ids(values: Any) -> tuple[str, ...]:
         raise PhoenixAnnotationError("Expected case IDs to be a non-empty JSON array")
     if any(not isinstance(value, str) or not value.strip() for value in values):
         raise PhoenixAnnotationError("Expected every case ID to be a non-empty string")
-    normalized = tuple(value.strip() for value in values)
-    if len(set(normalized)) != len(normalized):
+    if any(value != value.strip() for value in values):
+        raise PhoenixAnnotationError("Case IDs must not contain surrounding whitespace")
+    case_ids = tuple(values)
+    if len(set(case_ids)) != len(case_ids):
         raise PhoenixAnnotationError("Expected case IDs to be unique")
-    return normalized
+    return case_ids
 
 
 def _payload_records(payload: Any) -> list[Any]:
@@ -147,7 +149,10 @@ def convert_annotations(
             raise PhoenixAnnotationError(
                 f"Phoenix annotation {index} needs metadata.{_CASE_METADATA_KEY}"
             )
-        case_id = case_id.strip()
+        if case_id != case_id.strip():
+            raise PhoenixAnnotationError(
+                f"Phoenix annotation {index} case ID must not contain surrounding whitespace"
+            )
         if case_id in metrics_by_case:
             raise PhoenixAnnotationError(f"Phoenix case IDs must be unique: {case_id!r}")
         metrics_by_case[case_id] = _score(raw_record, index)
