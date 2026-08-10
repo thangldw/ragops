@@ -194,12 +194,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--annotation-name", required=True, help="Phoenix annotation name")
     args = parser.parse_args(argv)
 
-    envelope = convert_annotations(
-        _read_json(args.input),
-        _read_json(args.case_ids),
-        annotation_name=args.annotation_name,
-    )
-    args.output.write_text(json.dumps(envelope, indent=2) + "\n", encoding="utf-8")
+    try:
+        envelope = convert_annotations(
+            _read_json(args.input),
+            _read_json(args.case_ids),
+            annotation_name=args.annotation_name,
+        )
+        args.output.write_text(json.dumps(envelope, indent=2) + "\n", encoding="utf-8")
+    except (OSError, PhoenixAnnotationError) as exc:
+        parser.exit(2, f"error: {exc}\n")
     return 0
 
 

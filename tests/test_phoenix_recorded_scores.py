@@ -95,3 +95,48 @@ def test_phoenix_example_rejects_non_canonical_expected_case_ids() -> None:
             ["support-001 ", "support-002"],
             annotation_name="answer_quality",
         )
+
+
+def test_phoenix_cli_reports_invalid_input_without_traceback(capsys, tmp_path: Path) -> None:
+    invalid_input = tmp_path / "invalid.json"
+    invalid_input.write_text(json.dumps({"data": [], "next_cursor": None}), encoding="utf-8")
+
+    with pytest.raises(SystemExit) as error:
+        main(
+            [
+                "--input",
+                str(invalid_input),
+                "--case-ids",
+                str(EXAMPLE_ROOT / "case_ids.json"),
+                "--annotation-name",
+                "answer_quality",
+                "--output",
+                str(tmp_path / "output.json"),
+            ]
+        )
+
+    assert error.value.code == 2
+    stderr = capsys.readouterr().err
+    assert stderr.startswith("error: ")
+    assert "Traceback" not in stderr
+
+
+def test_phoenix_cli_reports_output_io_error_without_traceback(capsys, tmp_path: Path) -> None:
+    with pytest.raises(SystemExit) as error:
+        main(
+            [
+                "--input",
+                str(EXAMPLE_ROOT / "annotations.json"),
+                "--case-ids",
+                str(EXAMPLE_ROOT / "case_ids.json"),
+                "--annotation-name",
+                "answer_quality",
+                "--output",
+                str(tmp_path / "missing" / "output.json"),
+            ]
+        )
+
+    assert error.value.code == 2
+    stderr = capsys.readouterr().err
+    assert stderr.startswith("error: ")
+    assert "Traceback" not in stderr
