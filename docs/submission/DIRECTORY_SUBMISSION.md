@@ -1,12 +1,12 @@
 # RAGOps directory submission
 
-Prepared: 2026-08-23
+Prepared: 2026-08-24
 
 Published on the OpenAI Plugin Directory: https://chatgpt.com/plugins/plugins_6a6ed9e25c60819194c48f4233ae507e
 
-PyPI release target: https://pypi.org/project/ragops/2.0.1/
+PyPI release target: https://pypi.org/project/ragops/2.0.2/
 
-Submission artifact: `dist/ragops-chatgpt-plugin-2.0.1.zip`
+Submission artifact: `dist/ragops-chatgpt-plugin-2.0.2.zip`
 
 ## Submission choice
 
@@ -61,9 +61,9 @@ Submission artifact: `dist/ragops-chatgpt-plugin-2.0.1.zip`
 
 No account or credential is required. Use Python 3.11+ and run the bundled wrapper at `skills/evaluate-ai-release/scripts/run_ragops.py`. The OpenAI ZIP stores review fixtures under `skills/evaluate-ai-release/references/fixtures/japanese_troubleshooting`; the GitHub plugin uses the canonical copies under `scenarios/japanese_troubleshooting`. A gate block may return exit code 2; this is an expected evaluated outcome.
 
-## v2.0 update notes
+## v2.0.2 update notes
 
-RAGOps 2.0 adds content-addressed evidence bundles, slice-aware policy, calibration, trace graphs, dataset leakage checks, CI-native output, portable import profiles, and audited blind review. The plugin remains skills-only and does not include a hosted MCP connector. The optional local API/workbench is distributed through the Python package, not as a remote ChatGPT connector.
+RAGOps 2.0.2 adds a synthetic retrieval-poisoning regression specimen, verified checkout-free Windows use of the published package, CodeQL and protected-branch gates, and explicit opt-in local usage evidence. It retains the 2.0 content-addressed evidence, slice-aware policy, calibration, trace-graph, dataset leakage, CI output, portable import, and blind-review contracts. The plugin remains skills-only and does not include a hosted MCP connector. The optional local API/workbench is distributed through the Python package, not as a remote ChatGPT connector.
 
 ## Final portal checks
 
