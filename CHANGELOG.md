@@ -4,7 +4,7 @@
 
 ### English
 
-- No unreleased changes.
+- Added a synthetic retrieval-poisoning Failure Zoo specimen, a published-package Windows smoke test, CodeQL scanning, and explicit local-only usage evidence.
 
 ## [2.0.1] - 2026-08-23
 

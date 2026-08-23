@@ -46,6 +46,8 @@ The credential-free demo intentionally returns `BLOCK`: citation coverage `1.0 -
 
 Install `ragops[api]` and run `ragops serve` for the local authenticated API/workbench. Use `ragops adapter list` for Phoenix, Ragas, DeepEval, LangSmith, MLflow, Promptfoo, custom JSON, and installed entry-point adapters.
 
+Local CLI usage evidence is disabled by default. Set `RAGOPS_USAGE_LOG` to an explicit JSONL path to record only the UTC timestamp, RAGOps version, top-level command, and exit code; arguments and file paths are never recorded. Summarize the file with `ragops usage-report --events usage.jsonl`. Use the consent-aware `pilot-report` contract for production adoption evidence.
+
 ## Tiếng Việt
 
 RAGOps so sánh trace ứng viên với baseline được chấp nhận, áp dụng release policy có version và xuất cùng một quyết định `PASS`, `WARN` hoặc `BLOCK` sang JSON/Markdown/HTML/JUnit/SARIF. Core không dependency, chạy offline; API/workbench là extra tùy chọn. Demo synthetic cố ý tạo `BLOCK`, không phải bằng chứng production adoption.

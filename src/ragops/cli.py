@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -85,6 +87,7 @@ from ragops.statistical import compare_replay_bundles, load_replay_bundle
 from ragops.store import ExperimentStore
 from ragops.trace_graph import evaluate_trace_graph, load_trace_expectation, load_trace_graph
 from ragops.traces import load_trace_jsonl
+from ragops.usage import UsageContractError, record_local_usage, summarize_local_usage
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -408,6 +411,12 @@ def build_parser() -> argparse.ArgumentParser:
     pilot_parser.add_argument("--economics")
     pilot_parser.add_argument("--output")
     pilot_parser.add_argument("--format", choices=("json", "markdown"), default="markdown")
+    usage_parser = commands.add_parser(
+        "usage-report", help="Summarize explicitly enabled local CLI usage events"
+    )
+    usage_parser.add_argument("--events", required=True)
+    usage_parser.add_argument("--output")
+    usage_parser.add_argument("--format", choices=("json",), default="json")
     return parser
 
 
@@ -717,6 +726,19 @@ def main() -> int:
             output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
         else:
             print(rendered.rstrip())
+        return 0
+    if args.command == "usage-report":
+        try:
+            report = summarize_local_usage(args.events)
+        except UsageContractError as exc:
+            raise SystemExit(f"usage contract error: {exc}") from exc
+        rendered = json.dumps(report, ensure_ascii=False, indent=2)
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(rendered + "\n", encoding="utf-8")
+        else:
+            print(rendered)
         return 0
     if args.command == "compare-runs":
         try:
@@ -1076,5 +1098,42 @@ def _evaluators_from_names(
     return tuple(factories[name]() for name in names)
 
 
+def _usage_command(arguments: list[str]) -> str:
+    if not arguments or arguments[0] in {"-h", "--help"}:
+        return "help"
+    if arguments[0] == "--version":
+        return "version"
+    candidate = arguments[0]
+    for action in build_parser()._actions:
+        if isinstance(action, argparse._SubParsersAction):
+            return candidate if candidate in action.choices else "unknown"
+    return "unknown"
+
+
+def cli_entrypoint() -> int:
+    exit_code = 1
+    try:
+        exit_code = main()
+        return exit_code
+    except SystemExit as exc:
+        if isinstance(exc.code, int) and not isinstance(exc.code, bool):
+            exit_code = exc.code
+        elif exc.code is None:
+            exit_code = 0
+        raise
+    finally:
+        usage_log = os.environ.get("RAGOPS_USAGE_LOG")
+        if usage_log:
+            try:
+                record_local_usage(
+                    usage_log,
+                    ragops_version=__version__,
+                    command=_usage_command(sys.argv[1:]),
+                    exit_code=exit_code if 0 <= exit_code <= 255 else 1,
+                )
+            except (OSError, UsageContractError) as exc:
+                print(f"usage log warning: {exc}", file=sys.stderr)
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(cli_entrypoint())
