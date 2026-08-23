@@ -35,6 +35,10 @@ def _timestamp(value: Any, label: str) -> str:
     return value
 
 
+def _timestamp_sort_key(value: str) -> datetime:
+    return datetime.fromisoformat(value.removesuffix("Z") + "+00:00")
+
+
 def _event(data: Any, line_number: int) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise UsageContractError(f"usage event line {line_number} must be an object")
@@ -123,8 +127,8 @@ def summarize_local_usage(path: str | Path) -> dict[str, Any]:
     return {
         "report_version": REPORT_VERSION,
         "event_count": len(events),
-        "first_recorded_at": min(timestamps),
-        "last_recorded_at": max(timestamps),
+        "first_recorded_at": min(timestamps, key=_timestamp_sort_key),
+        "last_recorded_at": max(timestamps, key=_timestamp_sort_key),
         "command_counts": dict(sorted(command_counts.items())),
         "exit_code_counts": dict(sorted(exit_code_counts.items())),
     }

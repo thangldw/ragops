@@ -116,3 +116,27 @@ def test_invalid_command_text_is_recorded_as_unknown(tmp_path: Path) -> None:
     event = json.loads(usage_log.read_text(encoding="utf-8"))
     assert event["command"] == "unknown"
     assert "customer-secret-project" not in usage_log.read_text(encoding="utf-8")
+
+
+def test_usage_report_orders_fractional_timestamps_chronologically(tmp_path: Path) -> None:
+    events = tmp_path / "usage.jsonl"
+    common = {
+        "schema_version": "ragops-local-usage-event-0.1",
+        "ragops_version": "2.0.1",
+        "command": "demo",
+        "exit_code": 0,
+    }
+    events.write_text(
+        json.dumps({**common, "recorded_at": "2026-08-21T10:00:00.100000Z"})
+        + "\n"
+        + json.dumps({**common, "recorded_at": "2026-08-21T10:00:00Z"})
+        + "\n",
+        encoding="utf-8",
+    )
+
+    result = run_cli("usage-report", "--events", str(events), "--format", "json")
+
+    assert result.returncode == 0
+    report = json.loads(result.stdout)
+    assert report["first_recorded_at"] == "2026-08-21T10:00:00Z"
+    assert report["last_recorded_at"] == "2026-08-21T10:00:00.100000Z"
