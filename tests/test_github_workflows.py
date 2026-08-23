@@ -49,11 +49,11 @@ def test_codeql_is_least_privilege_and_immutably_pinned() -> None:
     assert "build-mode: none" in workflow
     assert workflow.count(
         "github/codeql-action/"
-        "init@42947a340483f03ba47bb1a039b2c519aab3df85"
+        "init@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28"
     ) == 1
     assert workflow.count(
         "github/codeql-action/"
-        "analyze@42947a340483f03ba47bb1a039b2c519aab3df85"
+        "analyze@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28"
     ) == 1
 
 
