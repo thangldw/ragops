@@ -4,7 +4,7 @@
 
 ### English
 
-- No unreleased changes.
+- Added a synthetic retrieval-poisoning Failure Zoo specimen for the Japanese troubleshooting benchmark.
 
 ## [2.0.1] - 2026-08-23
 
