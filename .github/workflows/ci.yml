@@ -51,6 +51,7 @@ jobs:
         with:
           version: "0.12.5"
           enable-cache: false
+          ignore-empty-workdir: true
       - name: Run published credential-free demo without checkout
         shell: pwsh
         run: |
