@@ -122,6 +122,56 @@ def verify_clean_install(wheel: Path, expected_version: str) -> None:
         run(str(python), "-m", "ragops.cli", "evidence", "verify", "--bundle", str(demo / "evidence"))
 
 
+def prepare_sbom_environment(wheel: Path, venv: Path) -> Path:
+    run(sys.executable, "-m", "venv", "--without-pip", str(venv))
+    python = venv / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    site_packages = Path(
+        subprocess.check_output(
+            [str(python), "-c", "import site; print(site.getsitepackages()[0])"],
+            text=True,
+        ).strip()
+    )
+    with zipfile.ZipFile(wheel) as archive:
+        archive.extractall(site_packages)
+    return python
+
+
+def validate_sbom(sbom: Path, expected_version: str) -> None:
+    data = json.loads(sbom.read_text(encoding="utf-8"))
+    root = data.get("metadata", {}).get("component", {})
+    if root.get("name") != "ragops" or root.get("version") != expected_version:
+        raise SystemExit("SBOM root component does not match package version")
+    if data.get("components"):
+        raise SystemExit("dependency-free RAGOps SBOM must not contain dependency components")
+    if data.get("dependencies") != [{"ref": root.get("bom-ref")}]:
+        raise SystemExit("dependency-free RAGOps SBOM has an unexpected dependency graph")
+    for component in [root, *data.get("components", [])]:
+        for reference in component.get("externalReferences", []):
+            if str(reference.get("url", "")).lower().startswith("file:"):
+                raise SystemExit("SBOM must not contain a local file URL")
+
+
+def build_sbom(wheel: Path, sbom: Path, expected_version: str) -> None:
+    cyclonedx = environment_tool("cyclonedx-py")
+    if not (Path(cyclonedx).is_file() or shutil.which(cyclonedx)):
+        raise SystemExit("cyclonedx-py is required: python -m pip install cyclonedx-bom==7.3.0")
+    with tempfile.TemporaryDirectory(prefix="ragops-sbom-") as temp:
+        python = prepare_sbom_environment(wheel, Path(temp) / "venv")
+        run(
+            cyclonedx,
+            "environment",
+            str(python),
+            "--pyproject",
+            str(ROOT / "pyproject.toml"),
+            "--mc-type",
+            "library",
+            "--output-reproducible",
+            "--output-file",
+            str(sbom),
+        )
+    validate_sbom(sbom, expected_version)
+
+
 def build_plugin_bundle(expected_version: str) -> Path:
     manifest = json.loads((ROOT / ".codex-plugin/plugin.json").read_text(encoding="utf-8"))
     if manifest.get("version") != expected_version:
@@ -186,12 +236,7 @@ def verify(tag: str) -> None:
     verify_clean_install(wheel, version())
     plugin = build_plugin_bundle(version())
     sbom = DIST / f"ragops-{version()}.cdx.json"
-    cyclonedx = environment_tool("cyclonedx-py")
-    if Path(cyclonedx).is_file() or shutil.which(cyclonedx):
-        run(cyclonedx, "environment", sys.executable, "--output-reproducible",
-            "--output-file", str(sbom))
-    else:
-        raise SystemExit("cyclonedx-py is required: python -m pip install cyclonedx-bom==7.3.0")
+    build_sbom(wheel, sbom, version())
     manifest = checksums([*built, sbom, plugin])
     evidence = {
         "schema": "ragops-local-release-evidence-0.1",

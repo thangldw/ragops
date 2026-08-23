@@ -63,7 +63,7 @@ No account or credential is required. Use Python 3.11+ and run the bundled wrapp
 
 ## v2.0.2 update notes
 
-RAGOps 2.0.2 adds a synthetic retrieval-poisoning regression specimen, verified checkout-free Windows use of the published package, CodeQL and protected-branch gates, and explicit opt-in local usage evidence. It retains the 2.0 content-addressed evidence, slice-aware policy, calibration, trace-graph, dataset leakage, CI output, portable import, and blind-review contracts. The plugin remains skills-only and does not include a hosted MCP connector. The optional local API/workbench is distributed through the Python package, not as a remote ChatGPT connector.
+RAGOps 2.0.2 adds a synthetic retrieval-poisoning regression specimen, verified checkout-free Windows use of the published package, CodeQL and protected-branch gates, explicit opt-in local usage evidence, and a wheel-derived SBOM with no local build paths. It retains the 2.0 content-addressed evidence, slice-aware policy, calibration, trace-graph, dataset leakage, CI output, portable import, and blind-review contracts. The plugin remains skills-only and does not include a hosted MCP connector. The optional local API/workbench is distributed through the Python package, not as a remote ChatGPT connector.
 
 ## Final portal checks
 

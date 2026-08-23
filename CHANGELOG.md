@@ -9,18 +9,21 @@
 - Added a deterministic synthetic retrieval-poisoning Failure Zoo specimen with explicit unsupported-citation, unsupported-claim, and forbidden-output findings.
 - Added checkout-free Windows verification of the published package, least-privilege CodeQL scanning, and protected-branch release gates.
 - Added disabled-by-default local usage evidence that records only command, exit code, version, and UTC timestamp without arguments or paths.
+- Generate the CycloneDX SBOM from the built wheel in a dependency-free environment so its root version is exact and no local build path is disclosed.
 
 ### Tiếng Việt
 
 - Bổ sung mẫu synthetic retrieval poisoning xác định với các finding rõ ràng về citation không được hỗ trợ, claim không có căn cứ và output bị cấm.
 - Bổ sung kiểm tra Windows không checkout từ package đã public, CodeQL theo least privilege và release gate bảo vệ nhánh chính.
 - Bổ sung bằng chứng sử dụng local mặc định tắt, chỉ ghi command, exit code, version và UTC timestamp, không ghi arguments hoặc paths.
+- Tạo CycloneDX SBOM từ wheel đã build trong môi trường không dependency để version gốc chính xác và không lộ local build path.
 
 ### 日本語
 
 - unsupported citation、unsupported claim、forbidden output を明示する決定的な synthetic retrieval-poisoning Failure Zoo specimen を追加しました。
 - 公開 package の checkout-free Windows 検証、least-privilege CodeQL、保護 branch release gate を追加しました。
 - デフォルト無効で、引数や path を記録せず command、exit code、version、UTC timestamp のみを残す local usage evidence を追加しました。
+- build 済み wheel を dependency-free environment で読み取り、正確な root version と local build path を含まない CycloneDX SBOM を生成します。
 
 ## [2.0.1] - 2026-08-23
 
