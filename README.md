@@ -39,6 +39,9 @@ ragops evidence verify --bundle ./demo-output/evidence
 open ./demo-output/release-report.html
 ```
 
+On Windows PowerShell, replace the final command with
+`Start-Process ./demo-output/release-report.html`.
+
 The credential-free demo intentionally returns `BLOCK`: citation coverage `1.0 -> 0.5`, citation precision `1.0 -> 0.5`, and lexical groundedness `1.0 -> 0.6`. It is synthetic benchmark evidence, not production adoption evidence.
 
 Install `ragops[api]` and run `ragops serve` for the local authenticated API/workbench. Use `ragops adapter list` for Phoenix, Ragas, DeepEval, LangSmith, MLflow, Promptfoo, custom JSON, and installed entry-point adapters.
