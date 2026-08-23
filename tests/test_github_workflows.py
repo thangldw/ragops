@@ -31,6 +31,8 @@ def test_windows_no_clone_demo_uses_the_published_package() -> None:
 
     assert "runs-on: windows-latest" in windows_job
     assert "actions/checkout@" not in windows_job
+    assert "enable-cache: false" in windows_job
+    assert "ignore-empty-workdir: true" in windows_job
     assert 'uvx --from "ragops==2.0.1" ragops demo' in windows_job
     assert '$summary.candidate_decision -ne "BLOCK"' in windows_job
     assert "demo-output/release-report.html" in windows_job
@@ -47,11 +49,11 @@ def test_codeql_is_least_privilege_and_immutably_pinned() -> None:
     assert "build-mode: none" in workflow
     assert workflow.count(
         "github/codeql-action/"
-        "init@42947a340483f03ba47bb1a039b2c519aab3df85"
+        "init@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28"
     ) == 1
     assert workflow.count(
         "github/codeql-action/"
-        "analyze@42947a340483f03ba47bb1a039b2c519aab3df85"
+        "analyze@db488ddef3bf6cb639b32c2e9a7c0a7ea8271d28"
     ) == 1
 
 
