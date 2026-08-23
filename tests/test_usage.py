@@ -103,7 +103,7 @@ def test_usage_log_failure_does_not_change_command_exit_code(tmp_path: Path) -> 
     result = run_cli("--version", usage_log=tmp_path)
 
     assert result.returncode == 0
-    assert result.stdout.strip() == "ragops 2.0.1"
+    assert result.stdout.strip() == "ragops 2.0.2"
     assert "usage log warning" in result.stderr
 
 

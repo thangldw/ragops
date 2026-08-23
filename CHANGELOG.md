@@ -2,9 +2,25 @@
 
 ## Unreleased
 
+## [2.0.2] - 2026-08-24
+
 ### English
 
-- Added a synthetic retrieval-poisoning Failure Zoo specimen, a published-package Windows smoke test, CodeQL scanning, and explicit local-only usage evidence.
+- Added a deterministic synthetic retrieval-poisoning Failure Zoo specimen with explicit unsupported-citation, unsupported-claim, and forbidden-output findings.
+- Added checkout-free Windows verification of the published package, least-privilege CodeQL scanning, and protected-branch release gates.
+- Added disabled-by-default local usage evidence that records only command, exit code, version, and UTC timestamp without arguments or paths.
+
+### Tiếng Việt
+
+- Bổ sung mẫu synthetic retrieval poisoning xác định với các finding rõ ràng về citation không được hỗ trợ, claim không có căn cứ và output bị cấm.
+- Bổ sung kiểm tra Windows không checkout từ package đã public, CodeQL theo least privilege và release gate bảo vệ nhánh chính.
+- Bổ sung bằng chứng sử dụng local mặc định tắt, chỉ ghi command, exit code, version và UTC timestamp, không ghi arguments hoặc paths.
+
+### 日本語
+
+- unsupported citation、unsupported claim、forbidden output を明示する決定的な synthetic retrieval-poisoning Failure Zoo specimen を追加しました。
+- 公開 package の checkout-free Windows 検証、least-privilege CodeQL、保護 branch release gate を追加しました。
+- デフォルト無効で、引数や path を記録せず command、exit code、version、UTC timestamp のみを残す local usage evidence を追加しました。
 
 ## [2.0.1] - 2026-08-23
 
@@ -84,6 +100,7 @@
 - リポジトリ所有の GitHub Actions をすべて削除し、リリースゲートはローカル CLI と API で引き続き利用できます。
 - 公開タグとパッケージ版を `v1.0.0` に統一しました。
 
+[2.0.2]: https://github.com/thangldw/ragops/releases/tag/v2.0.2
 [2.0.1]: https://github.com/thangldw/ragops/releases/tag/v2.0.1
 [2.0.0]: https://github.com/thangldw/ragops/releases/tag/v2.0.0
 [1.2.0]: https://github.com/thangldw/ragops/releases/tag/v1.2.0
