@@ -4,6 +4,8 @@
 
 Install with `pip install -e '.[dev]'`, run `ruff check .`, then `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest -q`. Verify `ragops demo --profile engineer`, `ragops evidence verify`, the packaged API/UI, every schema instance, and a clean `--no-deps` wheel import. Build wheel/sdist/SBOM/checksums from a clean commit, promote those exact artifacts to a GitHub Release, then dispatch the tag-bound PyPI Trusted Publishing workflow. GitHub publication, PyPI publication, ChatGPT directory submission, and ChatGPT approval are separate states and must be reported separately.
 
+Optional local usage measurement is enabled only by setting `RAGOPS_USAGE_LOG=/controlled/path/usage.jsonl`. It records command name and exit code without arguments or paths; aggregate it with `ragops usage-report --events /controlled/path/usage.jsonl`. Production adoption claims require approved, pseudonymous observations through `ragops pilot-report`, not CLI event counts.
+
 ## Tiếng Việt
 
 Cài bằng `pip install -e '.[dev]'`, chạy lint/test, demo/evidence verify, API/UI, schema và clean-wheel import. Build wheel/sdist/SBOM/checksum từ commit sạch, phát hành đúng artifact lên GitHub rồi mới chạy PyPI Trusted Publishing theo tag. Phải phân biệt GitHub release, PyPI release, ChatGPT submission và ChatGPT approval.

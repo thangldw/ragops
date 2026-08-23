@@ -36,7 +36,7 @@ dev = ["pytest>=8.0", "ruff>=0.6", "fastapi>=0.115", "jsonschema>=4.23"]
 release = ["build>=1.2", "cyclonedx-bom>=7.3", "twine>=5.1"]
 
 [project.scripts]
-ragops = "ragops.cli:main"
+ragops = "ragops.cli:cli_entrypoint"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ragops"]

@@ -39,9 +39,14 @@ ragops evidence verify --bundle ./demo-output/evidence
 open ./demo-output/release-report.html
 ```
 
+On Windows PowerShell, replace the final command with
+`Start-Process ./demo-output/release-report.html`.
+
 The credential-free demo intentionally returns `BLOCK`: citation coverage `1.0 -> 0.5`, citation precision `1.0 -> 0.5`, and lexical groundedness `1.0 -> 0.6`. It is synthetic benchmark evidence, not production adoption evidence.
 
 Install `ragops[api]` and run `ragops serve` for the local authenticated API/workbench. Use `ragops adapter list` for Phoenix, Ragas, DeepEval, LangSmith, MLflow, Promptfoo, custom JSON, and installed entry-point adapters.
+
+Local CLI usage evidence is disabled by default. Set `RAGOPS_USAGE_LOG` to an explicit JSONL path to record only the UTC timestamp, RAGOps version, top-level command, and exit code; arguments and file paths are never recorded. Summarize the file with `ragops usage-report --events usage.jsonl`. Use the consent-aware `pilot-report` contract and the [production pilot runbook](docs/gtm/production-pilot.md) for production adoption evidence.
 
 ## Tiếng Việt
 
