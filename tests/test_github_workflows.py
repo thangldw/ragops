@@ -31,6 +31,7 @@ def test_windows_no_clone_demo_uses_the_published_package() -> None:
 
     assert "runs-on: windows-latest" in windows_job
     assert "actions/checkout@" not in windows_job
+    assert "enable-cache: false" in windows_job
     assert 'uvx --from "ragops==2.0.1" ragops demo' in windows_job
     assert '$summary.candidate_decision -ne "BLOCK"' in windows_job
     assert "demo-output/release-report.html" in windows_job
