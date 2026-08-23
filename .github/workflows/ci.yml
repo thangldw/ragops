@@ -55,7 +55,7 @@ jobs:
       - name: Run published credential-free demo without checkout
         shell: pwsh
         run: |
-          $demoJson = (& uvx --from "ragops==2.0.1" ragops demo --profile engineer --output demo-output | Out-String)
+          $demoJson = (& uvx --from "ragops==2.0.2" ragops demo --profile engineer --output demo-output | Out-String)
           if ($LASTEXITCODE -ne 0) {
             throw "ragops demo returned $LASTEXITCODE"
           }
@@ -66,7 +66,7 @@ jobs:
           if (-not (Test-Path "demo-output/release-report.html" -PathType Leaf)) {
             throw "release-report.html was not generated"
           }
-          uvx --from "ragops==2.0.1" ragops evidence verify --bundle demo-output/evidence
+          uvx --from "ragops==2.0.2" ragops evidence verify --bundle demo-output/evidence
           if ($LASTEXITCODE -ne 0) {
             throw "evidence verification returned $LASTEXITCODE"
           }
