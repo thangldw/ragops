@@ -62,4 +62,4 @@ jobs:
           cp release-assets/ragops-*.whl release-assets/ragops-*.tar.gz dist/
       - name: Publish distributions with Trusted Publishing
         # Upstream container images are published for exact release tags, not commit-SHA refs.
-        uses: pypa/gh-action-pypi-publish@v1.14.2
+        uses: pypa/gh-action-pypi-publish@v1.14.3
