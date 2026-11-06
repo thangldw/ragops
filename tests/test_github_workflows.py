@@ -13,7 +13,7 @@ def test_repository_has_consumer_ci_and_separate_release_publisher() -> None:
     assert "id-token: write" in workflow
     assert "environment: pypi" in workflow
     assert "pull_request" not in workflow
-    assert "pypa/gh-action-pypi-publish@v1.14.2" in workflow
+    assert "pypa/gh-action-pypi-publish@v1.14.3" in workflow
     ci = (WORKFLOW_ROOT / "ci.yml").read_text(encoding="utf-8")
     assert "pull_request:" in ci
     assert 'python-version: ${{ matrix.python-version }}' in ci
