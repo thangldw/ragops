@@ -1,0 +1,29 @@
+name: RAGOps
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Pin the action to a full commit SHA of a reviewed RAGOps revision.
+      - uses: thangldw/ragops@<full-commit-sha>
+        id: ragops
+        with:
+          scenario: ragops/scenario.json
+          baseline: ragops/baseline.json
+          candidate: ragops/candidate.json
+          policy: ragops/policy.toml
+      - name: Upload decision and CI reports
+        if: always()
+        uses: actions/upload-artifact@<full-commit-sha>
+        with:
+          name: ragops-output
+          path: ragops-output
