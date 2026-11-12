@@ -43,3 +43,18 @@ def test_github_caller_is_read_only_and_verifies_evidence() -> None:
     assert '"ragops==2.0.2"' in recipe
     assert "ragops evidence verify" in recipe
     assert '>> "$GITHUB_STEP_SUMMARY"' in recipe
+
+
+def test_composite_action_pins_actions_and_never_interpolates_inputs_into_shell() -> None:
+    action = Path("action.yml").read_text(encoding="utf-8")
+
+    assert re.search(r"^\s+using: composite$", action, re.MULTILINE)
+    for reference in re.findall(r"^\s+- uses: (\S+)", action, re.MULTILINE):
+        assert re.fullmatch(r"[\w./-]+@[0-9a-f]{40}", reference), reference
+    # Inputs may only reach the shell through environment variables.
+    allowed = re.compile(r"^\s+(RAGOPS_[A-Z_]+|python-version): \$\{\{ inputs\.[a-z-]+ \}\}$")
+    for line in action.splitlines():
+        if "${{ inputs." in line:
+            assert allowed.match(line), line
+    assert 'echo "::error::RAGOps release decision is BLOCK' in action
+    assert '>> "$GITHUB_STEP_SUMMARY"' in action

@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### English
+
+- Added a composite GitHub Action (`action.yml`) that applies a release policy v2 with `ragops gate-v2`, writes the canonical decision plus JUnit, SARIF and GitHub Summary renderings, and fails the step only when the decision is BLOCK. See `docs/examples/github-action-release-gate.yml`.
+
+### Tiếng Việt
+
+- Bổ sung GitHub Action dạng composite (`action.yml`) áp dụng release policy v2 bằng `ragops gate-v2`, ghi quyết định chuẩn cùng bản render JUnit, SARIF và GitHub Summary, và chỉ làm step thất bại khi quyết định là BLOCK. Xem `docs/examples/github-action-release-gate.yml`.
+
+### 日本語
+
+- `ragops gate-v2` でリリースポリシー v2 を適用し、正規の判定と JUnit・SARIF・GitHub Summary を出力し、判定が BLOCK の場合のみステップを失敗させる composite GitHub Action (`action.yml`) を追加しました。`docs/examples/github-action-release-gate.yml` を参照してください。
+
 ## [2.0.2] - 2026-08-24
 
 ### English

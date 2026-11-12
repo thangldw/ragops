@@ -1,0 +1,108 @@
+name: RAGOps release gate
+description: >-
+  Apply a RAGOps release policy v2 to recorded baseline and candidate responses,
+  write the canonical decision plus JUnit, SARIF and GitHub Summary renderings, and
+  fail the step only when the decision is BLOCK.
+author: thangldw
+branding:
+  icon: shield
+  color: orange
+
+inputs:
+  scenario:
+    description: Path to the scenario JSON file.
+    required: true
+  baseline:
+    description: Path to the accepted baseline responses JSON file.
+    required: true
+  candidate:
+    description: Path to the candidate responses JSON file.
+    required: true
+  policy:
+    description: Path to the release policy v2 TOML file.
+    required: true
+  version:
+    description: RAGOps version installed from PyPI.
+    required: false
+    default: "2.0.2"
+  python-version:
+    description: Python version used to run RAGOps (3.11 or newer).
+    required: false
+    default: "3.12"
+  output-dir:
+    description: Directory for decision.json, junit.xml, release.sarif and github-summary.md.
+    required: false
+    default: ragops-output
+  now:
+    description: Optional UTC timestamp (RFC 3339) used to evaluate waiver expiry deterministically.
+    required: false
+    default: ""
+
+outputs:
+  decision:
+    description: Canonical release decision, one of PASS, WARN or BLOCK.
+    value: ${{ steps.gate.outputs.decision }}
+  decision-path:
+    description: Path to the canonical decision.json file.
+    value: ${{ steps.gate.outputs.decision-path }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Install RAGOps
+      shell: bash
+      env:
+        RAGOPS_VERSION: ${{ inputs.version }}
+      run: python -m pip install --disable-pip-version-check "ragops==${RAGOPS_VERSION}"
+    - name: Apply release policy
+      id: gate
+      shell: bash
+      env:
+        RAGOPS_SCENARIO: ${{ inputs.scenario }}
+        RAGOPS_BASELINE: ${{ inputs.baseline }}
+        RAGOPS_CANDIDATE: ${{ inputs.candidate }}
+        RAGOPS_POLICY: ${{ inputs.policy }}
+        RAGOPS_NOW: ${{ inputs.now }}
+        RAGOPS_OUTPUT_DIR: ${{ inputs.output-dir }}
+      run: |
+        set -uo pipefail
+        mkdir -p "$RAGOPS_OUTPUT_DIR"
+        decision_path="$RAGOPS_OUTPUT_DIR/decision.json"
+        args=(gate-v2 --scenario "$RAGOPS_SCENARIO" --baseline "$RAGOPS_BASELINE"
+          --candidate "$RAGOPS_CANDIDATE" --policy "$RAGOPS_POLICY" --output "$decision_path")
+        if [ -n "$RAGOPS_NOW" ]; then args+=(--now "$RAGOPS_NOW"); fi
+        ragops "${args[@]}" > /dev/null
+        status=$?
+        # Exit 0 is PASS or WARN, 2 is BLOCK. Anything else is a contract or usage error.
+        if [ "$status" -ne 0 ] && [ "$status" -ne 2 ]; then
+          echo "::error::ragops gate-v2 failed with exit code $status before producing a decision"
+          exit "$status"
+        fi
+        decision=$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["decision"])' "$decision_path")
+        {
+          echo "decision=$decision"
+          echo "decision-path=$decision_path"
+        } >> "$GITHUB_OUTPUT"
+    - name: Render CI reports
+      shell: bash
+      env:
+        RAGOPS_OUTPUT_DIR: ${{ inputs.output-dir }}
+      run: |
+        set -euo pipefail
+        decision_path="$RAGOPS_OUTPUT_DIR/decision.json"
+        ragops ci-render --input "$decision_path" --format junit --output "$RAGOPS_OUTPUT_DIR/junit.xml"
+        ragops ci-render --input "$decision_path" --format sarif --output "$RAGOPS_OUTPUT_DIR/release.sarif"
+        ragops ci-render --input "$decision_path" --format github --output "$RAGOPS_OUTPUT_DIR/github-summary.md"
+        cat "$RAGOPS_OUTPUT_DIR/github-summary.md" >> "$GITHUB_STEP_SUMMARY"
+    - name: Fail on BLOCK
+      shell: bash
+      env:
+        RAGOPS_DECISION: ${{ steps.gate.outputs.decision }}
+      run: |
+        if [ "$RAGOPS_DECISION" = "BLOCK" ]; then
+          echo "::error::RAGOps release decision is BLOCK. Review the gate summary before shipping."
+          exit 1
+        fi
