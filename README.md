@@ -66,4 +66,4 @@ RAGOps は記録済み候補を承認済みベースラインと比較し、バ�
 
 必要環境は Python 3.11 以上です。セットアップ、lint、テストには English セクションのコマンドを使用してください。
 
-Released under the [MIT License](LICENSE).
+Released under the [Apache License 2.0](LICENSE).

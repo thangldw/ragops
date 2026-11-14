@@ -8,7 +8,7 @@
   },
   "homepage": "https://github.com/thangldw/ragops",
   "repository": "https://github.com/thangldw/ragops",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "keywords": ["rag", "ai-agents", "evaluation", "release-gates", "regression-testing"],
   "skills": "./skills/",
   "interface": {
