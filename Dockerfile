@@ -1,4 +1,4 @@
-FROM python:3.12-slim AS runtime
+FROM python:3.15-slim AS runtime
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 COPY pyproject.toml README.md LICENSE ./
