@@ -341,6 +341,12 @@ def build_parser() -> argparse.ArgumentParser:
     init_parser.add_argument("--from", dest="source", required=True, help="JSON/JSONL file or directory")
     init_parser.add_argument("--output", required=True)
     init_parser.add_argument("--scenario-id", default="my-rag")
+    init_parser.add_argument(
+        "--source-format",
+        choices=("generic", "langfuse", "openai", "anthropic"),
+        default="generic",
+        help="Shape of the logs: a Langfuse trace export, OpenAI or Anthropic request/response logs",
+    )
     pilot_init_parser = commands.add_parser(
         "pilot-init", help="Create blank design-partner pilot files that fail closed"
     )
