@@ -4,6 +4,7 @@
 
 ### English
 
+- `scripts/nli_ragtruth_probe.py` can pick evidence by IDF overlap (`bm25`) and reports min and mean sentence aggregation. Neither improves off-the-shelf NLI on RAGTruth QA (AUROC 0.68 and 0.63 vs 0.76 for lexical); documented in `docs/semantic-evaluator.md`.
 - Added `examples/nli_scorer.py`, an optional local entailment scorer for `semantic_grounding`, and `scripts/nli_ragtruth_probe.py`. Measured result: off-the-shelf NLI models (AUROC 0.62 to 0.68) did not beat lexical grounding (0.76) on RAGTruth QA, so semantic scoring is documented as something to calibrate, not assume.
 - Coverage gate raised to 91% (measured 92.1%). New mutation tests over the pilot, dataset, evidence, trace-graph, replay-bundle and statistical-policy loaders found and fixed more crashes: wrongly typed values raised `TypeError`/`KeyError` instead of the loader's own contract error. A shared `contract_guard` converts them.
 - Removed all remaining mypy `ignore_errors` overrides (`cli`, `pilot`, `sequential`, `statistical`, `policy_v2`): the whole package is now type-checked. Missing absolute thresholds now raise `ContractError` instead of a `TypeError`.
