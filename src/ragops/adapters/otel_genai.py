@@ -10,13 +10,14 @@ def otel_spans_to_trace_graph(spans: Iterable[Mapping[str, Any]]) -> TraceGraph:
     items = list(spans)
     if not items:
         raise ContractError("OpenTelemetry export contains no spans")
+    for index, item in enumerate(items):
+        if not isinstance(item, Mapping):
+            raise ContractError(f"OpenTelemetry span {index} must be an object")
     trace_ids = {item.get("trace_id") for item in items}
     if len(trace_ids) != 1 or not next(iter(trace_ids)):
         raise ContractError("OpenTelemetry spans must share one non-empty trace_id")
     normalized = []
     for index, item in enumerate(items):
-        if not isinstance(item, Mapping):
-            raise ContractError(f"OpenTelemetry span {index} must be an object")
         attributes = item.get("attributes", {})
         if not isinstance(attributes, Mapping):
             raise ContractError(f"OpenTelemetry span {index} attributes must be an object")
