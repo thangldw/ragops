@@ -86,6 +86,7 @@ from ragops.reporters import (
     statistical_comparison_markdown,
 )
 from ragops.sequential import compare_replay_bundles_sequentially
+from ragops.stability import stability_markdown, stability_report
 from ragops.statistical import compare_replay_bundles, load_replay_bundle
 from ragops.store import ExperimentStore
 from ragops.trace_graph import evaluate_trace_graph, load_trace_expectation, load_trace_graph
@@ -486,6 +487,30 @@ def main() -> int:
         else:
             print(rendered.rstrip())
         return 0 if statistical_report.passed else 2
+    if args.command == "stability":
+        try:
+            stability = stability_report(
+                load_replay_bundle(args.bundle),
+                metrics=tuple(args.metric),
+                max_range=args.max_range,
+                max_unstable_fraction=args.max_unstable_fraction,
+                baseline=load_replay_bundle(args.baseline_bundle) if args.baseline_bundle else None,
+                max_stddev_increase=args.max_stddev_increase,
+            )
+        except (ContractError, ValueError) as exc:
+            raise SystemExit(f"stability error: {exc}") from exc
+        rendered = (
+            json.dumps(stability.to_dict(), ensure_ascii=False, indent=2)
+            if args.format == "json"
+            else stability_markdown(stability)
+        )
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
+        else:
+            print(rendered.rstrip())
+        return 0 if stability.passed else 2
     if args.command == "collect-runs":
         command = tuple(
             args.runner_command[1:]
