@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- New `ragops mine --from LOGS --scenario S --responses R --output DIR`: appends production failures (thumbs down, rating at or below `--max-rating`, escalated, flagged) to an existing scenario as high-severity `mined-feedback` cases, skipping questions already present. The failing answer stays as the baseline response, so a fixed system should beat it and the case guards against the failure returning.
 - Mutation testing now also covers the release policy engine (`policy_v2.py`). It found that inclusive/exclusive boundaries, the `lower` direction, regression budgets, tail gates, slice `minimum_cases` and waiver windows were not pinned by any test; `tests/test_policy_v2_gate_semantics.py` now does (2023 of 2340 mutants killed across the five modules, up from 659 of 1152 on first run).
 
 ## [2.5.0] - 2026-11-20

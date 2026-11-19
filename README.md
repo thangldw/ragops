@@ -48,6 +48,8 @@ The credential-free demo intentionally returns `BLOCK`: citation coverage `1.0 -
 
 Install `ragops[api]` and run `ragops serve` for the local authenticated API/workbench. Use `ragops adapter list` for Phoenix, Ragas, DeepEval, LangSmith, MLflow, Promptfoo, custom JSON, and installed entry-point adapters.
 
+Found a bad answer in production? `ragops mine --from logs.jsonl --scenario scenario.json --responses responses.json --output next/` adds every thumbs-down, low-rating or escalated log to the scenario as a regression case, so the suite grows with each incident.
+
 No release policy yet? `ragops policy-suggest --scenario scenario.json --baseline responses.json --output policy.toml` generates a slice-aware policy v2 from your accepted baseline (review it before use), which `ragops gate-v2` then applies.
 
 `lexical_groundedness` is a transparent lexical-overlap baseline, not a semantic judge: a correct paraphrase can score low and a wrong answer that reuses evidence vocabulary can score high. Japanese/Chinese text is compared as character bigrams and Vietnamese is NFC-normalized. For a stricter deterministic check (claim-level, exact numbers, negation) use `--evaluator strict_grounding`; measured accuracy and known failures are in [evaluator accuracy](docs/evaluator-accuracy.md). For semantic grounding, import Ragas/DeepEval scores through the adapters and calibrate against human labels.

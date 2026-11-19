@@ -359,6 +359,14 @@ def build_parser() -> argparse.ArgumentParser:
         default="generic",
         help="Shape of the logs: a Langfuse trace export, OpenAI or Anthropic request/response logs",
     )
+    mine_parser = commands.add_parser(
+        "mine", help="Add production failures (thumbs-down, low rating, escalation) to a scenario"
+    )
+    mine_parser.add_argument("--from", dest="source", required=True, help="JSON/JSONL file or directory")
+    mine_parser.add_argument("--scenario", required=True)
+    mine_parser.add_argument("--responses", required=True)
+    mine_parser.add_argument("--output", required=True)
+    mine_parser.add_argument("--max-rating", type=float, default=2.0, help="Ratings at or below this are failures")
     pilot_init_parser = commands.add_parser(
         "pilot-init", help="Create blank design-partner pilot files that fail closed"
     )
