@@ -335,6 +335,12 @@ def build_parser() -> argparse.ArgumentParser:
     workspace_audit.add_argument("--root", required=True)
     workspace_audit.add_argument("--workspace-id", required=True)
     workspace_audit.add_argument("--limit", type=int, default=100)
+    init_parser = commands.add_parser(
+        "init", help="Create a first release-gate scenario from your own RAG logs"
+    )
+    init_parser.add_argument("--from", dest="source", required=True, help="JSON/JSONL file or directory")
+    init_parser.add_argument("--output", required=True)
+    init_parser.add_argument("--scenario-id", default="my-rag")
     pilot_init_parser = commands.add_parser(
         "pilot-init", help="Create blank design-partner pilot files that fail closed"
     )
