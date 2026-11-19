@@ -19,7 +19,8 @@ def test_repository_has_consumer_ci_and_separate_release_publisher() -> None:
     ci = (WORKFLOW_ROOT / "ci.yml").read_text(encoding="utf-8")
     assert "pull_request:" in ci
     assert 'python-version: ${{ matrix.python-version }}' in ci
-    assert '["3.11", "3.12", "3.13"]' in ci
+    assert '["3.11", "3.12", "3.13", "3.14", "3.15"]' in ci
+    assert "macos-latest" in ci and "run: mypy" in ci
     assert "ruff check ." in ci
     assert "pytest -q" in ci
     assert "ragops demo" in ci
