@@ -10,9 +10,9 @@ def test_package_and_release_metadata_versions_match() -> None:
     version = metadata["project"]["version"]
     changelog = Path("CHANGELOG.md").read_text(encoding="utf-8")
 
-    assert version == __version__ == "2.2.1"
+    assert version == __version__ == "2.3.1"
     assert f"## [{version}]" in changelog
-    assert Path("docs/releases/v2.2.1.md").is_file()
+    assert Path("docs/releases/v2.3.1.md").is_file()
 
 
 def test_plugin_manifests_match_package_version() -> None:
@@ -25,4 +25,4 @@ def test_plugin_manifests_match_package_version() -> None:
         )
     }
 
-    assert versions == {"2.2.1"}
+    assert versions == {"2.3.1"}

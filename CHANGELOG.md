@@ -1,6 +1,6 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
-## Unreleased
+## [2.3.1] - 2026-11-19
 
 ### English
 
