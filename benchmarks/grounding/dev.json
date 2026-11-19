@@ -1,0 +1,247 @@
+{
+ "schema": "ragops-grounding-benchmark-0.1",
+ "split": "dev",
+ "note": "Author-labeled synthetic pairs (label 1 = answer fully supported by evidence). Not independent human annotation.",
+ "items": [
+  {
+   "id": "dev-01",
+   "language": "en",
+   "evidence": "Refunds are available within 30 days of purchase if the product is unused.",
+   "answer": "You can get a refund within 30 days if the product is unused.",
+   "label": 1,
+   "kind": "paraphrase"
+  },
+  {
+   "id": "dev-02",
+   "language": "en",
+   "evidence": "Refunds are available within 30 days of purchase if the product is unused.",
+   "answer": "You can get a refund within 60 days if the product is unused.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "dev-03",
+   "language": "en",
+   "evidence": "The warranty does not cover water damage.",
+   "answer": "The warranty covers water damage.",
+   "label": 0,
+   "kind": "negation"
+  },
+  {
+   "id": "dev-04",
+   "language": "en",
+   "evidence": "The warranty does not cover water damage.",
+   "answer": "Water damage is not covered by the warranty.",
+   "label": 1,
+   "kind": "paraphrase"
+  },
+  {
+   "id": "dev-05",
+   "language": "en",
+   "evidence": "Standard shipping takes 5 to 7 business days. Express shipping takes 2 days.",
+   "answer": "Express shipping takes 2 days.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "dev-06",
+   "language": "en",
+   "evidence": "Standard shipping takes 5 to 7 business days. Express shipping takes 2 days.",
+   "answer": "Express shipping takes 5 days.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "dev-07",
+   "language": "en",
+   "evidence": "Reset the router by holding the reset button for 10 seconds.",
+   "answer": "Hold the reset button for 10 seconds to reset the router.",
+   "label": 1,
+   "kind": "paraphrase"
+  },
+  {
+   "id": "dev-08",
+   "language": "en",
+   "evidence": "Reset the router by holding the reset button for 10 seconds.",
+   "answer": "Unplug the router and replace the battery.",
+   "label": 0,
+   "kind": "unrelated"
+  },
+  {
+   "id": "dev-09",
+   "language": "en",
+   "evidence": "Support is available Monday to Friday from 9am to 5pm.",
+   "answer": "Support is available Monday to Friday from 9am to 5pm and on weekends.",
+   "label": 0,
+   "kind": "extra_claim"
+  },
+  {
+   "id": "dev-10",
+   "language": "en",
+   "evidence": "Premium plans include priority support and 2 TB of storage.",
+   "answer": "Premium plans include priority support and 2 TB of storage.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "dev-11",
+   "language": "en",
+   "evidence": "Passwords must contain at least 12 characters.",
+   "answer": "Passwords must contain at least 8 characters.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "dev-12",
+   "language": "en",
+   "evidence": "The API rate limit is 100 requests per minute.",
+   "answer": "The rate limit is 100 requests per minute.",
+   "label": 1,
+   "kind": "paraphrase"
+  },
+  {
+   "id": "dev-13",
+   "language": "en",
+   "evidence": "Invoices are sent on the first day of each month.",
+   "answer": "Invoices are sent on the last day of each month.",
+   "label": 0,
+   "kind": "word_swap"
+  },
+  {
+   "id": "dev-14",
+   "language": "en",
+   "evidence": "Do not run the pump dry.",
+   "answer": "Run the pump dry to clean it.",
+   "label": 0,
+   "kind": "negation"
+  },
+  {
+   "id": "dev-15",
+   "language": "en",
+   "evidence": "Admins can delete projects. Members can only view projects.",
+   "answer": "Members can delete projects.",
+   "label": 0,
+   "kind": "role_swap"
+  },
+  {
+   "id": "dev-16",
+   "language": "en",
+   "evidence": "Tokens expire after 24 hours.",
+   "answer": "Tokens expire after 24 hours, and can be renewed once.",
+   "label": 0,
+   "kind": "extra_claim"
+  },
+  {
+   "id": "dev-17",
+   "language": "en",
+   "evidence": "The meeting is on Tuesday at 3pm in room B.",
+   "answer": "The meeting is on Tuesday at 3pm in room B.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "dev-18",
+   "language": "en",
+   "evidence": "The meeting is on Tuesday at 3pm in room B.",
+   "answer": "The meeting is on Tuesday at 3pm in room C.",
+   "label": 0,
+   "kind": "entity"
+  },
+  {
+   "id": "dev-19",
+   "language": "vi",
+   "evidence": "Khách hàng được hoàn tiền trong vòng 30 ngày kể từ ngày mua.",
+   "answer": "Bạn được hoàn tiền trong 30 ngày kể từ ngày mua.",
+   "label": 1,
+   "kind": "paraphrase"
+  },
+  {
+   "id": "dev-20",
+   "language": "vi",
+   "evidence": "Khách hàng được hoàn tiền trong vòng 30 ngày kể từ ngày mua.",
+   "answer": "Bạn được hoàn tiền trong 90 ngày kể từ ngày mua.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "dev-21",
+   "language": "vi",
+   "evidence": "Bảo hành không bao gồm hư hỏng do nước.",
+   "answer": "Bảo hành bao gồm hư hỏng do nước.",
+   "label": 0,
+   "kind": "negation"
+  },
+  {
+   "id": "dev-22",
+   "language": "vi",
+   "evidence": "Hỗ trợ làm việc từ thứ hai đến thứ sáu.",
+   "answer": "Hỗ trợ làm việc từ thứ hai đến thứ sáu.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "dev-23",
+   "language": "vi",
+   "evidence": "Gói cơ bản có giá 100 nghìn đồng mỗi tháng.",
+   "answer": "Gói cơ bản có giá 200 nghìn đồng mỗi tháng.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "dev-24",
+   "language": "vi",
+   "evidence": "Khởi động lại thiết bị bằng cách giữ nút nguồn 5 giây.",
+   "answer": "Giữ nút nguồn 5 giây để khởi động lại thiết bị.",
+   "label": 1,
+   "kind": "paraphrase"
+  },
+  {
+   "id": "dev-25",
+   "language": "ja",
+   "evidence": "返金は購入後30日以内に申請できます。",
+   "answer": "購入後30日以内なら返金を申請できます。",
+   "label": 1,
+   "kind": "paraphrase"
+  },
+  {
+   "id": "dev-26",
+   "language": "ja",
+   "evidence": "返金は購入後30日以内に申請できます。",
+   "answer": "返金は購入後60日以内に申請できます。",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "dev-27",
+   "language": "ja",
+   "evidence": "保証は水濡れによる故障を含みません。",
+   "answer": "保証は水濡れによる故障を含みます。",
+   "label": 0,
+   "kind": "negation"
+  },
+  {
+   "id": "dev-28",
+   "language": "ja",
+   "evidence": "サポートは平日の9時から17時まで対応しています。",
+   "answer": "サポートは平日の9時から17時まで対応しています。",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "dev-29",
+   "language": "ja",
+   "evidence": "ルーターはリセットボタンを10秒間押すと初期化されます。",
+   "answer": "ルーターの電源を切って電池を交換してください。",
+   "label": 0,
+   "kind": "unrelated"
+  },
+  {
+   "id": "dev-30",
+   "language": "ja",
+   "evidence": "パスワードは12文字以上にしてください。",
+   "answer": "パスワードは8文字以上にしてください。",
+   "label": 0,
+   "kind": "number"
+  }
+ ]
+}

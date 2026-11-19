@@ -1,0 +1,255 @@
+{
+ "schema": "ragops-grounding-benchmark-0.1",
+ "split": "heldout",
+ "note": "Author-labeled synthetic pairs (label 1 = answer fully supported by evidence). Not independent human annotation.",
+ "items": [
+  {
+   "id": "heldout-01",
+   "language": "en",
+   "evidence": "Orders over 50 dollars ship free within the country.",
+   "answer": "Orders above 50 dollars qualify for free domestic shipping.",
+   "label": 1,
+   "kind": "synonym_paraphrase"
+  },
+  {
+   "id": "heldout-02",
+   "language": "en",
+   "evidence": "The trial lasts 14 days and requires no credit card.",
+   "answer": "The trial lasts 14 days and no credit card is needed.",
+   "label": 1,
+   "kind": "paraphrase"
+  },
+  {
+   "id": "heldout-03",
+   "language": "en",
+   "evidence": "The trial lasts 14 days and requires no credit card.",
+   "answer": "The trial lasts 30 days and requires no credit card.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout-04",
+   "language": "en",
+   "evidence": "Backups run nightly at 2am and are kept for 7 days.",
+   "answer": "Backups run nightly at 2am.",
+   "label": 1,
+   "kind": "subset"
+  },
+  {
+   "id": "heldout-05",
+   "language": "en",
+   "evidence": "Backups run nightly at 2am and are kept for 7 days.",
+   "answer": "Backups run nightly at 2am and are kept for 30 days.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout-06",
+   "language": "en",
+   "evidence": "Users must verify their email before posting.",
+   "answer": "Users can post without verifying their email.",
+   "label": 0,
+   "kind": "negation"
+  },
+  {
+   "id": "heldout-07",
+   "language": "en",
+   "evidence": "Users must verify their email before posting.",
+   "answer": "Posting requires users to verify their email first.",
+   "label": 1,
+   "kind": "synonym_paraphrase"
+  },
+  {
+   "id": "heldout-08",
+   "language": "en",
+   "evidence": "The server is located in Frankfurt, Germany.",
+   "answer": "The server is located in Frankfurt.",
+   "label": 1,
+   "kind": "subset"
+  },
+  {
+   "id": "heldout-09",
+   "language": "en",
+   "evidence": "The server is located in Frankfurt, Germany.",
+   "answer": "The server is located in Dublin, Ireland.",
+   "label": 0,
+   "kind": "entity"
+  },
+  {
+   "id": "heldout-10",
+   "language": "en",
+   "evidence": "Version 3.2 adds dark mode and fixes the login bug.",
+   "answer": "Version 3.2 adds dark mode.",
+   "label": 1,
+   "kind": "subset"
+  },
+  {
+   "id": "heldout-11",
+   "language": "en",
+   "evidence": "Version 3.2 adds dark mode and fixes the login bug.",
+   "answer": "Version 3.4 adds dark mode.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout-12",
+   "language": "en",
+   "evidence": "Employees accrue 1.5 vacation days per month.",
+   "answer": "Employees accrue 1.5 vacation days per month.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout-13",
+   "language": "en",
+   "evidence": "Employees accrue 1.5 vacation days per month.",
+   "answer": "Employees accrue 2.5 vacation days per month.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout-14",
+   "language": "en",
+   "evidence": "Cancel anytime from the billing page. No fee is charged.",
+   "answer": "You can cancel at any time and a fee is charged.",
+   "label": 0,
+   "kind": "negation"
+  },
+  {
+   "id": "heldout-15",
+   "language": "en",
+   "evidence": "The camera supports 4K video at 30 fps.",
+   "answer": "The camera supports 4K video at 60 fps.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout-16",
+   "language": "vi",
+   "evidence": "Đơn hàng trên 500 nghìn được miễn phí vận chuyển.",
+   "answer": "Đơn hàng trên 500 nghìn được miễn phí vận chuyển.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout-17",
+   "language": "vi",
+   "evidence": "Đơn hàng trên 500 nghìn được miễn phí vận chuyển.",
+   "answer": "Đơn hàng trên 300 nghìn được miễn phí vận chuyển.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout-18",
+   "language": "vi",
+   "evidence": "Không được hoàn tiền sau 30 ngày.",
+   "answer": "Được hoàn tiền sau 30 ngày.",
+   "label": 0,
+   "kind": "negation"
+  },
+  {
+   "id": "heldout-19",
+   "language": "vi",
+   "evidence": "Ứng dụng hỗ trợ tiếng Việt và tiếng Anh.",
+   "answer": "Ứng dụng hỗ trợ tiếng Việt.",
+   "label": 1,
+   "kind": "subset"
+  },
+  {
+   "id": "heldout-20",
+   "language": "vi",
+   "evidence": "Ứng dụng hỗ trợ tiếng Việt và tiếng Anh.",
+   "answer": "Ứng dụng hỗ trợ tiếng Nhật và tiếng Anh.",
+   "label": 0,
+   "kind": "entity"
+  },
+  {
+   "id": "heldout-21",
+   "language": "ja",
+   "evidence": "配送は通常3日から5日かかります。",
+   "answer": "配送は通常3日から5日かかります。",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout-22",
+   "language": "ja",
+   "evidence": "配送は通常3日から5日かかります。",
+   "answer": "配送は通常1日から2日かかります。",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout-23",
+   "language": "ja",
+   "evidence": "この製品は防水ではありません。",
+   "answer": "この製品は防水です。",
+   "label": 0,
+   "kind": "negation"
+  },
+  {
+   "id": "heldout-24",
+   "language": "ja",
+   "evidence": "会員は毎月ポイントを受け取れます。",
+   "answer": "会員は毎月ポイントを受け取れます。",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout-25",
+   "language": "ja",
+   "evidence": "営業時間は午前10時から午後6時までです。",
+   "answer": "営業時間は午前10時から午後8時までです。",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout-26",
+   "language": "en",
+   "evidence": "Store the medicine below 25 degrees.",
+   "answer": "The capital of France is Paris.",
+   "label": 0,
+   "kind": "unrelated"
+  },
+  {
+   "id": "heldout-27",
+   "language": "en",
+   "evidence": "Store the medicine below 25 degrees.",
+   "answer": "",
+   "label": 0,
+   "kind": "empty"
+  },
+  {
+   "id": "heldout-28",
+   "language": "en",
+   "evidence": "Contact support via the in-app chat.",
+   "answer": "Contact support via the in-app chat or phone.",
+   "label": 0,
+   "kind": "extra_claim"
+  },
+  {
+   "id": "heldout-29",
+   "language": "en",
+   "evidence": "The deadline is June 5.",
+   "answer": "The deadline is June 5.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout-30",
+   "language": "en",
+   "evidence": "The deadline is June 5.",
+   "answer": "The deadline is June 15.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout-31",
+   "language": "en",
+   "evidence": "Only the owner can transfer a workspace.",
+   "answer": "An admin can transfer a workspace.",
+   "label": 0,
+   "kind": "role_swap"
+  }
+ ]
+}

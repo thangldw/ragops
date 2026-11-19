@@ -1,5 +1,19 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
+## Unreleased
+
+### English
+
+- Added the opt-in `strict_grounding` evaluator (claim-level support, exact numbers/identifiers, negation contradictions) and a labeled grounding benchmark with `scripts/grounding_benchmark.py`; on the held-out split it scores 87% vs 71% for lexical groundedness. See `docs/evaluator-accuracy.md`.
+
+### Tiếng Việt
+
+- Thêm evaluator `strict_grounding` (tùy chọn): kiểm tra từng claim, khớp chính xác số/định danh, phát hiện mâu thuẫn phủ định; kèm bộ benchmark có nhãn. Trên tập heldout đạt 87% so với 71% của lexical groundedness. Xem `docs/evaluator-accuracy.md`.
+
+### 日本語
+
+- 任意の `strict_grounding` evaluator（主張単位の裏付け、数値・識別子の完全一致、否定の矛盾検出）とラベル付きベンチマークを追加しました。held-out で 87%（lexical groundedness は 71%）。`docs/evaluator-accuracy.md` を参照してください。
+
 ## [2.1.1] - 2026-11-19
 
 ### English
