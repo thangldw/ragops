@@ -7,6 +7,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
+from ragops._guard import contract_guard
 from ragops.loader import ContractError
 
 
@@ -65,6 +66,7 @@ def load_trace_graph(path: str | Path) -> TraceGraph:
     return trace_graph_from_dict(_read_json(path))
 
 
+@contract_guard(ContractError, "trace file")
 def load_trace_expectation(path: str | Path) -> TraceExpectation:
     data = _read_json(path)
     if not isinstance(data, dict) or set(data) != {
@@ -91,6 +93,7 @@ def load_trace_expectation(path: str | Path) -> TraceExpectation:
     return expectation
 
 
+@contract_guard(ContractError, "trace file")
 def trace_graph_from_dict(data: object) -> TraceGraph:
     if not isinstance(data, dict) or set(data) != {"schema_version", "trace_id", "spans", "metadata"}:
         raise ContractError("Trace graph fields do not match schema 1.0")

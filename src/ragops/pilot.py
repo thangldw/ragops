@@ -8,6 +8,8 @@ from pathlib import Path
 from statistics import median
 from typing import Any
 
+from ragops._guard import contract_guard
+
 PILOT_ID = re.compile(r"^[a-z0-9][a-z0-9-]{2,63}$")
 USER_ID = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9_-]{2,63}$")
 WEEK = re.compile(r"^(\d{4})-W(\d{2})$")
@@ -115,6 +117,7 @@ def _date(value: Any, label: str) -> str:
     return value
 
 
+@contract_guard(PilotContractError, "pilot file")
 def load_pilot_manifest(path: str | Path) -> PilotManifest:
     data = _mapping(path, "pilot manifest")
     _exact_keys(
@@ -248,6 +251,7 @@ def _observation(data: Any, line_number: int) -> PilotObservation:
     )
 
 
+@contract_guard(PilotContractError, "pilot file")
 def load_pilot_observations(path: str | Path) -> tuple[PilotObservation, ...]:
     try:
         lines = Path(path).read_text(encoding="utf-8").splitlines()
@@ -268,6 +272,7 @@ def load_pilot_observations(path: str | Path) -> tuple[PilotObservation, ...]:
     return tuple(observations)
 
 
+@contract_guard(PilotContractError, "pilot file")
 def load_pilot_economics(path: str | Path) -> PilotEconomics:
     data = _mapping(path, "pilot economics")
     _exact_keys(

@@ -67,3 +67,14 @@ def test_init_accepts_each_format_end_to_end(tmp_path: Path, fmt: str, payload, 
     result = init_project(source, tmp_path / "out", source_format=fmt)
     assert result.cases == cases
     assert len(load_scenario(tmp_path / "out/scenario.json").cases) == cases
+
+
+def test_converters_survive_junk_without_crashing() -> None:
+    import random
+
+    rng = random.Random(7)
+    junk = [None, "x", 1, -1, [], {}, True, [None], {"k": None}, [{"role": 1}], {"type": 3}]
+    for fmt in ("langfuse", "openai", "anthropic"):
+        for _ in range(400):
+            record = {key: rng.choice(junk) for key in ("id", "input", "output", "observations", "messages", "request", "response", "choices", "content", "latency", "totalCost", "latency_ms")}
+            convert_traces(fmt, [record])

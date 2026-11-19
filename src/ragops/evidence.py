@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Any, Mapping
 
+from ragops._guard import contract_guard
 from ragops.loader import ContractError
 
 DEFAULT_MAX_ARTIFACT_BYTES = 50 * 1024 * 1024
@@ -129,6 +130,7 @@ def create_evidence_bundle(
     return manifest
 
 
+@contract_guard(ContractError, "evidence manifest")
 def load_evidence_manifest(path: str | Path) -> EvidenceManifest:
     manifest_path = Path(path)
     if manifest_path.is_dir():
