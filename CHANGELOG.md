@@ -1,5 +1,19 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
+## [2.1.1] - 2026-11-19
+
+### English
+
+- Same content as 2.1.0. PyPI refused the 2.1.0 filename because it was used by a since-deleted file, so 2.1.0 exists only as a GitHub pre-release and 2.1.1 is the first PyPI release of these changes.
+
+### Tiếng Việt
+
+- Nội dung giống 2.1.0. PyPI từ chối tên file 2.1.0 vì từng được dùng bởi file đã xoá, nên 2.1.0 chỉ còn là pre-release trên GitHub và 2.1.1 là bản PyPI đầu tiên chứa các thay đổi này.
+
+### 日本語
+
+- 内容は 2.1.0 と同じです。2.1.0 のファイル名は削除済みファイルが使用していたため PyPI に拒否され、2.1.0 は GitHub の pre-release のみとなり、2.1.1 がこれらの変更を含む最初の PyPI release です。
+
 ## [2.1.0] - 2026-11-19
 
 ### English
