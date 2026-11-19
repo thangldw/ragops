@@ -6,7 +6,14 @@ import pytest
 
 from ragops.loader import ContractError, scenario_from_dict
 from ragops.models import CaseResult, EvaluationReport, Finding
-from ragops.policy_v2 import PolicyGate, PolicyWaiver, ReleasePolicyV2, SlicePolicy, TailGate, apply_release_policy
+from ragops.policy_v2 import (
+    PolicyGate,
+    PolicyWaiver,
+    ReleasePolicyV2,
+    SlicePolicy,
+    TailGate,
+    apply_release_policy,
+)
 from ragops.slices import SliceSelector
 
 NOW = "2026-08-23T00:00:00Z"
