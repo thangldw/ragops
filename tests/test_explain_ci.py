@@ -129,3 +129,43 @@ def test_release_decision_loader_rejects_type_coercion(tmp_path, field, value):
 
     with pytest.raises(ContractError):
         load_release_decision(source)
+
+
+def test_pr_comment_is_sticky_actionable_and_escapes_text():
+    from dataclasses import replace
+
+    from ragops.ci import COMMENT_MARKER, pr_comment, render_ci
+
+    decision = _decision()
+    comment = pr_comment(decision)
+
+    assert comment.startswith(COMMENT_MARKER)
+    assert COMMENT_MARKER == "<!-- ragops-release-gate -->"
+    assert "RAGOps release gate: **BLOCK**" in comment
+    assert "What to change" in comment
+    assert "`global:citation_coverage:regression`" in comment and "`q2`" in comment
+    assert "raise to at least 0" in comment
+    assert "slice:ja:groundedness" not in comment.split("<details>")[0]  # waived: not an action
+    assert "<details>" in comment and "</details>" in comment
+    assert render_ci(decision, "comment") == comment
+
+    passing = replace(decision, decision="PASS", passed=True, gates=tuple(
+        replace(g, passed=True) for g in decision.gates
+    ))
+    assert "All gates passed." in pr_comment(passing)
+
+    many = replace(decision, gates=tuple(
+        replace(decision.gates[0], id=f"g{i}") for i in range(15)
+    ))
+    assert "and 5 more failing gates" in pr_comment(many)
+
+
+def test_action_exposes_comment_input_that_skips_forks():
+    from pathlib import Path
+
+    action = Path("action.yml").read_text(encoding="utf-8")
+    assert "comment:" in action and "github-token:" in action
+    assert "github.event_name == 'pull_request'" in action
+    assert 'RAGOPS_COMMENT" != "true"' in action
+    assert 'IS_FORK" = "true"' in action
+    assert "<!-- ragops-release-gate -->" in action

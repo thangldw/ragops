@@ -4,6 +4,7 @@ import json
 import xml.etree.ElementTree as ET
 from typing import Any
 
+from ragops.explain import explain_decision
 from ragops.policy_v2 import GateEvidence, ReleaseDecision
 
 
@@ -90,11 +91,46 @@ def sarif_report(decision: ReleaseDecision) -> dict[str, Any]:
     }
 
 
+COMMENT_MARKER = "<!-- ragops-release-gate -->"
+
+
+def pr_comment(decision: ReleaseDecision, *, max_items: int = 10, max_cases: int = 5) -> str:
+    """Sticky pull-request comment: the decision, what to change, then the gate table."""
+    explanation = explain_decision(decision)
+    lines = [COMMENT_MARKER, f"### RAGOps release gate: **{_markdown(decision.decision)}**", ""]
+    blocking = [item for item in explanation.items if not item.waived]
+    if blocking:
+        lines.append("**What to change**")
+        lines.append("")
+        for item in blocking[:max_items]:
+            direction = "raise to at least" if item.comparator == ">=" else "reduce to at most"
+            cases = ", ".join(f"`{_markdown(case)}`" for case in item.case_ids[:max_cases])
+            more = len(item.case_ids) - max_cases
+            suffix = f"; affected: {cases}" + (f" (+{more} more)" if more > 0 else "") if cases else ""
+            lines.append(
+                f"- `{_markdown(item.gate_id)}` ({_markdown(item.scope)}): observed "
+                f"{item.observed:.4g}, {direction} {item.threshold:.4g} "
+                f"(change by {item.required_change:.4g}){suffix}"
+            )
+        if len(blocking) > max_items:
+            lines.append(f"- … and {len(blocking) - max_items} more failing gates")
+        lines.append("")
+    elif decision.decision == "PASS":
+        lines.extend(["All gates passed.", ""])
+    lines.append("<details><summary>All gates</summary>")
+    lines.append("")
+    lines.append(github_summary(decision).split("\n", 2)[2].lstrip("\n").rstrip())
+    lines.extend(["", "</details>", ""])
+    return "\n".join(lines)
+
+
 def render_ci(decision: ReleaseDecision, output_format: str) -> str:
     if output_format == "junit":
         return junit_xml(decision)
     if output_format == "github":
         return github_summary(decision)
+    if output_format == "comment":
+        return pr_comment(decision)
     if output_format == "sarif":
         return json.dumps(sarif_report(decision), ensure_ascii=False, indent=2) + "\n"
     raise ValueError(f"Unsupported CI format: {output_format}")
