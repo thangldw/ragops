@@ -19,7 +19,7 @@ Across all 97 pairs, lexical groundedness has 26% false-pass and 31% false-block
 
 ## Independent check
 
-On 10,000 public HaluEval QA pairs, zero-shot, lexical groundedness scored 92.9% and `strict_grounding` 91.0%. The advantage above did not reproduce. The maintainer-written benchmark overstates strict grounding; see `docs/case-study-halueval.md` for the protocol and failure analysis.
+On 10,000 public HaluEval QA pairs, zero-shot, lexical groundedness scored 92.9% and `strict_grounding` 91.0%. The advantage above did not reproduce. The maintainer-written benchmark overstates strict grounding; see `docs/case-study-halueval.md` for the protocol and failure analysis. On long answers (RAGTruth) `strict_grounding` is near chance (AUROC 0.53 to 0.58) and lexical groundedness is weak (0.68 to 0.76); see `docs/case-study-ragtruth.md`. Use strict grounding for short factual answers only.
 
 ## What `strict_grounding` adds
 
