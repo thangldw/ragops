@@ -1,5 +1,9 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
+## [Unreleased]
+
+- `ragops explain` and the PR comment now start each failing gate with one plain sentence saying why it failed (for example "The citation coverage overall dropped by 0.5 compared with the baseline; the policy allows at most 0"). New `summary` field in the explanation JSON.
+
 ## [2.4.0] - 2026-11-19
 
 ### English
