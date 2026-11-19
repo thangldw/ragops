@@ -4,6 +4,7 @@
 
 ### English
 
+- Added `examples/nli_scorer.py`, an optional local entailment scorer for `semantic_grounding`, and `scripts/nli_ragtruth_probe.py`. Measured result: off-the-shelf NLI models (AUROC 0.62 to 0.68) did not beat lexical grounding (0.76) on RAGTruth QA, so semantic scoring is documented as something to calibrate, not assume.
 - Coverage gate raised to 91% (measured 92.1%). New mutation tests over the pilot, dataset, evidence, trace-graph, replay-bundle and statistical-policy loaders found and fixed more crashes: wrongly typed values raised `TypeError`/`KeyError` instead of the loader's own contract error. A shared `contract_guard` converts them.
 - Removed all remaining mypy `ignore_errors` overrides (`cli`, `pilot`, `sequential`, `statistical`, `policy_v2`): the whole package is now type-checked. Missing absolute thresholds now raise `ContractError` instead of a `TypeError`.
 - Added `scripts/ragtruth_benchmark.py` and `docs/case-study-ragtruth.md`: on long RAG answers from the public RAGTruth set, `strict_grounding` is near chance (AUROC 0.53 to 0.58) and lexical groundedness is weak (0.68 to 0.76). Strict grounding is documented as suitable for short factual answers only.
