@@ -1,47 +1,76 @@
 """Probe: off-the-shelf NLI models vs lexical grounding on RAGTruth (needs torch, transformers).
 
-    python scripts/nli_ragtruth_probe.py MODEL N QA|Summary   (data layout as in ragtruth_benchmark.py)
+    python scripts/nli_ragtruth_probe.py MODEL N QA|Summary DATA_DIR
+
+DATA_DIR holds response.jsonl and source_info.jsonl (see ragtruth_benchmark.py). Response score is the
+minimum over sentences of the best entailment probability over sliding evidence windows.
 """
+
+from __future__ import annotations
+
 import json
 import random
 import sys
 import time
+from pathlib import Path
 
 import torch
-
-sys.path.insert(0,'scripts'); sys.path.insert(0,'src')
-from ragtruth_benchmark import auroc
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-from ragops.evaluators import lexical_groundedness, split_sentences
-from ragops.models import EvalCase, RecordedResponse
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
-name=sys.argv[1]; n=int(sys.argv[2]); task=sys.argv[3]
-tok=AutoTokenizer.from_pretrained(name); model=AutoModelForSequenceClassification.from_pretrained(name).eval()
-ent=[i for i,l in model.config.id2label.items() if l.lower().startswith('entail')][0]
-D=sys.argv[4]+'/' if len(sys.argv)>4 else 'ragtruth/'
-src={}
-for l in open(D+'source_info.jsonl'):
-    r=json.loads(l)
-    if r['task_type']==task: src[r['source_id']]=r['source_info'] if task=='Summary' else r['source_info'].get('passages','')
-rows=[json.loads(l) for l in open(D+'response.jsonl')]
-rows=[r for r in rows if r['split']=='test' and r['source_id'] in src and r.get('quality')=='good']
-random.Random(1).shuffle(rows); rows=rows[:n]
-def chunks(text, size=180, stride=120):
-    w=text.split() 
-    return [' '.join(w[i:i+size]) for i in range(0,max(len(w)-size+stride,1),stride)] or ['']
-def entail(prem_list, hyp):
-    best=0.0
-    for i in range(0,len(prem_list),8):
-        enc=tok(prem_list[i:i+8],[hyp]*len(prem_list[i:i+8]),truncation=True,max_length=400,padding=True,return_tensors='pt')
-        with torch.no_grad(): p=model(**enc).logits.softmax(-1)[:,ent]
-        best=max(best,float(p.max()))
-    return best
-t=time.time(); nli=[]; lex=[]; lab=[]
-for r in rows:
-    ch=chunks(src[r['source_id']]); sents=split_sentences(r['response'])[:12]
-    s=min((entail(ch,x) for x in sents), default=0.0)
-    nli.append(s); lab.append(int(not r['labels']))
-    lex.append(lexical_groundedness(EvalCase('x','',(src[r['source_id']],),()),RecordedResponse('x',r['response'],(),0,0)))
-print(task,'n',len(rows),'halluc',len(rows)-sum(lab),'secs',round(time.time()-t))
-print('AUROC nli(min-sentence)',round(auroc(nli,lab),4),'lexical',round(auroc(lex,lab),4))
+from ragtruth_benchmark import auroc  # noqa: E402
+
+from ragops.evaluators import lexical_groundedness, split_sentences  # noqa: E402
+from ragops.models import EvalCase, RecordedResponse  # noqa: E402
+
+
+def windows(text: str, size: int = 180, stride: int = 120) -> list[str]:
+    words = text.split()
+    starts = range(0, max(len(words) - size + stride, 1), stride)
+    return [" ".join(words[i : i + size]) for i in starts] or [""]
+
+
+def main() -> None:
+    name, count, task, data = sys.argv[1], int(sys.argv[2]), sys.argv[3], Path(sys.argv[4])
+    tokenizer = AutoTokenizer.from_pretrained(name)
+    model = AutoModelForSequenceClassification.from_pretrained(name).eval()
+    entail = next(i for i, label in model.config.id2label.items() if label.lower().startswith("entail"))
+    sources = {}
+    for line in (data / "source_info.jsonl").read_text(encoding="utf-8").splitlines():
+        record = json.loads(line)
+        if record["task_type"] == task:
+            info = record["source_info"]
+            sources[record["source_id"]] = info if task == "Summary" else info.get("passages", "")
+    rows = [json.loads(line) for line in (data / "response.jsonl").read_text(encoding="utf-8").splitlines()]
+    rows = [r for r in rows if r["split"] == "test" and r["source_id"] in sources and r.get("quality") == "good"]
+    random.Random(1).shuffle(rows)
+    rows = rows[:count]
+
+    def best_entailment(premises: list[str], hypothesis: str) -> float:
+        best = 0.0
+        for start in range(0, len(premises), 8):
+            batch = premises[start : start + 8]
+            encoded = tokenizer(batch, [hypothesis] * len(batch), truncation=True, max_length=400,
+                                padding=True, return_tensors="pt")
+            with torch.no_grad():
+                best = max(best, float(model(**encoded).logits.softmax(-1)[:, entail].max()))
+        return best
+
+    started = time.time()
+    nli, lexical, labels = [], [], []
+    for row in rows:
+        premises = windows(sources[row["source_id"]])
+        sentences = split_sentences(row["response"])[:12]
+        nli.append(min((best_entailment(premises, s) for s in sentences), default=0.0))
+        labels.append(int(not row["labels"]))
+        case = EvalCase("x", "", (sources[row["source_id"]],), ())
+        lexical.append(lexical_groundedness(case, RecordedResponse("x", row["response"], (), 0, 0)))
+    print(f"{task} n={len(rows)} hallucinated={len(rows) - sum(labels)} seconds={round(time.time() - started)}")
+    print("AUROC nli", round(auroc(nli, labels), 4), "lexical", round(auroc(lexical, labels), 4))
+
+
+if __name__ == "__main__":
+    main()
