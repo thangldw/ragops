@@ -72,6 +72,7 @@ from ragops.plugins import (
     ClaimSupportEvaluator,
     RetrievalRecallEvaluator,
     SourceFreshnessEvaluator,
+    StrictGroundingEvaluator,
 )
 from ragops.policy_v2 import apply_release_policy, load_release_decision, load_release_policy_v2
 from ragops.provenance import diagnose_provenance
@@ -760,6 +761,7 @@ def _evaluators_from_names(
         "retrieval_recall": RetrievalRecallEvaluator,
         "citation_correctness": CitationCorrectnessEvaluator,
         "claim_support": ClaimSupportEvaluator,
+        "strict_grounding": StrictGroundingEvaluator,
         "answer_length_budget": lambda: AnswerLengthBudgetEvaluator(
             max_characters=answer_length_limit
         ),
