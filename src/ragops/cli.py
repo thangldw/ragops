@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shlex
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -85,6 +86,7 @@ from ragops.reporters import (
     sequential_comparison_markdown,
     statistical_comparison_markdown,
 )
+from ragops.semantic import CommandSemanticScorer, SemanticGroundingEvaluator
 from ragops.sequential import compare_replay_bundles_sequentially
 from ragops.statistical import compare_replay_bundles, load_replay_bundle
 from ragops.store import ExperimentStore
@@ -649,6 +651,7 @@ def main() -> int:
             evaluators = _evaluators_from_names(
                 args.evaluator,
                 answer_length_limit=args.answer_length_limit,
+                semantic_command=args.semantic_command,
             )
             if args.external_metrics:
                 evaluators += (load_external_metric_evaluator(args.external_metrics, scenario),)
@@ -671,6 +674,7 @@ def main() -> int:
             evaluators = _evaluators_from_names(
                 args.evaluator,
                 answer_length_limit=args.answer_length_limit,
+                semantic_command=args.semantic_command,
             )
             if args.baseline_external_metrics:
                 baseline_external = load_external_metric_evaluator(
@@ -764,12 +768,16 @@ def _evaluators_from_names(
     names: list[str],
     *,
     answer_length_limit: int = 500,
+    semantic_command: str | None = None,
 ) -> tuple[CaseEvaluator, ...]:
     factories = {
         "retrieval_recall": RetrievalRecallEvaluator,
         "citation_correctness": CitationCorrectnessEvaluator,
         "claim_support": ClaimSupportEvaluator,
         "strict_grounding": StrictGroundingEvaluator,
+        "semantic_grounding": lambda: SemanticGroundingEvaluator(
+            CommandSemanticScorer(_semantic_command(semantic_command))
+        ),
         "answer_length_budget": lambda: AnswerLengthBudgetEvaluator(
             max_characters=answer_length_limit
         ),
@@ -777,6 +785,12 @@ def _evaluators_from_names(
         "abstention_contract": AbstentionContractEvaluator,
     }
     return tuple(factories[name]() for name in names)
+
+
+def _semantic_command(value: str | None) -> tuple[str, ...]:
+    if not value:
+        raise SystemExit("semantic_grounding requires --semantic-command")
+    return tuple(shlex.split(value))
 
 
 def _usage_command(arguments: list[str]) -> str:

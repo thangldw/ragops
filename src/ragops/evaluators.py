@@ -250,3 +250,15 @@ def _negated(value: str) -> bool:
     folded = unicodedata.normalize("NFKC", value).casefold()
     words = set(TOKEN_RE.findall(folded.replace("’", "'")))
     return bool(words & NEGATION_WORDS) or any(marker in folded for marker in NEGATION_MARKERS)
+
+
+def claim_conflict(claim: str, evidence_sentences: list[str]) -> str | None:
+    """Return ``"number"`` or ``"contradicted"`` if the claim clashes with its best-matching
+    evidence sentence, else ``None``. Used to guard semantic scorers, which tend to miss
+    exact-number, identifier and polarity errors."""
+    status = _claim_status(claim, evidence_sentences, 0.0)
+    return status if status in {"number", "contradicted"} else None
+
+
+def split_sentences(value: str) -> list[str]:
+    return _split(value, SENTENCE_SPLIT)
