@@ -63,6 +63,7 @@ from ragops.explorer import explorer_html
 from ragops.governance import GovernanceStore
 from ragops.init_project import init_project
 from ragops.loader import ContractError, load_responses, load_scenario
+from ragops.mine import mine_failures
 from ragops.models import ComparisonReport, EvaluationReport, SequentialComparisonReport
 from ragops.pilot import (
     PilotContractError,
@@ -413,6 +414,15 @@ def main() -> int:
             " --evaluator strict_grounding --format markdown",
             file=sys.stderr,
         )
+        return 0
+    if args.command == "mine":
+        try:
+            mined = mine_failures(
+                args.source, args.scenario, args.responses, args.output, max_rating=args.max_rating
+            )
+        except (ContractError, OSError, ValueError) as exc:
+            raise SystemExit(f"mine error: {exc}") from exc
+        print(json.dumps(mined.to_dict(), ensure_ascii=False, indent=2))
         return 0
     if args.command == "pilot-init":
         try:
