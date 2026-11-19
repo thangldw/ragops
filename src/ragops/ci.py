@@ -107,8 +107,9 @@ def pr_comment(decision: ReleaseDecision, *, max_items: int = 10, max_cases: int
             cases = ", ".join(f"`{_markdown(case)}`" for case in item.case_ids[:max_cases])
             more = len(item.case_ids) - max_cases
             suffix = f"; affected: {cases}" + (f" (+{more} more)" if more > 0 else "") if cases else ""
+            why = f"{_markdown(item.summary)} " if item.summary else ""
             lines.append(
-                f"- `{_markdown(item.gate_id)}` ({_markdown(item.scope)}): observed "
+                f"- {why}`{_markdown(item.gate_id)}` ({_markdown(item.scope)}): observed "
                 f"{item.observed:.4g}, {direction} {item.threshold:.4g} "
                 f"(change by {item.required_change:.4g}){suffix}"
             )

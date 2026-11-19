@@ -169,3 +169,30 @@ def test_action_exposes_comment_input_that_skips_forks():
     assert 'RAGOPS_COMMENT" != "true"' in action
     assert 'IS_FORK" = "true"' in action
     assert "<!-- ragops-release-gate -->" in action
+
+
+def test_plain_reason_covers_each_gate_kind():
+    from ragops.explain import plain_reason
+
+    regression = plain_reason("global:citation_coverage:regression", "citation_coverage", "global", -0.5, 0.0, ">=")
+    assert "dropped by 0.5" in regression and "allows at most 0" in regression
+    rising = plain_reason("global:avg_latency_ms:regression", "avg_latency_ms", "global", 30.0, 10.0, "<=")
+    assert "rose by 30" in rising
+    low = plain_reason("slice:ja:lexical_groundedness:minimum", "lexical_groundedness", "ja", 0.6, 0.8, ">=")
+    assert "for the ja slice" in low and "below the required minimum of 0.8" in low
+    high = plain_reason("global:avg_cost_usd:maximum", "avg_cost_usd", "global", 0.2, 0.1, "<=")
+    assert "above the allowed maximum of 0.1" in high
+    few = plain_reason("slice:ja:minimum_cases", "case_count", "ja", 2.0, 10.0, ">=")
+    assert "only 2 test cases" in few
+    unknown = plain_reason("global:my_metric:minimum", "my_metric", "global", 1.0, 2.0, ">=")
+    assert "my metric" in unknown
+
+
+def test_explanation_and_comment_carry_plain_summary():
+    from ragops.ci import pr_comment
+
+    decision = _decision()
+    first = explain_decision(decision).items[0]
+    assert "dropped by 0.5" in first.summary
+    assert first.to_dict()["summary"] == first.summary
+    assert "dropped by 0.5" in pr_comment(decision)

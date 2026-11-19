@@ -18,6 +18,7 @@ class GateExplanation:
     required_change: float
     waived: bool
     waiver: dict[str, str | None] | None
+    summary: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -37,6 +38,41 @@ class DecisionExplanation:
             "decision": self.decision,
             "items": [item.to_dict() for item in self.items],
         }
+
+
+_METRIC_NAMES = {
+    "citation_coverage": "share of answers that cite a source",
+    "citation_precision": "share of citations that point to relevant evidence",
+    "lexical_groundedness": "share of answer words found in the evidence",
+    "avg_latency_ms": "average response time (ms)",
+    "latency_ms": "response time (ms)",
+    "avg_cost_usd": "average cost per answer (USD)",
+    "cost_usd": "cost per answer (USD)",
+    "critical_findings": "number of critical findings",
+    "case_count": "number of test cases",
+}
+
+
+def plain_reason(gate_id: str, metric: str, scope: str, observed: float, threshold: float, comparator: str) -> str:
+    """One plain-language sentence saying why a gate failed."""
+    name = _METRIC_NAMES.get(metric, metric.replace("_", " "))
+    where = "overall" if scope == "global" else f"for the {scope} slice"
+    kind = gate_id.rsplit(":", 1)[-1]
+    if kind == "minimum_cases":
+        return (
+            f"The {scope} slice has only {observed:.0f} test cases but at least {threshold:.0f} are needed, "
+            "so its result is not trustworthy yet. Add cases or lower the minimum."
+        )
+    if kind == "regression":
+        worse = "dropped" if comparator == ">=" else "rose"
+        allowed = abs(threshold)
+        return (
+            f"The {name} {where} {worse} by {abs(observed):.4g} compared with the baseline; "
+            f"the policy allows at most {allowed:.4g}."
+        )
+    if comparator == ">=":
+        return f"The {name} {where} is {observed:.4g}, below the required minimum of {threshold:.4g}."
+    return f"The {name} {where} is {observed:.4g}, above the allowed maximum of {threshold:.4g}."
 
 
 def explain_decision(decision: ReleaseDecision) -> DecisionExplanation:
@@ -68,6 +104,7 @@ def explain_decision(decision: ReleaseDecision) -> DecisionExplanation:
                 required_change=required_change,
                 waived=gate.waived,
                 waiver=waiver,
+                summary=plain_reason(gate.id, gate.metric, gate.scope, gate.observed, gate.threshold, gate.comparator),
             )
         )
     return DecisionExplanation("1.0", decision.scenario_id, decision.decision, tuple(items))
