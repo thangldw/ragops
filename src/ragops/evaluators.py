@@ -262,3 +262,47 @@ def claim_conflict(claim: str, evidence_sentences: list[str]) -> str | None:
 
 def split_sentences(value: str) -> list[str]:
     return _split(value, SENTENCE_SPLIT)
+
+
+def unsupported_spans(answer: str, evidence: tuple[str, ...]) -> list[tuple[int, int]]:
+    """Character spans of ``answer`` whose words have no counterpart in the evidence.
+
+    A visual aid for reviewers, not a verdict: it uses the same lexical matching as
+    ``strict_grounding`` and so shares its blind spots (synonyms, reasoning).
+    """
+    known = _strict_tokens(" ".join(evidence))
+    spans: list[tuple[int, int]] = []
+    for match in TOKEN_RE.finditer(answer):
+        word, offset = match.group(), match.start()
+        position = 0
+        for cjk in CJK_RE.finditer(word):
+            if cjk.start() > position:
+                _mark_word(word[position : cjk.start()], offset + position, known, spans)
+            run, run_offset = cjk.group(), offset + cjk.start()
+            if len(run) == 1:
+                _mark_word(run, run_offset, known, spans)
+            else:
+                for index in range(len(run) - 1):
+                    bigram = run[index : index + 2]
+                    if bigram.casefold() not in known and bigram.casefold() not in STOP_WORDS:
+                        spans.append((run_offset + index, run_offset + index + 2))
+            position = cjk.end()
+        if position < len(word):
+            _mark_word(word[position:], offset + position, known, spans)
+    return _merge(spans)
+
+
+def _mark_word(word: str, start: int, known: set[str], spans: list[tuple[int, int]]) -> None:
+    folded = _stem(unicodedata.normalize("NFC", word).casefold())
+    if (len(folded) > 1 or folded.isdigit()) and folded not in STRICT_STOP_WORDS and folded not in known:
+        spans.append((start, start + len(word)))
+
+
+def _merge(spans: list[tuple[int, int]]) -> list[tuple[int, int]]:
+    merged: list[tuple[int, int]] = []
+    for start, end in sorted(spans):
+        if merged and start <= merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
+        else:
+            merged.append((start, end))
+    return merged

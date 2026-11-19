@@ -59,6 +59,7 @@ from ragops.drift import detect_evaluator_drift
 from ragops.engine import compare, evaluate
 from ragops.evidence import create_evidence_bundle, verify_evidence_bundle
 from ragops.explain import explain_decision
+from ragops.explorer import explorer_html
 from ragops.governance import GovernanceStore
 from ragops.loader import ContractError, load_responses, load_scenario
 from ragops.pilot import (
@@ -677,18 +678,20 @@ def main() -> int:
                     args.candidate_external_metrics, scenario
                 )
                 validate_external_metric_pair(baseline_external, candidate_external)
+            baseline_responses = (
+                load_trace_jsonl(args.baseline_traces)
+                if args.baseline_traces
+                else load_responses(args.baseline)
+            )
+            candidate_responses = (
+                load_trace_jsonl(args.candidate_traces)
+                if args.candidate_traces
+                else load_responses(args.candidate)
+            )
             report = compare(
                 scenario,
-                (
-                    load_trace_jsonl(args.baseline_traces)
-                    if args.baseline_traces
-                    else load_responses(args.baseline)
-                ),
-                (
-                    load_trace_jsonl(args.candidate_traces)
-                    if args.candidate_traces
-                    else load_responses(args.candidate)
-                ),
+                baseline_responses,
+                candidate_responses,
                 policy=load_regression_policy(args.policy) if args.policy else None,
                 evaluators=evaluators,
                 baseline_evaluators=(
@@ -715,6 +718,8 @@ def main() -> int:
         rendered = evaluation_markdown(report)
     elif args.format == "html":
         rendered = comparison_html(report)
+    elif args.format == "explorer":
+        rendered = explorer_html(scenario, baseline_responses, candidate_responses, report)
     else:
         rendered = comparison_markdown(report)
     if args.store:

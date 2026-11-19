@@ -4,6 +4,7 @@
 
 ### English
 
+- New `ragops compare --format explorer`: a single self-contained HTML report with category/language/severity/status filters, text search, side-by-side baseline vs candidate answers, per-case metrics and highlighting of answer words that have no counterpart in the evidence (lexical visual aid, not a verdict). No network access; a Content-Security-Policy allows only its own script by hash.
 - Added property-based and tamper tests (Hypothesis) for the scenario, response, trace-graph, OpenTelemetry, contract and evidence loaders. They found and fixed crashes: wrongly typed JSON values raised `TypeError`/`AttributeError`, and a non-UTF-8 evidence/dataset/contract/decision file raised `UnicodeDecodeError`, instead of a `ContractError`.
 - Moved CLI helper functions into `cli_helpers.py` (`cli.py` is now ~770 lines).
 - Coverage gate raised to 88% (now ~88.1%) with in-process CLI tests and mutation tests for policy and run-plan loaders. Fixed: a release policy v2 with a wrongly typed value (for example `insufficient_evidence = []`) raised `TypeError` instead of a `ContractError`; an OpenTelemetry export containing a non-object span raised `AttributeError` instead of a `ContractError`.

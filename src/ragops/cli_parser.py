@@ -187,7 +187,9 @@ def build_parser() -> argparse.ArgumentParser:
     candidate_input.add_argument("--candidate")
     candidate_input.add_argument("--candidate-traces")
     compare_parser.add_argument("--output")
-    compare_parser.add_argument("--format", choices=("json", "markdown", "html"), default="markdown")
+    compare_parser.add_argument(
+        "--format", choices=("json", "markdown", "html", "explorer"), default="markdown"
+    )
     compare_parser.add_argument("--store")
     compare_parser.add_argument("--label", default="")
     compare_parser.add_argument("--policy", help="TOML regression policy")
