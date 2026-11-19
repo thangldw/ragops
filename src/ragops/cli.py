@@ -63,6 +63,7 @@ from ragops.explorer import explorer_html
 from ragops.governance import GovernanceStore
 from ragops.init_project import init_project
 from ragops.loader import ContractError, load_responses, load_scenario
+from ragops.models import ComparisonReport, EvaluationReport, SequentialComparisonReport
 from ragops.pilot import (
     PilotContractError,
     load_pilot_economics,
@@ -159,7 +160,7 @@ def main() -> int:
     if args.command == "gate-v2":
         try:
             scenario = load_scenario(args.scenario)
-            report = apply_release_policy(
+            release_report = apply_release_policy(
                 load_release_policy_v2(args.policy),
                 evaluate(scenario, load_responses(args.baseline)),
                 evaluate(scenario, load_responses(args.candidate)),
@@ -168,31 +169,31 @@ def main() -> int:
             )
         except (ContractError, OSError, ValueError) as exc:
             raise SystemExit(f"release policy error: {exc}") from exc
-        rendered = json.dumps(report.to_dict(), ensure_ascii=False, indent=2) + "\n"
+        rendered = json.dumps(release_report.to_dict(), ensure_ascii=False, indent=2) + "\n"
         if args.output:
             output = Path(args.output)
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(rendered, encoding="utf-8")
         else:
             print(rendered, end="")
-        return 2 if report.decision == "BLOCK" else 0
+        return 2 if release_report.decision == "BLOCK" else 0
     if args.command == "calibrate":
         try:
             calibration_set = load_calibration_set(args.input)
-            report = calibrate_evaluator(
+            calibration_report = calibrate_evaluator(
                 calibration_set.evaluator,
                 calibration_set.records,
                 calibration_set.policy,
             )
         except (ContractError, OSError, ValueError) as exc:
             raise SystemExit(f"calibration error: {exc}") from exc
-        rendered = json.dumps(report.to_dict(), ensure_ascii=False, indent=2) + "\n"
+        rendered = json.dumps(calibration_report.to_dict(), ensure_ascii=False, indent=2) + "\n"
         if args.output:
             output = Path(args.output)
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(rendered, encoding="utf-8")
         print(rendered, end="")
-        return 0 if report.decision == "PASS" else 2
+        return 0 if calibration_report.decision == "PASS" else 2
     if args.command == "trace":
         try:
             if args.trace_command == "convert-otel":
@@ -207,16 +208,16 @@ def main() -> int:
                 payload = {"converted": True, "trace_id": graph.trace_id, "output": str(output)}
                 exit_code = 0
             else:
-                report = evaluate_trace_graph(
+                graph_report = evaluate_trace_graph(
                     load_trace_graph(args.trace), load_trace_expectation(args.expectation)
                 )
-                payload = report.to_dict()
+                payload = graph_report.to_dict()
                 rendered = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
                 if args.output:
                     output = Path(args.output)
                     output.parent.mkdir(parents=True, exist_ok=True)
                     output.write_text(rendered, encoding="utf-8")
-                exit_code = 0 if report.decision == "PASS" else 2
+                exit_code = 0 if graph_report.decision == "PASS" else 2
         except (ContractError, OSError, json.JSONDecodeError, ValueError) as exc:
             raise SystemExit(f"trace error: {exc}") from exc
         print(json.dumps(payload, ensure_ascii=False, indent=2))
@@ -241,7 +242,7 @@ def main() -> int:
                     }
                     for item in scenario.cases
                 )
-                manifest = create_dataset_manifest(
+                dataset_manifest = create_dataset_manifest(
                     args.dataset_id,
                     args.version,
                     cases,
@@ -249,13 +250,13 @@ def main() -> int:
                     source_classification=args.source_classification,
                     owners=tuple(args.owner),
                 )
-                write_dataset_manifest(args.output, manifest)
-                payload = manifest.to_dict()
+                write_dataset_manifest(args.output, dataset_manifest)
+                payload = dataset_manifest.to_dict()
                 exit_code = 0
             elif args.dataset_command == "validate":
                 minimum_slices = _named_int_values(args.minimum_slice, "dataset minimum slice")
-                manifest = load_dataset_manifest(args.manifest)
-                issues = validate_dataset_manifest(manifest, minimum_slice_counts=minimum_slices)
+                dataset_manifest = load_dataset_manifest(args.manifest)
+                issues = validate_dataset_manifest(dataset_manifest, minimum_slice_counts=minimum_slices)
                 payload = {"valid": not issues, "issues": [item.to_dict() for item in issues]}
                 exit_code = 0 if not issues else 2
             else:
@@ -402,7 +403,7 @@ def main() -> int:
         return 0
     if args.command == "pilot-report":
         try:
-            report = summarize_pilot(
+            pilot_summary = summarize_pilot(
                 load_pilot_manifest(args.manifest),
                 load_pilot_observations(args.observations),
                 load_pilot_economics(args.economics) if args.economics else None,
@@ -410,9 +411,9 @@ def main() -> int:
         except PilotContractError as exc:
             raise SystemExit(f"pilot contract error: {exc}") from exc
         rendered = (
-            json.dumps(report.to_dict(), ensure_ascii=False, indent=2)
+            json.dumps(pilot_summary.to_dict(), ensure_ascii=False, indent=2)
             if args.format == "json"
-            else pilot_markdown(report)
+            else pilot_markdown(pilot_summary)
         )
         if args.output:
             output_path = Path(args.output)
@@ -423,10 +424,10 @@ def main() -> int:
         return 0
     if args.command == "usage-report":
         try:
-            report = summarize_local_usage(args.events)
+            usage_summary = summarize_local_usage(args.events)
         except UsageContractError as exc:
             raise SystemExit(f"usage contract error: {exc}") from exc
-        rendered = json.dumps(report, ensure_ascii=False, indent=2)
+        rendered = json.dumps(usage_summary, ensure_ascii=False, indent=2)
         if args.output:
             output_path = Path(args.output)
             output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -436,7 +437,7 @@ def main() -> int:
         return 0
     if args.command == "compare-runs":
         try:
-            report = compare_replay_bundles(
+            statistical_report = compare_replay_bundles(
                 load_replay_bundle(args.baseline_bundle),
                 load_replay_bundle(args.candidate_bundle),
                 load_statistical_policy(args.policy),
@@ -444,9 +445,9 @@ def main() -> int:
         except (ContractError, ValueError) as exc:
             raise SystemExit(f"contract error: {exc}") from exc
         rendered = (
-            json.dumps(report.to_dict(), ensure_ascii=False, indent=2)
+            json.dumps(statistical_report.to_dict(), ensure_ascii=False, indent=2)
             if args.format == "json"
-            else statistical_comparison_markdown(report)
+            else statistical_comparison_markdown(statistical_report)
         )
         if args.output:
             output_path = Path(args.output)
@@ -454,7 +455,7 @@ def main() -> int:
             output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
         else:
             print(rendered.rstrip())
-        return 0 if report.passed else 2
+        return 0 if statistical_report.passed else 2
     if args.command == "collect-runs":
         command = tuple(
             args.runner_command[1:]
@@ -469,7 +470,7 @@ def main() -> int:
                     "Sequential collection requires both --baseline-bundle and "
                     "--sequential-policy"
                 )
-            sequential_reports = []
+            sequential_reports: list[SequentialComparisonReport] = []
             stop_when = None
             if args.baseline_bundle:
                 sequential_baseline = load_replay_bundle(args.baseline_bundle)
@@ -533,7 +534,7 @@ def main() -> int:
         )
     if args.command == "detect-evaluator-drift":
         try:
-            report = detect_evaluator_drift(
+            drift_report = detect_evaluator_drift(
                 load_replay_bundle(args.reference_bundle),
                 load_replay_bundle(args.current_bundle),
                 load_evaluator_drift_policy(args.policy),
@@ -541,9 +542,9 @@ def main() -> int:
         except (ContractError, ValueError) as exc:
             raise SystemExit(f"drift contract error: {exc}") from exc
         rendered = (
-            json.dumps(report.to_dict(), ensure_ascii=False, indent=2)
+            json.dumps(drift_report.to_dict(), ensure_ascii=False, indent=2)
             if args.format == "json"
-            else evaluator_drift_markdown(report)
+            else evaluator_drift_markdown(drift_report)
         )
         if args.output:
             output_path = Path(args.output)
@@ -551,10 +552,10 @@ def main() -> int:
             output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
         else:
             print(rendered.rstrip())
-        return 0 if report.passed else 2
+        return 0 if drift_report.passed else 2
     if args.command == "compare-sequential":
         try:
-            report = compare_replay_bundles_sequentially(
+            sequential_report = compare_replay_bundles_sequentially(
                 load_replay_bundle(args.baseline_bundle),
                 load_replay_bundle(args.candidate_bundle),
                 load_sequential_policy(args.policy),
@@ -562,9 +563,9 @@ def main() -> int:
         except (ContractError, ValueError) as exc:
             raise SystemExit(f"sequential contract error: {exc}") from exc
         rendered = (
-            json.dumps(report.to_dict(), ensure_ascii=False, indent=2)
+            json.dumps(sequential_report.to_dict(), ensure_ascii=False, indent=2)
             if args.format == "json"
-            else sequential_comparison_markdown(report)
+            else sequential_comparison_markdown(sequential_report)
         )
         if args.output:
             output_path = Path(args.output)
@@ -572,16 +573,16 @@ def main() -> int:
             output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
         else:
             print(rendered.rstrip())
-        return 0 if report.passed else 2
+        return 0 if sequential_report.passed else 2
     if args.command == "baseline-create":
         try:
-            manifest = create_baseline_manifest(
+            baseline_manifest = create_baseline_manifest(
                 args.bundle,
                 args.policy,
                 owner=args.owner,
                 accepted_at=args.accepted_at,
             )
-            write_baseline_manifest(args.output, manifest)
+            write_baseline_manifest(args.output, baseline_manifest)
         except ContractError as exc:
             raise SystemExit(f"baseline contract error: {exc}") from exc
         print(json.dumps({"manifest": str(args.output), "verified": True}))
@@ -602,8 +603,8 @@ def main() -> int:
                 "--allowed-signers, and --identity"
             )
         try:
-            manifest = load_baseline_manifest(args.manifest)
-            verify_baseline_manifest(manifest, args.bundle, args.policy)
+            baseline_manifest = load_baseline_manifest(args.manifest)
+            verify_baseline_manifest(baseline_manifest, args.bundle, args.policy)
             if args.signature:
                 verify_baseline_signature(
                     args.manifest,
@@ -618,7 +619,7 @@ def main() -> int:
                 {
                     "verified": True,
                     "signature_verified": bool(args.signature),
-                    "owner": manifest.acceptance.owner,
+                    "owner": baseline_manifest.acceptance.owner,
                 }
             )
         )
@@ -657,6 +658,7 @@ def main() -> int:
         )
         print(json.dumps(points, ensure_ascii=False, indent=2))
         return 0
+    report: EvaluationReport | ComparisonReport
     try:
         scenario = load_scenario(args.scenario)
         if args.command == "evaluate":
@@ -732,7 +734,7 @@ def main() -> int:
         raise SystemExit(f"contract error: {exc}") from exc
     if args.format == "json":
         rendered = json.dumps(report.to_dict(), ensure_ascii=False, indent=2)
-    elif args.command == "evaluate":
+    elif isinstance(report, EvaluationReport):
         rendered = evaluation_markdown(report)
     elif args.format == "html":
         rendered = comparison_html(report)
