@@ -8,6 +8,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
+from ragops._guard import contract_guard
 from ragops.loader import ContractError
 
 
@@ -205,6 +206,7 @@ def write_dataset_manifest(path: str | Path, manifest: DatasetManifest) -> None:
     )
 
 
+@contract_guard(ContractError, "dataset manifest")
 def load_dataset_manifest(path: str | Path) -> DatasetManifest:
     try:
         data = json.loads(Path(path).read_text(encoding="utf-8"))

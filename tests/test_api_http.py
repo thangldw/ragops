@@ -125,3 +125,34 @@ def test_oversized_request_is_rejected(client, monkeypatch) -> None:
     monkeypatch.setenv("RAGOPS_MAX_REQUEST_BYTES", "50")
     response = client.post("/v1/evaluate", headers=KEY, json={"scenario": {"a": "x" * 500}, "responses": []})
     assert response.status_code == 413
+
+
+@pytest.mark.parametrize(
+    "path",
+    ["/v1/evaluate", "/v1/compare", "/v1/statistical/compare", "/v1/statistical/sequential",
+     "/v1/evaluator-drift", "/v1/runs/evaluate"],
+)
+def test_post_endpoints_turn_bad_payloads_into_422(client, path: str) -> None:
+    junk = {"scenario": {}, "baseline": [], "candidate": [], "responses": [], "reference": {}, "current": {},
+            "policy": {}, "label": "x"}
+    for body in (junk, {**junk, "policy": {"metrics": {"m": {"direction": "x"}}}},
+                 {**junk, "scenario": {"cases": 1}, "baseline": [1], "responses": [1]}):
+        response = client.post(path, json=body, headers=KEY)
+        assert response.status_code in {400, 422}, (path, response.text)
+
+
+def test_run_listing_trends_and_review_error_paths(client) -> None:
+    assert client.get("/v1/runs", headers=KEY).status_code == 200
+    assert client.get("/v1/trends/unknown/citation_coverage", headers=KEY).status_code in {200, 404, 422}
+    review = client.post("/v1/runs/9999/review", json={"status": "accepted", "reviewer": "a"}, headers=KEY)
+    assert review.status_code in {404, 422}
+    bad = client.post("/v1/runs/1/review", json={"status": "nope", "reviewer": "a"}, headers=KEY)
+    assert bad.status_code == 422
+
+
+def test_request_size_and_content_length_guards(client, monkeypatch) -> None:
+    monkeypatch.setenv("RAGOPS_MAX_REQUEST_BYTES", "100")
+    too_big = client.post("/v1/evaluate", content=b"x" * 500, headers={**KEY, "content-type": "application/json"})
+    assert too_big.status_code == 413
+    bad_length = client.post("/v1/evaluate", content=b"{}", headers={**KEY, "content-length": "abc"})
+    assert bad_length.status_code in {400, 413, 422}

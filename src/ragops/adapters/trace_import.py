@@ -83,6 +83,10 @@ def _split_tagged_context(question: str | None) -> tuple[str | None, list[str]]:
     return stripped or question, contexts
 
 
+def _items(value: Any) -> list[Any]:
+    return value if isinstance(value, list) else []
+
+
 def _section(record: dict[str, Any], key: str) -> dict[str, Any]:
     value = record.get(key)
     return value if isinstance(value, dict) else record
@@ -103,7 +107,7 @@ def from_langfuse(trace: dict[str, Any]) -> dict[str, Any]:
     cited: list[str] = []
     answer = _text(trace.get("output"))
     cost = _number(trace.get("totalCost"))
-    for observation in trace.get("observations") or []:
+    for observation in _items(trace.get("observations")):
         if not isinstance(observation, dict):
             continue
         kind = str(observation.get("type", "")).upper()
@@ -188,8 +192,8 @@ def from_anthropic(record: dict[str, Any]) -> dict[str, Any]:
     contexts.extend(tagged)
     answer = _blocks_text(response.get("content"))
     cited: list[str] = []
-    for block in response.get("content") or []:
-        for citation in (block.get("citations") or []) if isinstance(block, dict) else []:
+    for block in _items(response.get("content")):
+        for citation in _items(block.get("citations")) if isinstance(block, dict) else []:
             if isinstance(citation, dict):
                 name = citation.get("document_title") or citation.get("source")
                 if name is None and isinstance(citation.get("document_index"), int):
