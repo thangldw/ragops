@@ -235,7 +235,6 @@ def suggest_threshold(
         accuracy = sum(p == h for p, h in zip(passed, humans)) / total
         within = false_pass <= policy.maximum_false_pass_rate
         key = (
-            0.0 if within else 1.0,
             0.0 if within else false_pass,
             -accuracy,
             abs(threshold - policy.threshold),
