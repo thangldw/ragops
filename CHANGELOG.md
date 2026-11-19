@@ -1,5 +1,19 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
+## Unreleased
+
+### English
+
+- Added the pluggable `semantic_grounding` evaluator (`--semantic-command`): per-claim scores from your own embedding/LLM scorer, guarded against wrong numbers and polarity flips. See `docs/semantic-evaluator.md`.
+
+### Tiếng Việt
+
+- Thêm evaluator plug-in `semantic_grounding` (`--semantic-command`): điểm theo từng claim từ scorer embedding/LLM của bạn, có chốt chặn lỗi số và đảo phủ định. Xem `docs/semantic-evaluator.md`.
+
+### 日本語
+
+- プラグイン型 `semantic_grounding` evaluator（`--semantic-command`）を追加しました。独自の埋め込み/LLM スコアラーによる主張単位のスコアで、数値や否定の誤りを防ぎます。`docs/semantic-evaluator.md` を参照してください。
+
 ## [2.3.1] - 2026-11-19
 
 ### English

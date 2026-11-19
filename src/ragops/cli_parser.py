@@ -161,11 +161,16 @@ def build_parser() -> argparse.ArgumentParser:
             "citation_correctness",
             "claim_support",
             "strict_grounding",
+            "semantic_grounding",
             "answer_length_budget",
             "source_freshness",
             "abstention_contract",
         ),
         default=[],
+    )
+    evaluate_parser.add_argument(
+        "--semantic-command",
+        help="Command (no shell) for semantic_grounding; reads claim JSON on stdin",
     )
     evaluate_parser.add_argument(
         "--answer-length-limit",
@@ -203,11 +208,16 @@ def build_parser() -> argparse.ArgumentParser:
             "citation_correctness",
             "claim_support",
             "strict_grounding",
+            "semantic_grounding",
             "answer_length_budget",
             "source_freshness",
             "abstention_contract",
         ),
         default=[],
+    )
+    compare_parser.add_argument(
+        "--semantic-command",
+        help="Command (no shell) for semantic_grounding; reads claim JSON on stdin",
     )
     compare_parser.add_argument(
         "--answer-length-limit",
