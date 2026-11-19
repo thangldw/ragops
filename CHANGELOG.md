@@ -4,6 +4,7 @@
 
 ### English
 
+- CI now runs Python 3.11–3.15 on Linux plus 3.12 on macOS and type-checks with mypy (existing debt is listed in `pyproject.toml`; new modules are checked).
 - Added `scripts/release_tools.py` (`bump` edits every version-bearing file; `check` rejects burned, already-published and non-increasing versions) and made version assertions in tests derive from `pyproject.toml`.
 - The GitHub Action gains `comment: true`: one sticky pull-request comment with the decision, what to change (observed vs threshold, affected cases) and the full gate table; skipped on forks. `ragops ci-render --format comment` renders the same text.
 - Added `scripts/grounding_labels.py` for blind relabeling of the grounding benchmark: export a label sheet, ingest reviewer sheets, report kappa and disagreements, and build a calibration set for `ragops calibrate`.

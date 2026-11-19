@@ -60,7 +60,7 @@ class CitationCorrectnessEvaluator:
             score = 1.0 if not required else 0.0
         else:
             score = len(supplied.intersection(required)) / len(supplied)
-        findings = ()
+        findings: tuple[Finding, ...] = ()
         if score < 1.0:
             findings = (
                 Finding(
@@ -99,7 +99,7 @@ class ClaimSupportEvaluator:
             supported += overlap >= self.min_overlap
         score = supported / len(claims)
         unsupported = len(claims) - supported
-        findings = ()
+        findings: tuple[Finding, ...] = ()
         if unsupported:
             findings = (
                 Finding(
@@ -184,7 +184,7 @@ class AnswerLengthBudgetEvaluator:
     def evaluate(self, case: EvalCase, response: RecordedResponse) -> PluginResult:
         character_count = len(response.answer)
         within_budget = character_count <= self.max_characters
-        findings = ()
+        findings: tuple[Finding, ...] = ()
         if not within_budget:
             findings = (
                 Finding(
@@ -222,7 +222,7 @@ class SourceFreshnessEvaluator:
         supplied = set(response.citation_ids)
         union = required | supplied
         score = len(required & supplied) / len(union) if union else 1.0
-        findings = ()
+        findings: tuple[Finding, ...] = ()
         if score < 1.0:
             findings = (
                 Finding(
@@ -260,7 +260,7 @@ class AbstentionContractEvaluator:
             else 0.0
         )
         score = min(citation_score, overlap)
-        findings = ()
+        findings: tuple[Finding, ...] = ()
         if citation_score < 1.0 or overlap < self.min_overlap:
             findings = (
                 Finding(

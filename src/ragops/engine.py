@@ -15,6 +15,7 @@ from ragops.models import (
     ComparisonReport,
     EvaluationPolicy,
     EvaluationReport,
+    Finding,
     RecordedResponse,
     RegressionPolicy,
     Scenario,
@@ -44,7 +45,7 @@ def evaluate(
     for case in scenario.cases:
         response = response_by_id[case.id]
         custom_metrics: dict[str, float] = {}
-        plugin_findings = []
+        plugin_findings: list[Finding] = []
         for evaluator in evaluators:
             plugin_result = evaluator.evaluate(case, response)
             for metric_name, value in plugin_result.metrics.items():
