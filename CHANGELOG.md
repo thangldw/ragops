@@ -4,6 +4,7 @@
 
 ### English
 
+- Added `scripts/ragtruth_benchmark.py` and `docs/case-study-ragtruth.md`: on long RAG answers from the public RAGTruth set, `strict_grounding` is near chance (AUROC 0.53 to 0.58) and lexical groundedness is weak (0.68 to 0.76). Strict grounding is documented as suitable for short factual answers only.
 - `strict_grounding` now treats number words as digits (`nine` = `9`) and flags a two-word name written in reversed order (`Brooks Garth` vs `Garth Brooks`) as a contradiction. On HaluEval this does not change accuracy (91.0%); see the error breakdown in `docs/case-study-halueval.md`.
 - Added `scripts/public_benchmark.py` and `docs/case-study-halueval.md`: a zero-shot check on 10,000 public HaluEval QA pairs. Result: lexical 92.9%, strict 91.0%, so the 93% vs 72% advantage from the maintainer-labeled benchmark did not reproduce. Docs now say so.
 - `ragops init --source-format langfuse|openai|anthropic` imports Langfuse trace exports and OpenAI/Anthropic request-response logs directly. Records without retrieved context are skipped, never guessed; cost is taken only when present.
