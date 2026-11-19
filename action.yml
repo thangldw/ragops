@@ -38,6 +38,18 @@ inputs:
     required: false
     default: ""
 
+  comment:
+    description: >-
+      Post or update one sticky pull-request comment with the decision and what to change.
+      Needs `pull-requests: write` on the calling job; skipped (with a warning) on fork
+      pull requests and non-pull-request events.
+    required: false
+    default: "false"
+  github-token:
+    description: Token used to post the comment (only read when `comment` is true).
+    required: false
+    default: ${{ github.token }}
+
 outputs:
   decision:
     description: Canonical release decision, one of PASS, WARN or BLOCK.
@@ -97,6 +109,36 @@ runs:
         ragops ci-render --input "$decision_path" --format sarif --output "$RAGOPS_OUTPUT_DIR/release.sarif"
         ragops ci-render --input "$decision_path" --format github --output "$RAGOPS_OUTPUT_DIR/github-summary.md"
         cat "$RAGOPS_OUTPUT_DIR/github-summary.md" >> "$GITHUB_STEP_SUMMARY"
+    - name: Post pull-request comment
+      if: github.event_name == 'pull_request'
+      shell: bash
+      env:
+        RAGOPS_GITHUB_TOKEN: ${{ inputs.github-token }}
+        RAGOPS_COMMENT: ${{ inputs.comment }}
+        RAGOPS_OUTPUT_DIR: ${{ inputs.output-dir }}
+        REPOSITORY: ${{ github.repository }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        IS_FORK: ${{ github.event.pull_request.head.repo.fork }}
+      run: |
+        set -uo pipefail
+        if [ "$RAGOPS_COMMENT" != "true" ]; then exit 0; fi
+        export GH_TOKEN="$RAGOPS_GITHUB_TOKEN"
+        if [ "$IS_FORK" = "true" ]; then
+          echo "::warning::Skipping RAGOps PR comment: the token is read-only on fork pull requests"
+          exit 0
+        fi
+        ragops ci-render --input "$RAGOPS_OUTPUT_DIR/decision.json" --format comment --output "$RAGOPS_OUTPUT_DIR/pr-comment.md"
+        existing=$(gh api "repos/$REPOSITORY/issues/$PR_NUMBER/comments" --paginate \
+          --jq '.[] | select(.body | startswith("<!-- ragops-release-gate -->")) | .id' | head -n 1) || existing=""
+        if [ -n "$existing" ]; then
+          gh api --method PATCH "repos/$REPOSITORY/issues/comments/$existing" \
+            --field body=@"$RAGOPS_OUTPUT_DIR/pr-comment.md" > /dev/null \
+            || echo "::warning::Could not update the RAGOps PR comment"
+        else
+          gh api --method POST "repos/$REPOSITORY/issues/$PR_NUMBER/comments" \
+            --field body=@"$RAGOPS_OUTPUT_DIR/pr-comment.md" > /dev/null \
+            || echo "::warning::Could not post the RAGOps PR comment"
+        fi
     - name: Fail on BLOCK
       shell: bash
       env:

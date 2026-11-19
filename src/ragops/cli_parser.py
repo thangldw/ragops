@@ -82,7 +82,7 @@ def build_parser() -> argparse.ArgumentParser:
     explain_parser.add_argument("--output")
     ci_render = commands.add_parser("ci-render", help="Render release decisions for CI systems")
     ci_render.add_argument("--input", required=True)
-    ci_render.add_argument("--format", choices=("junit", "sarif", "github"), required=True)
+    ci_render.add_argument("--format", choices=("junit", "sarif", "github", "comment"), required=True)
     ci_render.add_argument("--output", required=True)
     adapter_parser = commands.add_parser("adapter", help="Discover and run portable import adapters")
     adapter_commands = adapter_parser.add_subparsers(dest="adapter_command", required=True)

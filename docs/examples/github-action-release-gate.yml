@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write # only needed for `comment: true`
 
 jobs:
   release-gate:
@@ -21,6 +22,7 @@ jobs:
           baseline: ragops/baseline.json
           candidate: ragops/candidate.json
           policy: ragops/policy.toml
+          comment: "true" # sticky PR comment with what to change
       - name: Upload decision and CI reports
         if: always()
         uses: actions/upload-artifact@<full-commit-sha>
