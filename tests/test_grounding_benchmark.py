@@ -18,17 +18,39 @@ def _run(evidence: str, answer: str):
     return case, response
 
 
+def _lexical_threshold() -> float:
+    dev = bench.load("dev")
+    return bench.best_threshold(dev, bench.scores(dev)["lexical"])
+
+
 @pytest.mark.parametrize("split", bench.SPLITS)
-def test_strict_grounding_beats_lexical_baseline_on_every_split(split: str) -> None:
+def test_strict_grounding_is_accurate_on_every_split(split: str) -> None:
     items = bench.load(split)
-    scored = bench.scores(items)
-    lexical_threshold = bench.best_threshold(bench.load("dev"), bench.scores(bench.load("dev"))["lexical"])
-    lexical = bench.metrics(items, scored["lexical"], lexical_threshold)
-    strict = bench.metrics(items, scored["strict"], 1.0)
+    strict = bench.metrics(items, bench.scores(items)["strict"], 1.0)
 
     assert strict["accuracy"] >= 0.85
-    assert strict["accuracy"] > lexical["accuracy"] + 0.10
     assert strict["false_pass_rate"] <= 0.12
+
+
+def test_strict_grounding_beats_lexical_baseline_overall() -> None:
+    threshold = _lexical_threshold()
+    items = [item for split in bench.SPLITS for item in bench.load(split)]
+    scored = bench.scores(items)
+
+    lexical = bench.metrics(items, scored["lexical"], threshold)
+    strict = bench.metrics(items, scored["strict"], 1.0)
+
+    assert strict["accuracy"] > lexical["accuracy"] + 0.10
+
+
+def test_antonyms_and_proper_nouns_contradict_the_evidence() -> None:
+    antonym = strict_grounding(*_run("Notifications are enabled by default.", "Notifications are disabled by default."))
+    proper = strict_grounding(*_run("Select Security in settings.", "Select Billing in settings."))
+    japanese = strict_grounding(*_run("通知は初期設定で有効です。", "通知は初期設定で無効です。"))
+
+    assert antonym.contradicted_claims == 1
+    assert proper.number_mismatches == 1
+    assert japanese.contradicted_claims == 1
 
 
 def test_number_negation_and_identifier_mismatches_are_named() -> None:

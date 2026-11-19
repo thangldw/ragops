@@ -119,8 +119,29 @@ STRICT_STOP_WORDS = STOP_WORDS | {
     "but", "if", "so", "than", "then", "also", "any", "all", "this", "that", "these",
     "those", "get", "into", "when", "which", "who",
 }
+# Mutually exclusive terms. A claim that uses one term while the matched evidence
+# sentence uses a different term from the same group (and not the claim's term)
+# contradicts the evidence. ASCII/Vietnamese entries match whole words; Japanese
+# entries match as substrings.
+EXCLUSIVE_GROUPS = (
+    ("after", "before"), ("enable", "disable"), ("enabled", "disabled"),
+    ("larger", "smaller"), ("more", "less"), ("greater", "less"), ("higher", "lower"),
+    ("above", "below"), ("over", "under"), ("free", "paid"), ("open", "close"),
+    ("opens", "closes"), ("increase", "decrease"), ("allow", "deny"), ("allows", "denies"),
+    ("add", "remove"), ("start", "stop"), ("public", "private"), ("first", "last"),
+    ("include", "exclude"), ("includes", "excludes"), ("accept", "reject"),
+    ("accepted", "rejected"), ("required", "optional"), ("early", "late"),
+    ("always", "never"), ("minimum", "maximum"), ("min", "max"), ("before", "during"),
+    ("hourly", "daily", "weekly", "monthly", "yearly", "annually"),
+    ("sau", "trước"), ("bật", "tắt"), ("lớn hơn", "nhỏ hơn"), ("miễn phí", "trả phí"),
+    ("mở", "đóng"), ("tăng", "giảm"), ("thêm", "xóa"), ("bắt buộc", "tùy chọn"),
+    ("hàng ngày", "hàng tuần", "hàng tháng"),
+    ("前", "後"), ("有効", "無効"), ("以上", "以下"), ("未開封", "開封済み"),
+    ("増", "減"), ("追加", "削除"), ("必須", "任意"), ("毎日", "毎週", "毎月"),
+)
+CAPITALIZED_RE = re.compile(r"\b[A-ZÀ-Ỹ][\wÀ-ỹ]+")
 SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+|[。！？\n]+")
-CLAUSE_SPLIT = re.compile(r"\s*(?:,|;|\band\b|\bor\b)\s*", re.IGNORECASE)
+CLAUSE_SPLIT = re.compile(r"\s*(?:(?<!\d),|,(?!\d)|;|\band\b|\bor\b)\s*", re.IGNORECASE)
 SINGLE_CHAR_RE = re.compile(r"\b[A-Z0-9]\b")
 
 
@@ -175,13 +196,12 @@ def _clause_status(clause: str, sentences: list[str], min_overlap: float) -> str
         overlap = len(tokens & _strict_tokens(sentence)) / len(tokens)
         if overlap > best_overlap:
             best, best_overlap = sentence, overlap
-    if best_overlap >= 0.5 and _critical(clause) - _critical(best):
-        return "number"
-    if best_overlap < min_overlap:
-        return "unsupported"
-    if _negated(clause) != _negated(best):
-        return "contradicted"
-    return "supported"
+    if best_overlap >= 0.5:
+        if _critical(clause) - _critical(best):
+            return "number"
+        if _negated(clause) != _negated(best) or _exclusive_conflict(clause, best):
+            return "contradicted"
+    return "supported" if best_overlap >= min_overlap else "unsupported"
 
 
 def _split(value: str, pattern: re.Pattern[str]) -> list[str]:
@@ -204,7 +224,26 @@ def _critical(value: str) -> set[str]:
     """Numbers and one-character identifiers that must match exactly."""
     normalized = unicodedata.normalize("NFKC", value)
     numbers = {m.replace(",", ".") for m in NUMBER_RE.findall(normalized)}
-    return numbers | {m.casefold() for m in SINGLE_CHAR_RE.findall(normalized)}
+    words = normalized.split(maxsplit=1)
+    proper = {m.casefold() for m in CAPITALIZED_RE.findall(words[1] if len(words) > 1 else "")}
+    return numbers | {m.casefold() for m in SINGLE_CHAR_RE.findall(normalized)} | proper
+
+
+def _has_term(text: str, term: str) -> bool:
+    if CJK_RE.search(term):
+        return term in text
+    return re.search(rf"(?<!\w){re.escape(term)}(?!\w)", text) is not None
+
+
+def _exclusive_conflict(claim: str, evidence: str) -> bool:
+    claim_text = unicodedata.normalize("NFKC", claim).casefold()
+    evidence_text = unicodedata.normalize("NFKC", evidence).casefold()
+    for group in EXCLUSIVE_GROUPS:
+        for term in group:
+            if _has_term(claim_text, term) and not _has_term(evidence_text, term):
+                if any(other != term and _has_term(evidence_text, other) for other in group):
+                    return True
+    return False
 
 
 def _negated(value: str) -> bool:
