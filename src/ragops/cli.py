@@ -91,6 +91,7 @@ from ragops.statistical import compare_replay_bundles, load_replay_bundle
 from ragops.store import ExperimentStore
 from ragops.trace_graph import evaluate_trace_graph, load_trace_expectation, load_trace_graph
 from ragops.traces import load_trace_jsonl
+from ragops.triage import load_band, load_evaluation_scores, triage_cases, triage_markdown
 from ragops.usage import UsageContractError, record_local_usage, summarize_local_usage
 
 
@@ -205,6 +206,8 @@ def main() -> int:
                 calibration_set.evaluator,
                 calibration_set.records,
                 calibration_set.policy,
+                target_accuracy=args.target_accuracy,
+                minimum_decided=args.minimum_decided,
             )
         except (ContractError, OSError, ValueError) as exc:
             raise SystemExit(f"calibration error: {exc}") from exc
@@ -415,6 +418,25 @@ def main() -> int:
             " --evaluator strict_grounding --format markdown",
             file=sys.stderr,
         )
+        return 0
+    if args.command == "triage":
+        try:
+            routed = triage_cases(
+                load_evaluation_scores(args.evaluation, args.metric), load_band(args.calibration), args.metric
+            )
+        except (ContractError, OSError, ValueError) as exc:
+            raise SystemExit(f"triage error: {exc}") from exc
+        rendered = (
+            json.dumps(routed.to_dict(), ensure_ascii=False, indent=2)
+            if args.format == "json"
+            else triage_markdown(routed)
+        )
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
+        else:
+            print(rendered.rstrip())
         return 0
     if args.command == "mine":
         try:

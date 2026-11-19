@@ -54,6 +54,20 @@ class ThresholdSuggestion:
 
 
 @dataclass(frozen=True)
+class ConfidenceBand:
+    """Scores strictly between ``lower`` and ``upper`` are too close to the threshold to trust."""
+
+    threshold: float
+    margin: float
+    lower: float
+    upper: float
+    target_accuracy: float
+    accuracy: float
+    coverage: float
+    decided_cases: int
+
+
+@dataclass(frozen=True)
 class CalibrationReport:
     schema_version: str
     evaluator: str
@@ -69,6 +83,7 @@ class CalibrationReport:
     reviewer_pair_count: int
     failed_gates: tuple[str, ...]
     suggested_threshold: ThresholdSuggestion | None = None
+    confidence_band: ConfidenceBand | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -143,8 +158,13 @@ def calibrate_evaluator(
     evaluator: str,
     records: tuple[CalibrationRecord, ...],
     policy: CalibrationPolicy,
+    *,
+    target_accuracy: float | None = None,
+    minimum_decided: int = 5,
 ) -> CalibrationReport:
     _validate_inputs(evaluator, records, policy)
+    if target_accuracy is not None:
+        _ratio(target_accuracy, "Calibration target accuracy")
     labeled = tuple(record for record in records if record.human_labels)
     coverage = len(labeled) / len(records)
     human_scores = {
@@ -206,7 +226,54 @@ def calibrate_evaluator(
         reviewer_pair_count=pair_count,
         failed_gates=tuple(failed),
         suggested_threshold=suggest_threshold(labeled, policy),
+        confidence_band=(
+            confident_band(labeled, policy, target_accuracy, minimum_decided)
+            if target_accuracy is not None
+            else None
+        ),
     )
+
+
+def confident_band(
+    labeled: tuple[CalibrationRecord, ...],
+    policy: CalibrationPolicy,
+    target_accuracy: float,
+    minimum_decided: int = 5,
+) -> ConfidenceBand | None:
+    """Widest decided share whose agreement with humans still meets ``target_accuracy``.
+
+    Scores within ``margin`` of the threshold are left undecided (for human review). The smallest
+    margin is chosen whose decided cases, those at least ``margin`` away from the threshold, agree with
+    the human labels at ``target_accuracy`` or better and number at least ``minimum_decided``.
+    Returns None when no margin achieves that, or without labels.
+    """
+    if not labeled or minimum_decided < 1:
+        return None
+    rows = [
+        (
+            abs(r.automated_score - policy.threshold),
+            int(r.automated_score >= policy.threshold),
+            int(fmean(label.label for label in r.human_labels) >= policy.threshold),
+        )
+        for r in labeled
+    ]
+    for margin in sorted({distance for distance, _, _ in rows}):
+        decided = [(auto, human) for distance, auto, human in rows if distance >= margin]
+        if len(decided) < minimum_decided:
+            break
+        accuracy = sum(auto == human for auto, human in decided) / len(decided)
+        if accuracy >= target_accuracy:
+            return ConfidenceBand(
+                policy.threshold,
+                margin,
+                max(0.0, policy.threshold - margin),
+                min(1.0, policy.threshold + margin),
+                target_accuracy,
+                accuracy,
+                len(decided) / len(rows),
+                len(decided),
+            )
+    return None
 
 
 def suggest_threshold(
