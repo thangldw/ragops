@@ -36,6 +36,22 @@ Majority-class accuracy is 81.7% (QA) and 77.3% (Summary). An AUROC of 0.5 is ch
   around 91–93%, and on long-form answers they are weak. The earlier 93% figure applies only to
   short, sentence-form claims like our own benchmark.
 
+## Do the explorer highlights point at real hallucinations?
+
+`ragops compare --format explorer` highlights answer words with no counterpart in the evidence.
+`python scripts/ragtruth_span_check.py DIR` compares those highlights with RAGTruth's annotated
+hallucination spans, character by character, on the same test responses:
+
+| Task | Precision | Recall | Random precision | Lift | Clean text highlighted |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| QA | 11.5% | 40.7% | 5.4% | 2.1x | 17.0% |
+| Summary | 5.5% | 31.4% | 2.9% | 1.9x | 15.6% |
+
+Highlights concentrate on hallucinated text about twice as much as chance would, and they cover a third
+to a half of the annotated spans. They are also noisy: about 16% of text in fully supported responses is
+highlighted, and most highlighted words are not hallucinations. Treat them as a reading aid that tells a
+reviewer where to look first, not as a detector.
+
 ## Guidance
 
 1. Use `strict_grounding` for short factual answers (numbers, identifiers, negation, single-claim
