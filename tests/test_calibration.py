@@ -132,3 +132,43 @@ def test_load_calibration_set_and_cli(tmp_path: Path, monkeypatch, capsys) -> No
     assert main() == 0
     assert json.loads(output.read_text(encoding="utf-8"))["decision"] == "PASS"
     assert json.loads(capsys.readouterr().out)["decision"] == "PASS"
+
+
+def test_threshold_suggestion_moves_to_the_best_fitting_cutoff() -> None:
+    records = (
+        CalibrationRecord("a", 0.2, (HumanLabel("r", 0),)),
+        CalibrationRecord("b", 0.4, (HumanLabel("r", 0),)),
+        CalibrationRecord("c", 0.6, (HumanLabel("r", 1),)),
+        CalibrationRecord("d", 0.8, (HumanLabel("r", 1),)),
+    )
+    policy = CalibrationPolicy(0.5, 1.0, 0.5, 0.9, 0.0, 0.0)
+    low = CalibrationPolicy(0.5, 1.0, 0.5, 0.9, 0.0, 0.0)
+    report = calibrate_evaluator("x", records, low)
+    suggestion = report.suggested_threshold
+    assert suggestion is not None
+    assert suggestion.accuracy == 1.0 and suggestion.meets_false_pass_limit
+    assert 0.4 < suggestion.threshold <= 0.6
+    assert report.to_dict()["suggested_threshold"]["accuracy"] == 1.0
+    assert policy == low
+
+
+def test_threshold_suggestion_respects_false_pass_limit_and_handles_no_labels() -> None:
+    records = (
+        CalibrationRecord("a", 0.9, (HumanLabel("r", 0),)),
+        CalibrationRecord("b", 0.9, (HumanLabel("r", 1),)),
+        CalibrationRecord("c", 0.3, (HumanLabel("r", 1),)),
+    )
+    strict = CalibrationPolicy(0.5, 1.0, 0.0, 1.0, 0.0, 0.0)
+    result = calibrate_evaluator("x", records, strict).suggested_threshold
+    assert result is not None and result.false_pass_rate == 0.0
+    assert result.meets_false_pass_limit is True
+
+    impossible = (
+        CalibrationRecord("a", 1.0, (HumanLabel("r", 0),)),
+        CalibrationRecord("b", 1.0, (HumanLabel("r", 1),)),
+    )
+    result = calibrate_evaluator("x", impossible, strict).suggested_threshold
+    assert result is not None and result.meets_false_pass_limit is False
+
+    unlabeled = (CalibrationRecord("a", 0.9, ()),)
+    assert calibrate_evaluator("x", unlabeled, strict).suggested_threshold is None

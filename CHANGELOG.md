@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - `ragops explain` and the PR comment now start each failing gate with one plain sentence saying why it failed (for example "The citation coverage overall dropped by 0.5 compared with the baseline; the policy allows at most 0"). New `summary` field in the explanation JSON.
+- `ragops calibrate` reports `suggested_threshold`: the pass threshold with the best accuracy against your human labels among those within the false-pass limit (ties go to the one closest to the current threshold), with its accuracy and false-pass/false-block rates. `meets_false_pass_limit` is false when no threshold can satisfy the limit.
 
 ## [2.4.0] - 2026-11-19
 
