@@ -1,15 +1,17 @@
 """Probe: off-the-shelf NLI models vs lexical grounding on RAGTruth (needs torch, transformers).
 
-    python scripts/nli_ragtruth_probe.py MODEL N QA|Summary DATA_DIR
+    python scripts/nli_ragtruth_probe.py MODEL N QA|Summary DATA_DIR [windows|bm25]
 
-DATA_DIR holds response.jsonl and source_info.jsonl (see ragtruth_benchmark.py). Response score is the
+[windows|bm25] chooses how evidence is picked per claim. DATA_DIR holds response.jsonl and source_info.jsonl (see ragtruth_benchmark.py). Response score is the
 minimum over sentences of the best entailment probability over sliding evidence windows.
 """
 
 from __future__ import annotations
 
 import json
+import math
 import random
+import re
 import sys
 import time
 from pathlib import Path
@@ -33,8 +35,20 @@ def windows(text: str, size: int = 180, stride: int = 120) -> list[str]:
     return [" ".join(words[i : i + size]) for i in starts] or [""]
 
 
+def top_sentences(text: str, claim: str, k: int = 3) -> list[str]:
+    """Pick the k evidence sentences with the highest IDF-weighted overlap with the claim."""
+    sentences = split_sentences(text) or [text]
+    docs = [set(re.findall(r"\w+", s.casefold())) for s in sentences]
+    idf = {t: math.log(1 + len(docs) / (1 + sum(t in d for d in docs))) for d in docs for t in d}
+    wanted = set(re.findall(r"\w+", claim.casefold()))
+    ranked = sorted(range(len(sentences)), key=lambda i: -sum(idf[t] for t in docs[i] & wanted))
+    chosen = sorted(ranked[:k])
+    return [" ".join(sentences[i] for i in chosen)]
+
+
 def main() -> None:
     name, count, task, data = sys.argv[1], int(sys.argv[2]), sys.argv[3], Path(sys.argv[4])
+    select = sys.argv[5] if len(sys.argv) > 5 else "windows"
     tokenizer = AutoTokenizer.from_pretrained(name)
     model = AutoModelForSequenceClassification.from_pretrained(name).eval()
     entail = next(i for i, label in model.config.id2label.items() if label.lower().startswith("entail"))
@@ -60,16 +74,22 @@ def main() -> None:
         return best
 
     started = time.time()
-    nli, lexical, labels = [], [], []
+    nli, mean, lexical, labels = [], [], [], []
     for row in rows:
         premises = windows(sources[row["source_id"]])
         sentences = split_sentences(row["response"])[:12]
-        nli.append(min((best_entailment(premises, s) for s in sentences), default=0.0))
+        per_sentence = [
+            best_entailment(top_sentences(sources[row["source_id"]], s) if select == "bm25" else premises, s)
+            for s in sentences
+        ]
+        nli.append(min(per_sentence, default=0.0))
+        mean.append(sum(per_sentence) / len(per_sentence) if per_sentence else 0.0)
         labels.append(int(not row["labels"]))
         case = EvalCase("x", "", (sources[row["source_id"]],), ())
         lexical.append(lexical_groundedness(case, RecordedResponse("x", row["response"], (), 0, 0)))
     print(f"{task} n={len(rows)} hallucinated={len(rows) - sum(labels)} seconds={round(time.time() - started)}")
-    print("AUROC nli", round(auroc(nli, labels), 4), "lexical", round(auroc(lexical, labels), 4))
+    print("AUROC nli-min", round(auroc(nli, labels), 4), "nli-mean", round(auroc(mean, labels), 4),
+          "lexical", round(auroc(lexical, labels), 4))
 
 
 if __name__ == "__main__":

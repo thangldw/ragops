@@ -32,3 +32,5 @@ work with). Small sample, one aggregation rule, no tuning: treat these as a warn
 The windowing, sentence splitting and aggregation matter a lot, and long abstractive answers are hard for
 sentence-level NLI. Do not assume a semantic scorer beats lexical grounding: measure it on your own labeled
 responses with `ragops calibrate` before gating on it.
+
+Follow-up on the small model (same 150 responses): choosing the three best evidence sentences per claim by IDF-weighted overlap instead of sliding windows gave AUROC 0.68 (unchanged), and averaging sentence scores instead of taking the minimum gave 0.63. Evidence selection and aggregation are not what limits off-the-shelf NLI here; the models themselves are. A stronger judge (a larger model behind `--semantic-command`) remains untested.
