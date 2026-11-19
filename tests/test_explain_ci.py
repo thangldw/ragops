@@ -179,7 +179,7 @@ def test_plain_reason_covers_each_gate_kind():
     rising = plain_reason("global:avg_latency_ms:regression", "avg_latency_ms", "global", 30.0, 10.0, "<=")
     assert "rose by 30" in rising
     low = plain_reason("slice:ja:lexical_groundedness:minimum", "lexical_groundedness", "ja", 0.6, 0.8, ">=")
-    assert "for the ja slice" in low and "below the required minimum of 0.8" in low
+    assert "For the ja slice, the" in low and "below the required minimum of 0.8" in low
     high = plain_reason("global:avg_cost_usd:maximum", "avg_cost_usd", "global", 0.2, 0.1, "<=")
     assert "above the allowed maximum of 0.1" in high
     few = plain_reason("slice:ja:minimum_cases", "case_count", "ja", 2.0, 10.0, ">=")
@@ -196,3 +196,29 @@ def test_explanation_and_comment_carry_plain_summary():
     assert "dropped by 0.5" in first.summary
     assert first.to_dict()["summary"] == first.summary
     assert "dropped by 0.5" in pr_comment(decision)
+
+
+def test_explanation_keeps_waiver_details_and_schema_fields():
+    explanation = explain_decision(_decision())
+    waived = explanation.items[1]
+    assert waived.waiver == {"owner": "ml-platform", "reason": "migration window", "expires_at": "2026-09-01T00:00:00Z"}
+    assert explanation.items[0].waiver is None
+    data = explanation.to_dict()
+    assert data["schema_version"] == "1.0" and data["scenario_id"] == "support" and data["decision"] == "BLOCK"
+    assert set(data["items"][1]["waiver"]) == {"owner", "reason", "expires_at"}
+
+
+def test_plain_reason_exact_wording():
+    from ragops.explain import plain_reason
+
+    assert plain_reason("global:citation_coverage:regression", "citation_coverage", "global", -0.5, 0.0, ">=") == (
+        "Overall, the share of answers that cite a source dropped by 0.5 compared with the baseline; "
+        "the policy allows at most 0."
+    )
+    assert plain_reason("slice:ja:minimum_cases", "case_count", "ja", 2.0, 10.0, ">=") == (
+        "The ja slice has only 2 test cases but at least 10 are needed, so its result is not trustworthy yet. "
+        "Add cases or lower the minimum."
+    )
+    assert plain_reason("global:avg_cost_usd:maximum", "avg_cost_usd", "global", 0.2, 0.1, "<=").startswith(
+        "Overall, the average cost per answer (USD) is 0.2"
+    )

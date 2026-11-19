@@ -56,7 +56,7 @@ _METRIC_NAMES = {
 def plain_reason(gate_id: str, metric: str, scope: str, observed: float, threshold: float, comparator: str) -> str:
     """One plain-language sentence saying why a gate failed."""
     name = _METRIC_NAMES.get(metric, metric.replace("_", " "))
-    where = "overall" if scope == "global" else f"for the {scope} slice"
+    lead = "Overall, the" if scope == "global" else f"For the {scope} slice, the"
     kind = gate_id.rsplit(":", 1)[-1]
     if kind == "minimum_cases":
         return (
@@ -67,12 +67,12 @@ def plain_reason(gate_id: str, metric: str, scope: str, observed: float, thresho
         worse = "dropped" if comparator == ">=" else "rose"
         allowed = abs(threshold)
         return (
-            f"The {name} {where} {worse} by {abs(observed):.4g} compared with the baseline; "
+            f"{lead} {name} {worse} by {abs(observed):.4g} compared with the baseline; "
             f"the policy allows at most {allowed:.4g}."
         )
     if comparator == ">=":
-        return f"The {name} {where} is {observed:.4g}, below the required minimum of {threshold:.4g}."
-    return f"The {name} {where} is {observed:.4g}, above the allowed maximum of {threshold:.4g}."
+        return f"{lead} {name} is {observed:.4g}, below the required minimum of {threshold:.4g}."
+    return f"{lead} {name} is {observed:.4g}, above the allowed maximum of {threshold:.4g}."
 
 
 def explain_decision(decision: ReleaseDecision) -> DecisionExplanation:
