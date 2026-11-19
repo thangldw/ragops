@@ -28,3 +28,17 @@ Enable with `ragops evaluate --evaluator strict_grounding`. Every claim must be 
 - Japanese paraphrase is weak because bigram overlap is coarse.
 
 `lexical_groundedness` stays the default so existing scores and baselines do not move. For semantic grounding, import Ragas/DeepEval/LLM-judge scores through the adapters and measure them against your own human labels with `ragops calibrate`.
+
+## Independent labels
+
+The labels above are the maintainer's. To replace them with independent evidence, give each reviewer a blind sheet and ingest the results:
+
+```bash
+python scripts/grounding_labels.py export --reviewer alice --out alice.json   # no labels, no failure kinds
+# reviewer sets "label" to 0 or 1 for every item and returns the file
+python scripts/grounding_labels.py ingest --sheet alice.json --sheet bob.json \
+    --evaluator strict --calibration-out calibration.json
+ragops calibrate --input calibration.json
+```
+
+`ingest` validates every sheet, prints reviewer agreement (Cohen kappa) and each item where reviewers disagree with the maintainer, and writes a calibration set so `ragops calibrate` reports accuracy and false-pass/false-block rates against the human labels. No independent labels have been collected yet.

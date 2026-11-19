@@ -4,6 +4,7 @@
 
 ### English
 
+- Added `scripts/grounding_labels.py` for blind relabeling of the grounding benchmark: export a label sheet, ingest reviewer sheets, report kappa and disagreements, and build a calibration set for `ragops calibrate`.
 - Added the pluggable `semantic_grounding` evaluator (`--semantic-command`): per-claim scores from your own embedding/LLM scorer, guarded against wrong numbers and polarity flips. See `docs/semantic-evaluator.md`.
 
 ### Tiếng Việt
