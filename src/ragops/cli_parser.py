@@ -46,6 +46,14 @@ def build_parser() -> argparse.ArgumentParser:
     gate_v2.add_argument("--policy", required=True)
     gate_v2.add_argument("--now")
     gate_v2.add_argument("--output")
+    policy_suggest = commands.add_parser(
+        "policy-suggest", help="Generate a slice-aware release policy from an accepted baseline"
+    )
+    policy_suggest.add_argument("--scenario", required=True)
+    policy_suggest.add_argument("--baseline", required=True)
+    policy_suggest.add_argument("--margin", type=float, default=0.05)
+    policy_suggest.add_argument("--min-cases", type=int, default=3)
+    policy_suggest.add_argument("--output")
     calibrate = commands.add_parser("calibrate", help="Calibrate an evaluator against human labels")
     calibrate.add_argument("--input", required=True)
     calibrate.add_argument("--output")

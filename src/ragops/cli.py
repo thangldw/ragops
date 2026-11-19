@@ -73,6 +73,7 @@ from ragops.pilot import (
     summarize_pilot,
     write_pilot_scaffold,
 )
+from ragops.policy_suggest import suggest_release_policy
 from ragops.policy_v2 import apply_release_policy, load_release_decision, load_release_policy_v2
 from ragops.provenance import diagnose_provenance
 from ragops.reporters import (
@@ -177,6 +178,24 @@ def main() -> int:
         else:
             print(rendered, end="")
         return 2 if release_report.decision == "BLOCK" else 0
+    if args.command == "policy-suggest":
+        try:
+            scenario = load_scenario(args.scenario)
+            rendered = suggest_release_policy(
+                scenario,
+                evaluate(scenario, load_responses(args.baseline)),
+                margin=args.margin,
+                min_cases=args.min_cases,
+            )
+        except (ContractError, OSError, ValueError) as exc:
+            raise SystemExit(f"policy suggestion error: {exc}") from exc
+        if args.output:
+            output = Path(args.output)
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text(rendered, encoding="utf-8")
+        else:
+            print(rendered, end="")
+        return 0
     if args.command == "calibrate":
         try:
             calibration_set = load_calibration_set(args.input)

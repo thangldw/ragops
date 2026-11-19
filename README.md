@@ -48,6 +48,8 @@ The credential-free demo intentionally returns `BLOCK`: citation coverage `1.0 -
 
 Install `ragops[api]` and run `ragops serve` for the local authenticated API/workbench. Use `ragops adapter list` for Phoenix, Ragas, DeepEval, LangSmith, MLflow, Promptfoo, custom JSON, and installed entry-point adapters.
 
+No release policy yet? `ragops policy-suggest --scenario scenario.json --baseline responses.json --output policy.toml` generates a slice-aware policy v2 from your accepted baseline (review it before use), which `ragops gate-v2` then applies.
+
 `lexical_groundedness` is a transparent lexical-overlap baseline, not a semantic judge: a correct paraphrase can score low and a wrong answer that reuses evidence vocabulary can score high. Japanese/Chinese text is compared as character bigrams and Vietnamese is NFC-normalized. For a stricter deterministic check (claim-level, exact numbers, negation) use `--evaluator strict_grounding`; measured accuracy and known failures are in [evaluator accuracy](docs/evaluator-accuracy.md). For semantic grounding, import Ragas/DeepEval scores through the adapters and calibrate against human labels.
 
 Local CLI usage evidence is disabled by default. Set `RAGOPS_USAGE_LOG` to an explicit JSONL path to record only the UTC timestamp, RAGOps version, top-level command, and exit code; arguments and file paths are never recorded. Summarize the file with `ragops usage-report --events usage.jsonl`. Use the consent-aware `pilot-report` contract and the [production pilot runbook](docs/gtm/production-pilot.md) for production adoption evidence.
