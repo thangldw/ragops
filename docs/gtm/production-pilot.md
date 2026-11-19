@@ -1,5 +1,7 @@
 # Production pilot evidence runbook
 
+Start a pilot with `ragops pilot-init` (see the [design-partner offer](design-partner-offer.md)).
+
 This runbook turns approved design-partner observations into reviewable RAGOps adoption evidence. It does not create production evidence by itself and does not treat synthetic fixtures, downloads, repository traffic, or CLI event counts as adoption.
 
 ## Entry criteria

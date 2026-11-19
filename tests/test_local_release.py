@@ -13,7 +13,7 @@ SPEC.loader.exec_module(local_release)
 
 
 def test_tag_must_match_package_version() -> None:
-    assert local_release.assert_tag(local_release.milestone_tag()) == "v2.1.1"
+    assert local_release.assert_tag(local_release.milestone_tag()) == "v2.2.0"
 
 
 def test_checksum_manifest_is_deterministic(tmp_path, monkeypatch) -> None:

@@ -1,17 +1,20 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
-## Unreleased
+## [2.2.0] - 2026-11-19
 
 ### English
 
+- Added `ragops pilot-init`, which writes blank design-partner pilot files that `pilot-report` rejects until consent is recorded, and `docs/gtm/design-partner-offer.md`. This makes real evidence collection easier; it is not evidence.
 - Added the opt-in `strict_grounding` evaluator (claim-level support, exact numbers/identifiers, negation contradictions) and a labeled grounding benchmark with `scripts/grounding_benchmark.py`; on the held-out split it scores 87% vs 71% for lexical groundedness. See `docs/evaluator-accuracy.md`.
 
 ### Tiếng Việt
 
+- Thêm `ragops pilot-init` tạo file pilot trống mà `pilot-report` từ chối cho đến khi ghi nhận consent, và `docs/gtm/design-partner-offer.md`. Đây là công cụ thu thập bằng chứng thật, không phải bằng chứng.
 - Thêm evaluator `strict_grounding` (tùy chọn): kiểm tra từng claim, khớp chính xác số/định danh, phát hiện mâu thuẫn phủ định; kèm bộ benchmark có nhãn. Trên tập heldout đạt 87% so với 71% của lexical groundedness. Xem `docs/evaluator-accuracy.md`.
 
 ### 日本語
 
+- 同意が記録されるまで `pilot-report` が拒否する空のパイロットファイルを作る `ragops pilot-init` と `docs/gtm/design-partner-offer.md` を追加しました。実証データの収集を容易にするもので、実証そのものではありません。
 - 任意の `strict_grounding` evaluator（主張単位の裏付け、数値・識別子の完全一致、否定の矛盾検出）とラベル付きベンチマークを追加しました。held-out で 87%（lexical groundedness は 71%）。`docs/evaluator-accuracy.md` を参照してください。
 
 ## [2.1.1] - 2026-11-19

@@ -323,6 +323,12 @@ def build_parser() -> argparse.ArgumentParser:
     workspace_audit.add_argument("--root", required=True)
     workspace_audit.add_argument("--workspace-id", required=True)
     workspace_audit.add_argument("--limit", type=int, default=100)
+    pilot_init_parser = commands.add_parser(
+        "pilot-init", help="Create blank design-partner pilot files that fail closed"
+    )
+    pilot_init_parser.add_argument("--output", required=True)
+    pilot_init_parser.add_argument("--pilot-id", required=True)
+    pilot_init_parser.add_argument("--label", required=True)
     pilot_parser = commands.add_parser(
         "pilot-report", help="Summarize design-partner adoption and ROI evidence"
     )
