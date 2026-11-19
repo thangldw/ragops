@@ -189,6 +189,13 @@ def _gate_evidence_from_dict(value: object, index: int) -> GateEvidence:
 
 def load_release_policy_v2(path: str | Path) -> ReleasePolicyV2:
     try:
+        return _parse_release_policy_v2(path)
+    except (TypeError, AttributeError, KeyError) as exc:
+        raise ContractError(f"Invalid release policy v2 {path}: wrong value type ({exc})") from exc
+
+
+def _parse_release_policy_v2(path: str | Path) -> ReleasePolicyV2:
+    try:
         data = tomllib.loads(Path(path).read_text(encoding="utf-8"))
     except (OSError, tomllib.TOMLDecodeError) as exc:
         raise ContractError(f"Cannot load release policy v2 from {path}: {exc}") from exc
@@ -516,6 +523,13 @@ def _apply_waiver(
 
 
 def _validate_policy(policy: ReleasePolicyV2) -> None:
+    try:
+        _validate_policy_values(policy)
+    except TypeError as exc:
+        raise ContractError(f"Release policy contains a value of the wrong type ({exc})") from exc
+
+
+def _validate_policy_values(policy: ReleasePolicyV2) -> None:
     if isinstance(policy.minimum_cases, bool) or not isinstance(policy.minimum_cases, int) or policy.minimum_cases <= 0:
         raise ContractError("Release minimum_cases must be a positive integer")
     if policy.insufficient_evidence not in {"warn", "block"}:
