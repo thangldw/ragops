@@ -4,6 +4,7 @@
 
 ### English
 
+- `strict_grounding` now treats number words as digits (`nine` = `9`) and flags a two-word name written in reversed order (`Brooks Garth` vs `Garth Brooks`) as a contradiction. On HaluEval this does not change accuracy (91.0%); see the error breakdown in `docs/case-study-halueval.md`.
 - Added `scripts/public_benchmark.py` and `docs/case-study-halueval.md`: a zero-shot check on 10,000 public HaluEval QA pairs. Result: lexical 92.9%, strict 91.0%, so the 93% vs 72% advantage from the maintainer-labeled benchmark did not reproduce. Docs now say so.
 - `ragops init --source-format langfuse|openai|anthropic` imports Langfuse trace exports and OpenAI/Anthropic request-response logs directly. Records without retrieved context are skipped, never guessed; cost is taken only when present.
 - New `ragops init --from LOGS --output DIR`: infers a scenario from your own JSON/JSONL RAG logs, writes `scenario.json`, `responses.json` and a first `strict_grounding` report in about a second. See `docs/quickstart-init.md`.

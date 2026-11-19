@@ -199,7 +199,11 @@ def _clause_status(clause: str, sentences: list[str], min_overlap: float) -> str
     if best_overlap >= 0.5:
         if _critical(clause) - _critical(best):
             return "number"
-        if _negated(clause) != _negated(best) or _exclusive_conflict(clause, best):
+        if (
+            _negated(clause) != _negated(best)
+            or _exclusive_conflict(clause, best)
+            or _name_order_conflict(clause, best)
+        ):
             return "contradicted"
     return "supported" if best_overlap >= min_overlap else "unsupported"
 
@@ -208,9 +212,27 @@ def _split(value: str, pattern: re.Pattern[str]) -> list[str]:
     return [part.strip() for part in pattern.split(unicodedata.normalize("NFKC", value)) if part.strip()]
 
 
+NUMBER_WORDS = {
+    word: str(number)
+    for number, word in enumerate(
+        "zero one two three four five six seven eight nine ten eleven twelve thirteen "
+        "fourteen fifteen sixteen seventeen eighteen nineteen twenty".split()
+    )
+    if word != "one"
+}
+NUMBER_WORDS.update(
+    {"thirty": "30", "forty": "40", "fifty": "50", "sixty": "60", "seventy": "70",
+     "eighty": "80", "ninety": "90", "hundred": "100", "thousand": "1000"}
+)
+
+
 def _strict_tokens(value: str) -> set[str]:
     normalized = unicodedata.normalize("NFKC", value)
-    words = {_stem(token) for token in tokenize(normalized) if token not in STRICT_STOP_WORDS}
+    words = {
+        NUMBER_WORDS.get(token.casefold(), _stem(token))
+        for token in tokenize(normalized)
+        if token not in STRICT_STOP_WORDS
+    }
     return words | {m.casefold() for m in SINGLE_CHAR_RE.findall(normalized)}
 
 
@@ -224,6 +246,9 @@ def _critical(value: str) -> set[str]:
     """Numbers and one-character identifiers that must match exactly."""
     normalized = unicodedata.normalize("NFKC", value)
     numbers = {m.replace(",", ".") for m in NUMBER_RE.findall(normalized)}
+    numbers |= {
+        NUMBER_WORDS[word] for word in TOKEN_RE.findall(normalized.casefold()) if word in NUMBER_WORDS
+    }
     words = normalized.split(maxsplit=1)
     proper = {m.casefold() for m in CAPITALIZED_RE.findall(words[1] if len(words) > 1 else "")}
     return numbers | {m.casefold() for m in SINGLE_CHAR_RE.findall(normalized)} | proper
@@ -244,6 +269,19 @@ def _exclusive_conflict(claim: str, evidence: str) -> bool:
                 if any(other != term and _has_term(evidence_text, other) for other in group):
                     return True
     return False
+
+
+def _name_order_conflict(claim: str, evidence: str) -> bool:
+    """A two-word name the claim writes as "B A" while the evidence only has "A B"."""
+    claim_words = unicodedata.normalize("NFKC", claim).split()
+    evidence_words = [w.strip(".,;:!?()\"'").casefold() for w in unicodedata.normalize("NFKC", evidence).split()]
+    pairs = {(a.casefold(), b.casefold()) for a, b in zip(
+        (w.strip(".,;:!?()\"'") for w in claim_words),
+        (w.strip(".,;:!?()\"'") for w in claim_words[1:]),
+        strict=False,
+    ) if a[:1].isupper() and b[:1].isupper() and a.isalpha() and b.isalpha()}
+    adjacent = set(zip(evidence_words, evidence_words[1:], strict=False))
+    return any((a, b) not in adjacent and (b, a) in adjacent for a, b in pairs)
 
 
 def _negated(value: str) -> bool:
