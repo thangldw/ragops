@@ -48,6 +48,8 @@ The credential-free demo intentionally returns `BLOCK`: citation coverage `1.0 -
 
 Install `ragops[api]` and run `ragops serve` for the local authenticated API/workbench. Use `ragops adapter list` for Phoenix, Ragas, DeepEval, LangSmith, MLflow, Promptfoo, custom JSON, and installed entry-point adapters.
 
+Does the answer really come from the evidence? `ragops counterfactual --scenario s.json --responses r.json --answer-command "python my_app.py"` removes the supporting passages and swaps the numbers, asks your system again and flags answers that do not react ([how it works and its limits](docs/counterfactual-test.md)).
+
 Not sure the scorer is right? `ragops calibrate --target-accuracy 0.9` finds, from your own human labels, how far from the threshold a score must be to be trusted, and `ragops triage` then auto-decides those cases and queues only the uncertain ones for a person.
 
 Is the same question answered differently on each run? `ragops collect-runs` records repeats, then `ragops stability --bundle runs.json --baseline-bundle old-runs.json --max-stddev-increase 0.05` blocks a candidate that became less repeatable even if its average score did not change.

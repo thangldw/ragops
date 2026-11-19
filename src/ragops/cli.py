@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shlex
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -47,6 +48,12 @@ from ragops.config import (
 )
 from ragops.contracts import diff_contract, migrate_contract, validate_contract
 from ragops.control_plane import ControlPlane
+from ragops.counterfactual import (
+    PERTURBATIONS,
+    CommandAnswerer,
+    counterfactual_markdown,
+    run_counterfactual,
+)
 from ragops.datasets import (
     create_dataset_manifest,
     diff_dataset_manifests,
@@ -419,6 +426,34 @@ def main() -> int:
             file=sys.stderr,
         )
         return 0
+    if args.command == "counterfactual":
+        try:
+            cf_scenario = load_scenario(args.scenario)
+            cf_report = run_counterfactual(
+                cf_scenario.id,
+                cf_scenario.cases,
+                {item.case_id: item for item in load_responses(args.responses)},
+                CommandAnswerer(tuple(shlex.split(args.answer_command)), timeout_seconds=args.timeout_seconds),
+                perturbations=tuple(args.perturbation) or PERTURBATIONS,
+                same_threshold=args.same_threshold,
+                max_insensitive_rate=args.max_insensitive_rate,
+                min_eligible=args.min_eligible,
+                limit=args.limit,
+            )
+        except (ContractError, OSError, ValueError) as exc:
+            raise SystemExit(f"counterfactual error: {exc}") from exc
+        rendered = (
+            json.dumps(cf_report.to_dict(), ensure_ascii=False, indent=2)
+            if args.format == "json"
+            else counterfactual_markdown(cf_report)
+        )
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
+        else:
+            print(rendered.rstrip())
+        return {"PASS": 0, "BLOCK": 2, "INCONCLUSIVE": 3}[cf_report.decision]
     if args.command == "triage":
         try:
             routed = triage_cases(

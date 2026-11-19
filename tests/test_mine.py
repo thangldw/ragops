@@ -124,3 +124,32 @@ def test_mine_cli(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr("sys.argv", argv)
     with pytest.raises(SystemExit, match="mine error"):
         main()
+
+
+def test_defaults_ids_counters_and_output_format(tmp_path):
+    scenario, responses = _baseline(tmp_path)
+    logs = tmp_path / "logs.jsonl"
+    rows = [
+        "not an object",
+        "also not an object",
+        _log("Question in 日本語?", "Answer.", "Context.", rating=3),            # above the default max rating
+        _log("Fine one?"),
+        _log("Fine two?"),
+        {"question": "x", "thumbs_down": True, "contexts": ["c"]},
+        {"question": "y", "thumbs_down": True, "contexts": ["c"]},
+        _log("Bad 日本語?", "Wrong.", "日本語 context.", thumbs_down=True),
+    ]
+    logs.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in rows), encoding="utf-8")
+
+    result = mine_failures(logs, scenario, responses, tmp_path / "deep" / "out")
+
+    assert [a["question"] for a in result.added] == ["Bad 日本語?"]
+    assert result.added[0]["case_id"] == "case-0008"          # numbering starts at 1 for the first log line
+    assert result.skipped["record is not an object"] == 2     # counters accumulate
+    assert result.skipped["not flagged as a failure"] == 3    # includes the rating-3 log: default max rating is 2
+    assert result.skipped["flagged but unusable: missing answer"] == 2
+    text = (tmp_path / "deep" / "out" / "scenario.json").read_text(encoding="utf-8")
+    assert "Bad 日本語?" in text and "\\u" not in text and text.endswith("}\n") and '\n  "id"' in text
+    assert (tmp_path / "deep" / "out" / "responses.json").read_text(encoding="utf-8").endswith("]\n")
+    assert '\n    "case_id"' in (tmp_path / "deep" / "out" / "mined.json").read_text(encoding="utf-8")
+    assert result.to_dict()["total_cases"] == 2 and "note" in result.to_dict()

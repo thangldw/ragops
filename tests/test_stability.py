@@ -148,3 +148,22 @@ def test_stability_cli(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr("sys.argv", ["ragops", "stability", "--bundle", str(tmp_path / "missing.json")])
     with pytest.raises(SystemExit, match="stability error"):
         main()
+
+
+def test_bounds_defaults_and_counters():
+    bundle = _bundle([[0.5, 0.5], [0.5]])
+    assert stability_report(bundle, max_range=0, max_unstable_fraction=1).decision == "PASS"
+    assert stability_report(bundle, max_unstable_fraction=0).decision == "PASS"
+    two_single = stability_report(_bundle([[0.5, 0.5], [0.4], [0.3]]))
+    assert two_single.metrics[0].cases_with_single_run == 2
+    report = stability_report(bundle)
+    assert (report.max_range, report.max_unstable_fraction, report.max_stddev_increase) == (0.2, 0.1, None)
+
+
+def test_increase_is_candidate_minus_baseline():
+    noisy = _bundle([[0.4, 0.6], [0.4, 0.6]])        # stddev ~0.1414
+    calm = _bundle([[0.5, 0.52], [0.5, 0.52]])       # stddev ~0.01414
+    item = stability_report(noisy, baseline=calm, max_stddev_increase=1.0, max_range=1.0).metrics[0]
+    assert item.stddev_increase == pytest.approx(0.1414 - 0.01414, abs=1e-3)
+    lower = stability_report(calm, baseline=noisy, max_stddev_increase=0.0, max_range=1.0)
+    assert lower.metrics[0].stddev_increase < 0 and lower.decision == "PASS"

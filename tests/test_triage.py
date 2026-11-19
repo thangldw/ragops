@@ -161,3 +161,11 @@ def test_calibrate_and_triage_cli(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr("sys.argv", ["ragops", "triage", "--evaluation", evaluation, "--calibration", str(out)])
     with pytest.raises(SystemExit, match="no confidence band"):
         main()
+
+
+def test_a_score_exactly_on_the_threshold_with_no_margin_passes():
+    band = confident_band((_rec("a", 0.9, 1), _rec("b", 0.1, 0), _rec("c", 0.5, 1), _rec("d", 0.8, 1), _rec("e", 0.2, 0)),
+                          _policy(), 1.0, minimum_decided=5)
+    assert band is not None and band.margin == 0.0
+    routed = {c.case_id: c.route for c in triage_cases({"on": 0.5, "above": 0.51, "below": 0.49}, band, "m").cases}
+    assert routed == {"on": "auto-pass", "above": "auto-pass", "below": "auto-fail"}
