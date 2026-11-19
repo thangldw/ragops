@@ -246,6 +246,17 @@ def build_parser() -> argparse.ArgumentParser:
     compare_runs_parser.add_argument(
         "--format", choices=("json", "markdown"), default="markdown"
     )
+    stability_parser = commands.add_parser(
+        "stability", help="Block when repeated runs of the same cases vary too much"
+    )
+    stability_parser.add_argument("--bundle", required=True, help="Replay bundle from collect-runs")
+    stability_parser.add_argument("--baseline-bundle")
+    stability_parser.add_argument("--metric", action="append", default=[], help="Repeat to limit the metrics")
+    stability_parser.add_argument("--max-range", type=float, default=0.2)
+    stability_parser.add_argument("--max-unstable-fraction", type=float, default=0.1)
+    stability_parser.add_argument("--max-stddev-increase", type=float)
+    stability_parser.add_argument("--output")
+    stability_parser.add_argument("--format", choices=("json", "markdown"), default="markdown")
     collect_runs_parser = commands.add_parser(
         "collect-runs",
         help="Collect a resumable replay bundle from an explicit metric command",

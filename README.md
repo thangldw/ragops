@@ -48,6 +48,8 @@ The credential-free demo intentionally returns `BLOCK`: citation coverage `1.0 -
 
 Install `ragops[api]` and run `ragops serve` for the local authenticated API/workbench. Use `ragops adapter list` for Phoenix, Ragas, DeepEval, LangSmith, MLflow, Promptfoo, custom JSON, and installed entry-point adapters.
 
+Is the same question answered differently on each run? `ragops collect-runs` records repeats, then `ragops stability --bundle runs.json --baseline-bundle old-runs.json --max-stddev-increase 0.05` blocks a candidate that became less repeatable even if its average score did not change.
+
 Found a bad answer in production? `ragops mine --from logs.jsonl --scenario scenario.json --responses responses.json --output next/` adds every thumbs-down, low-rating or escalated log to the scenario as a regression case, so the suite grows with each incident.
 
 No release policy yet? `ragops policy-suggest --scenario scenario.json --baseline responses.json --output policy.toml` generates a slice-aware policy v2 from your accepted baseline (review it before use), which `ragops gate-v2` then applies.
