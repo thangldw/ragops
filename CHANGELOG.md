@@ -4,6 +4,7 @@
 
 ### English
 
+- Added `scripts/public_benchmark.py` and `docs/case-study-halueval.md`: a zero-shot check on 10,000 public HaluEval QA pairs. Result: lexical 92.9%, strict 91.0%, so the 93% vs 72% advantage from the maintainer-labeled benchmark did not reproduce. Docs now say so.
 - `ragops init --source-format langfuse|openai|anthropic` imports Langfuse trace exports and OpenAI/Anthropic request-response logs directly. Records without retrieved context are skipped, never guessed; cost is taken only when present.
 - New `ragops init --from LOGS --output DIR`: infers a scenario from your own JSON/JSONL RAG logs, writes `scenario.json`, `responses.json` and a first `strict_grounding` report in about a second. See `docs/quickstart-init.md`.
 - New `ragops compare --format explorer`: a single self-contained HTML report with category/language/severity/status filters, text search, side-by-side baseline vs candidate answers, per-case metrics and highlighting of answer words that have no counterpart in the evidence (lexical visual aid, not a verdict). No network access; a Content-Security-Policy allows only its own script by hash.
