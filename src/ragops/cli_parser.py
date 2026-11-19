@@ -375,6 +375,24 @@ def build_parser() -> argparse.ArgumentParser:
         default="generic",
         help="Shape of the logs: a Langfuse trace export, OpenAI or Anthropic request/response logs",
     )
+    counterfactual_parser = commands.add_parser(
+        "counterfactual",
+        help="Alter the evidence and re-ask your system: does the answer depend on it? (calls your system)",
+    )
+    counterfactual_parser.add_argument("--scenario", required=True)
+    counterfactual_parser.add_argument("--responses", required=True)
+    counterfactual_parser.add_argument(
+        "--answer-command", required=True,
+        help='Command (no shell): reads {"case_id","question","evidence"} on stdin, prints {"answer": text}',
+    )
+    counterfactual_parser.add_argument("--perturbation", action="append", default=[], help="remove_support, swap_number")
+    counterfactual_parser.add_argument("--same-threshold", type=float, default=0.8)
+    counterfactual_parser.add_argument("--max-insensitive-rate", type=float, default=0.2)
+    counterfactual_parser.add_argument("--min-eligible", type=int, default=3)
+    counterfactual_parser.add_argument("--limit", type=int, help="Only the first N cases (caps calls to your system)")
+    counterfactual_parser.add_argument("--timeout-seconds", type=float, default=60.0)
+    counterfactual_parser.add_argument("--output")
+    counterfactual_parser.add_argument("--format", choices=("json", "markdown"), default="markdown")
     triage_parser = commands.add_parser(
         "triage", help="Split evaluated cases into auto-pass, auto-fail and needs-human-review"
     )

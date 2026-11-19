@@ -1,0 +1,66 @@
+[
+  {
+    "case_id": "refund",
+    "answer": "Customers can request a refund within 30 days of purchase.",
+    "citation_ids": [],
+    "retrieved_ids": [],
+    "latency_ms": 1,
+    "cost_usd": 0
+  },
+  {
+    "case_id": "warranty",
+    "answer": "Laptops carry a warranty of 24 months from delivery.",
+    "citation_ids": [],
+    "retrieved_ids": [],
+    "latency_ms": 1,
+    "cost_usd": 0
+  },
+  {
+    "case_id": "support",
+    "answer": "Phone support is open from 9 to 17 on weekdays.",
+    "citation_ids": [],
+    "retrieved_ids": [],
+    "latency_ms": 1,
+    "cost_usd": 0
+  },
+  {
+    "case_id": "shipping",
+    "answer": "Shipping is free for orders over 50 dollars.",
+    "citation_ids": [],
+    "retrieved_ids": [],
+    "latency_ms": 1,
+    "cost_usd": 0
+  },
+  {
+    "case_id": "returns",
+    "answer": "The customer pays for return shipping unless the item is defective.",
+    "citation_ids": [],
+    "retrieved_ids": [],
+    "latency_ms": 1,
+    "cost_usd": 0
+  },
+  {
+    "case_id": "privacy",
+    "answer": "Personal data is retained for 36 months after the last order.",
+    "citation_ids": [],
+    "retrieved_ids": [],
+    "latency_ms": 1,
+    "cost_usd": 0
+  },
+  {
+    "case_id": "sizes",
+    "answer": "The jacket comes in sizes small, medium and large.",
+    "citation_ids": [],
+    "retrieved_ids": [],
+    "latency_ms": 1,
+    "cost_usd": 0
+  },
+  {
+    "case_id": "loyalty",
+    "answer": "Each purchase earns 5 loyalty points per 10 dollars spent.",
+    "citation_ids": [],
+    "retrieved_ids": [],
+    "latency_ms": 1,
+    "cost_usd": 0
+  }
+]
