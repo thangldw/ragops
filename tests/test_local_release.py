@@ -6,6 +6,8 @@ from pathlib import Path
 
 import pytest
 
+from ragops import __version__
+
 SPEC = importlib.util.spec_from_file_location("local_release", Path("scripts/local_release.py"))
 assert SPEC and SPEC.loader
 local_release = importlib.util.module_from_spec(SPEC)
@@ -13,7 +15,7 @@ SPEC.loader.exec_module(local_release)
 
 
 def test_tag_must_match_package_version() -> None:
-    assert local_release.assert_tag(local_release.milestone_tag()) == "v2.3.1"
+    assert local_release.assert_tag(local_release.milestone_tag()) == f"v{__version__}"
 
 
 def test_checksum_manifest_is_deterministic(tmp_path, monkeypatch) -> None:

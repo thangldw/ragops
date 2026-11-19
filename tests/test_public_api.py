@@ -1,9 +1,12 @@
+import tomllib
+from pathlib import Path
+
 from ragops import __version__, responses_from_data, scenario_from_dict
 from ragops.cli import build_parser
 
 
 def test_stable_version() -> None:
-    assert __version__ == "2.3.1"
+    assert __version__ == tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
 
 
 def test_cli_exposes_version(capsys) -> None:

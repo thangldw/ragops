@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from ragops import __version__
+
 WORKFLOW_ROOT = Path(".github/workflows")
 
 
@@ -62,7 +64,7 @@ def test_current_operations_are_linked() -> None:
     for guide in (
         "docs/ARCHITECTURE.md",
         "docs/OPERATIONS.md",
-        "docs/releases/v2.3.1.md",
+        f"docs/releases/v{__version__}.md",
     ):
         assert Path(guide).is_file()
         assert guide in readme

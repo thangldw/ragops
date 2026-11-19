@@ -1,0 +1,5 @@
+# Versions whose PyPI filenames were used and then deleted; PyPI refuses to reuse them.
+# One per line. `release_tools.py check` rejects these.
+2.0.0
+2.1.0
+2.2.0
