@@ -4,6 +4,7 @@
 
 ### English
 
+- Moved the argument parser out of `cli.py` into `cli_parser.py` (`ragops.cli.build_parser` is unchanged).
 - Added API HTTP, baseline-manifest, usage and Markdown-reporter tests and a CI coverage gate (`fail_under = 82`).
 - Lexical groundedness now splits Japanese/Chinese runs into character bigrams and NFC-normalizes text; documented that it is a lexical baseline, not a semantic judge.
 - Added a composite GitHub Action (`action.yml`) that applies a release policy v2 with `ragops gate-v2`, writes the canonical decision plus JUnit, SARIF and GitHub Summary renderings, and fails the step only when the decision is BLOCK. See `docs/examples/github-action-release-gate.yml`.
