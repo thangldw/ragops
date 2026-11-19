@@ -101,7 +101,7 @@ class ReleaseDecision:
 def load_release_decision(path: str | Path) -> ReleaseDecision:
     try:
         raw = json.loads(Path(path).read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise ContractError(f"Cannot load release decision from {path}: {exc}") from exc
     if not isinstance(raw, dict):
         raise ContractError("Release decision must be a JSON object")

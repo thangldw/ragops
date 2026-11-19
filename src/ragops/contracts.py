@@ -150,7 +150,7 @@ def _schema_document(filename: str) -> dict[str, Any]:
             return json.loads(repository_schema.read_text(encoding="utf-8"))
         resource = files("ragops").joinpath("schemas", filename)
         return json.loads(resource.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise ContractError(f"Cannot load contract schema {filename}: {exc}") from exc
 
 

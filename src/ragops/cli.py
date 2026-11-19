@@ -121,7 +121,7 @@ def main() -> int:
                         "to_version": args.to_version,
                         "output": str(output),
                     }
-        except (ContractError, OSError, json.JSONDecodeError) as exc:
+        except (ContractError, OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
             raise SystemExit(f"contract error: {exc}") from exc
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
@@ -150,7 +150,7 @@ def main() -> int:
                     metadata,
                 )
                 payload = manifest.to_dict()
-        except (ContractError, FileExistsError, OSError, json.JSONDecodeError) as exc:
+        except (ContractError, FileExistsError, OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
             raise SystemExit(f"evidence error: {exc}") from exc
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0

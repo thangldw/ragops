@@ -137,7 +137,7 @@ def load_evidence_manifest(path: str | Path) -> EvidenceManifest:
         raise ContractError(f"Evidence manifest must be a regular non-symlink file: {manifest_path}")
     try:
         data = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise ContractError(f"Cannot load evidence manifest: {exc}") from exc
     if not isinstance(data, dict):
         raise ContractError("Evidence manifest must be a JSON object")
