@@ -1,11 +1,13 @@
 import re
 from pathlib import Path
 
+from ragops import __version__
+
 
 def test_gitlab_recipe_preserves_evidence_and_exit_code() -> None:
     recipe = Path("docs/examples/gitlab-ci-ragops.yml").read_text(encoding="utf-8")
 
-    assert 'RAGOPS_VERSION: "2.3.1"' in recipe
+    assert f'RAGOPS_VERSION: "{__version__}"' in recipe
     assert 'if: \'$CI_PIPELINE_SOURCE == "merge_request_event"\'' in recipe
     assert "gate_exit=$?" in recipe
     assert 'exit "$gate_exit"' in recipe
@@ -40,7 +42,7 @@ def test_github_caller_is_read_only_and_verifies_evidence() -> None:
     assert "id-token: write" not in recipe
     assert "persist-credentials: false" in recipe
     assert re.search(r"actions/checkout@[0-9a-f]{40}", recipe)
-    assert '"ragops==2.3.1"' in recipe
+    assert f'"ragops=={__version__}"' in recipe
     assert "ragops evidence verify" in recipe
     assert '>> "$GITHUB_STEP_SUMMARY"' in recipe
 

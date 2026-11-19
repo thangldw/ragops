@@ -7,6 +7,8 @@ import sys
 import zipfile
 from pathlib import Path
 
+from ragops import __version__
+
 SPEC = importlib.util.spec_from_file_location("local_release", Path("scripts/local_release.py"))
 assert SPEC and SPEC.loader
 local_release = importlib.util.module_from_spec(SPEC)
@@ -16,15 +18,15 @@ SPEC.loader.exec_module(local_release)
 def test_chatgpt_plugin_bundle_is_deterministic_and_self_contained(tmp_path, monkeypatch):
     monkeypatch.setattr(local_release, "DIST", tmp_path)
 
-    first = local_release.build_plugin_bundle("2.3.1")
+    first = local_release.build_plugin_bundle(__version__)
     first_bytes = first.read_bytes()
-    second = local_release.build_plugin_bundle("2.3.1")
+    second = local_release.build_plugin_bundle(__version__)
 
     assert second.read_bytes() == first_bytes
     with zipfile.ZipFile(first) as archive:
         names = archive.namelist()
         manifest = json.loads(archive.read(".codex-plugin/plugin.json"))
-    assert manifest["version"] == "2.3.1"
+    assert manifest["version"] == __version__
     assert "skills/evaluate-ai-release/SKILL.md" in names
     assert "skills/evaluate-ai-release/scripts/run_ragops.py" in names
     assert "skills/evaluate-ai-release/scripts/vendor/ragops/cli.py" in names
@@ -35,7 +37,7 @@ def test_chatgpt_plugin_bundle_is_deterministic_and_self_contained(tmp_path, mon
 
 def test_extracted_chatgpt_bundle_runs_without_install(tmp_path, monkeypatch):
     monkeypatch.setattr(local_release, "DIST", tmp_path)
-    bundle = local_release.build_plugin_bundle("2.3.1")
+    bundle = local_release.build_plugin_bundle(__version__)
     extracted = tmp_path / "plugin"
     with zipfile.ZipFile(bundle) as archive:
         archive.extractall(extracted)
@@ -49,4 +51,4 @@ def test_extracted_chatgpt_bundle_runs_without_install(tmp_path, monkeypatch):
         text=True,
     )
 
-    assert result.stdout.strip() == "ragops 2.3.1"
+    assert result.stdout.strip() == f"ragops {__version__}"

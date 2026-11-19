@@ -4,6 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from ragops import __version__
+
 
 def run_cli(*args: str, usage_log: Path | None = None) -> subprocess.CompletedProcess[str]:
     environment = os.environ.copy()
@@ -103,7 +105,7 @@ def test_usage_log_failure_does_not_change_command_exit_code(tmp_path: Path) -> 
     result = run_cli("--version", usage_log=tmp_path)
 
     assert result.returncode == 0
-    assert result.stdout.strip() == "ragops 2.3.1"
+    assert result.stdout.strip() == f"ragops {__version__}"
     assert "usage log warning" in result.stderr
 
 
