@@ -3,7 +3,7 @@ from ragops.cli import build_parser
 
 
 def test_stable_version() -> None:
-    assert __version__ == "2.0.2"
+    assert __version__ == "2.2.1"
 
 
 def test_cli_exposes_version(capsys) -> None:

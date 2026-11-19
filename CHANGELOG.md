@@ -4,14 +4,80 @@
 
 ### English
 
+- `strict_grounding` now treats antonym pairs and mismatched proper nouns as contradictions, and no longer splits numbers such as `1,000`. Benchmark grew to 97 pairs; strict accuracy is 93% overall versus 72% for lexical groundedness.
+
+### Tiếng Việt
+
+- `strict_grounding` nay coi cặp từ trái nghĩa và danh từ riêng không khớp là mâu thuẫn, và không còn tách số như `1,000`. Benchmark tăng lên 97 cặp; strict đạt 93% so với 72% của lexical groundedness.
+
+### 日本語
+
+- `strict_grounding` は反意語の組と一致しない固有名詞を矛盾として扱い、`1,000` のような数値を分割しなくなりました。ベンチマークは 97 組になり、strict は全体で 93%（lexical groundedness は 72%）です。
+
+## [2.2.1] - 2026-11-19
+
+### English
+
+- Same content as 2.2.0. PyPI refused the 2.2.0 filename (used by a since-deleted file), so 2.2.0 is a GitHub-only pre-release and 2.2.1 is the PyPI release.
+
+### Tiếng Việt
+
+- Nội dung giống 2.2.0. PyPI từ chối tên file 2.2.0 (từng được dùng bởi file đã xoá) nên 2.2.0 chỉ là pre-release trên GitHub, 2.2.1 là bản PyPI.
+
+### 日本語
+
+- 内容は 2.2.0 と同じです。2.2.0 のファイル名は PyPI に拒否されたため、2.2.0 は GitHub のみの pre-release、2.2.1 が PyPI release です。
+
+## [2.2.0] - 2026-11-19
+
+### English
+
+- Added `ragops pilot-init`, which writes blank design-partner pilot files that `pilot-report` rejects until consent is recorded, and `docs/gtm/design-partner-offer.md`. This makes real evidence collection easier; it is not evidence.
+- Added the opt-in `strict_grounding` evaluator (claim-level support, exact numbers/identifiers, negation contradictions) and a labeled grounding benchmark with `scripts/grounding_benchmark.py`; on the held-out split it scores 87% vs 71% for lexical groundedness. See `docs/evaluator-accuracy.md`.
+
+### Tiếng Việt
+
+- Thêm `ragops pilot-init` tạo file pilot trống mà `pilot-report` từ chối cho đến khi ghi nhận consent, và `docs/gtm/design-partner-offer.md`. Đây là công cụ thu thập bằng chứng thật, không phải bằng chứng.
+- Thêm evaluator `strict_grounding` (tùy chọn): kiểm tra từng claim, khớp chính xác số/định danh, phát hiện mâu thuẫn phủ định; kèm bộ benchmark có nhãn. Trên tập heldout đạt 87% so với 71% của lexical groundedness. Xem `docs/evaluator-accuracy.md`.
+
+### 日本語
+
+- 同意が記録されるまで `pilot-report` が拒否する空のパイロットファイルを作る `ragops pilot-init` と `docs/gtm/design-partner-offer.md` を追加しました。実証データの収集を容易にするもので、実証そのものではありません。
+- 任意の `strict_grounding` evaluator（主張単位の裏付け、数値・識別子の完全一致、否定の矛盾検出）とラベル付きベンチマークを追加しました。held-out で 87%（lexical groundedness は 71%）。`docs/evaluator-accuracy.md` を参照してください。
+
+## [2.1.1] - 2026-11-19
+
+### English
+
+- Same content as 2.1.0. PyPI refused the 2.1.0 filename because it was used by a since-deleted file, so 2.1.0 exists only as a GitHub pre-release and 2.1.1 is the first PyPI release of these changes.
+
+### Tiếng Việt
+
+- Nội dung giống 2.1.0. PyPI từ chối tên file 2.1.0 vì từng được dùng bởi file đã xoá, nên 2.1.0 chỉ còn là pre-release trên GitHub và 2.1.1 là bản PyPI đầu tiên chứa các thay đổi này.
+
+### 日本語
+
+- 内容は 2.1.0 と同じです。2.1.0 のファイル名は削除済みファイルが使用していたため PyPI に拒否され、2.1.0 は GitHub の pre-release のみとなり、2.1.1 がこれらの変更を含む最初の PyPI release です。
+
+## [2.1.0] - 2026-11-19
+
+### English
+
+- Moved the argument parser out of `cli.py` into `cli_parser.py` (`ragops.cli.build_parser` is unchanged).
+- Added API HTTP, baseline-manifest, usage and Markdown-reporter tests and a CI coverage gate (`fail_under = 82`).
+- Lexical groundedness now splits Japanese/Chinese runs into character bigrams and NFC-normalizes text; documented that it is a lexical baseline, not a semantic judge.
 - Added a composite GitHub Action (`action.yml`) that applies a release policy v2 with `ragops gate-v2`, writes the canonical decision plus JUnit, SARIF and GitHub Summary renderings, and fails the step only when the decision is BLOCK. See `docs/examples/github-action-release-gate.yml`.
 
 ### Tiếng Việt
 
+- Chuyển bộ phân tích tham số khỏi `cli.py` sang `cli_parser.py`; thêm test API/baseline/usage/reporter và ngưỡng coverage trong CI (`fail_under = 82`).
+- Lexical groundedness tách chuỗi tiếng Nhật/Trung thành bigram ký tự và chuẩn hoá NFC; ghi rõ đây là baseline từ vựng, không phải bộ đánh giá ngữ nghĩa.
 - Bổ sung GitHub Action dạng composite (`action.yml`) áp dụng release policy v2 bằng `ragops gate-v2`, ghi quyết định chuẩn cùng bản render JUnit, SARIF và GitHub Summary, và chỉ làm step thất bại khi quyết định là BLOCK. Xem `docs/examples/github-action-release-gate.yml`.
 
 ### 日本語
 
+- 引数パーサーを `cli.py` から `cli_parser.py` に移動し、API・baseline・usage・reporter のテストと CI のカバレッジ基準 (`fail_under = 82`) を追加しました。
+- lexical groundedness は日本語・中国語の連続文字を文字 bigram に分割し NFC 正規化します。意味的な評価器ではなく語彙ベースラインであることを明記しました。
 - `ragops gate-v2` でリリースポリシー v2 を適用し、正規の判定と JUnit・SARIF・GitHub Summary を出力し、判定が BLOCK の場合のみステップを失敗させる composite GitHub Action (`action.yml`) を追加しました。`docs/examples/github-action-release-gate.yml` を参照してください。
 
 ## [2.0.2] - 2026-08-24

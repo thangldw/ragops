@@ -423,3 +423,48 @@ def pilot_markdown(report: PilotReport) -> str:
         ]
     )
     return "\n".join(lines).rstrip() + "\n"
+
+
+CONSENT_PLACEHOLDER = "SET_TO_approved_ONLY_AFTER_PARTNER_CONSENT"
+
+
+def write_pilot_scaffold(directory: str | Path, pilot_id: str, label: str) -> tuple[Path, ...]:
+    """Create blank pilot files that fail closed until consent is recorded.
+
+    The manifest deliberately carries a consent placeholder so ``pilot-report``
+    refuses it until a human replaces the value after the design partner approves.
+    """
+    if not PILOT_ID.fullmatch(pilot_id):
+        raise PilotContractError("pilot_id must be a lowercase slug")
+    if not label.strip() or len(label) > 120:
+        raise PilotContractError("label must be a non-empty string up to 120 characters")
+    root = Path(directory)
+    manifest = root / "pilot-manifest.json"
+    observations = root / "pilot-observations.jsonl"
+    if manifest.exists() or observations.exists():
+        raise PilotContractError("pilot files already exist; refusing to overwrite")
+    root.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": "ragops-pilot-manifest-0.1",
+                "pilot_id": pilot_id,
+                "label": label.strip(),
+                "period_start": "YYYY-MM-DD",
+                "period_end": "YYYY-MM-DD",
+                "synthetic": False,
+                "consent_status": CONSENT_PLACEHOLDER,
+                "eligible_user_ids": ["user_001"],
+                "targets": {
+                    "min_repeat_usage_rate": 0.5,
+                    "min_task_success_uplift": 0.1,
+                    "min_time_saved_rate": 0.2,
+                },
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    observations.write_text("", encoding="utf-8")
+    return manifest, observations

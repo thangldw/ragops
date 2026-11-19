@@ -103,3 +103,33 @@ def test_pilot_contract_rejects_unknown_fields(tmp_path: Path) -> None:
 
     with pytest.raises(PilotContractError, match="unexpected fields"):
         load_pilot_manifest(path)
+
+
+def test_pilot_init_scaffold_fails_closed_until_consent(tmp_path) -> None:
+    import json
+
+    import pytest
+
+    from ragops.pilot import (
+        CONSENT_PLACEHOLDER,
+        PilotContractError,
+        load_pilot_manifest,
+        write_pilot_scaffold,
+    )
+
+    manifest, observations = write_pilot_scaffold(tmp_path / "p", "acme-support", "Acme support")
+    assert observations.read_text(encoding="utf-8") == ""
+
+    with pytest.raises(PilotContractError):
+        load_pilot_manifest(manifest)
+
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    assert data["consent_status"] == CONSENT_PLACEHOLDER and data["synthetic"] is False
+    data.update(consent_status="approved", period_start="2026-01-05", period_end="2026-02-01")
+    manifest.write_text(json.dumps(data), encoding="utf-8")
+    assert load_pilot_manifest(manifest).pilot_id == "acme-support"
+
+    with pytest.raises(PilotContractError, match="overwrite"):
+        write_pilot_scaffold(tmp_path / "p", "acme-support", "Acme support")
+    with pytest.raises(PilotContractError, match="slug"):
+        write_pilot_scaffold(tmp_path / "q", "Bad ID", "x")

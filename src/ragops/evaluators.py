@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import re
+import unicodedata
+from dataclasses import dataclass
 
 from ragops.models import EvalCase, Finding, RecordedResponse, RedTeamPolicy
 
 TOKEN_RE = re.compile(r"[\w\-]+", re.UNICODE)
+CJK_RE = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]+")
 STOP_WORDS = {
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in",
     "is", "it", "of", "on", "or", "that", "the", "to", "with", "を", "に",
@@ -62,9 +65,188 @@ def redteam_findings(policy: RedTeamPolicy, response: RecordedResponse) -> tuple
     return tuple(findings)
 
 
-def _tokens(value: str) -> set[str]:
-    return {
-        token.casefold()
-        for token in TOKEN_RE.findall(value)
-        if len(token) > 1 and token.casefold() not in STOP_WORDS
-    }
+def tokenize(value: str) -> set[str]:
+    """Meaningful, casefolded tokens.
+
+    Text is NFC-normalized so composed and decomposed Vietnamese match. Runs of
+    Japanese/Chinese characters have no spaces, so they are split into character
+    bigrams (a lone character is kept) instead of one sentence-sized token.
+    """
+    tokens: set[str] = set()
+    for word in TOKEN_RE.findall(unicodedata.normalize("NFC", value)):
+        for part in _split_cjk(word):
+            folded = part.casefold()
+            if len(folded) > 1 or CJK_RE.fullmatch(folded):
+                if folded not in STOP_WORDS:
+                    tokens.add(folded)
+    return tokens
+
+
+def _split_cjk(word: str) -> list[str]:
+    parts: list[str] = []
+    position = 0
+    for match in CJK_RE.finditer(word):
+        if match.start() > position:
+            parts.append(word[position : match.start()])
+        run = match.group()
+        parts.extend([run] if len(run) == 1 else [run[i : i + 2] for i in range(len(run) - 1)])
+        position = match.end()
+    if position < len(word):
+        parts.append(word[position:])
+    return parts
+
+
+_tokens = tokenize
+
+
+# --- Strict claim-level grounding -------------------------------------------------
+#
+# Still deterministic and lexical, but it checks what the bag-of-words baseline
+# cannot: every claim must be supported by a single evidence sentence, numbers and
+# short identifiers must match exactly, and a negation mismatch is a contradiction.
+# It cannot judge synonyms or reasoning; see docs/evaluator-accuracy.md.
+
+NUMBER_RE = re.compile(r"\d+(?:[.,]\d+)?")
+NEGATION_WORDS = {
+    "not", "no", "never", "cannot", "without", "none", "nor", "neither",
+    "don't", "doesn't", "isn't", "aren't", "won't", "can't", "didn't", "wasn't",
+    "không", "chưa", "chẳng",
+}
+NEGATION_MARKERS = ("ません", "ない", "なし", "不可", "ではあり")
+STRICT_STOP_WORDS = STOP_WORDS | {
+    "you", "your", "we", "our", "they", "their", "can", "could", "may", "might", "will",
+    "would", "should", "has", "have", "had", "was", "were", "been", "do", "does", "did",
+    "but", "if", "so", "than", "then", "also", "any", "all", "this", "that", "these",
+    "those", "get", "into", "when", "which", "who",
+}
+# Mutually exclusive terms. A claim that uses one term while the matched evidence
+# sentence uses a different term from the same group (and not the claim's term)
+# contradicts the evidence. ASCII/Vietnamese entries match whole words; Japanese
+# entries match as substrings.
+EXCLUSIVE_GROUPS = (
+    ("after", "before"), ("enable", "disable"), ("enabled", "disabled"),
+    ("larger", "smaller"), ("more", "less"), ("greater", "less"), ("higher", "lower"),
+    ("above", "below"), ("over", "under"), ("free", "paid"), ("open", "close"),
+    ("opens", "closes"), ("increase", "decrease"), ("allow", "deny"), ("allows", "denies"),
+    ("add", "remove"), ("start", "stop"), ("public", "private"), ("first", "last"),
+    ("include", "exclude"), ("includes", "excludes"), ("accept", "reject"),
+    ("accepted", "rejected"), ("required", "optional"), ("early", "late"),
+    ("always", "never"), ("minimum", "maximum"), ("min", "max"), ("before", "during"),
+    ("hourly", "daily", "weekly", "monthly", "yearly", "annually"),
+    ("sau", "trước"), ("bật", "tắt"), ("lớn hơn", "nhỏ hơn"), ("miễn phí", "trả phí"),
+    ("mở", "đóng"), ("tăng", "giảm"), ("thêm", "xóa"), ("bắt buộc", "tùy chọn"),
+    ("hàng ngày", "hàng tuần", "hàng tháng"),
+    ("前", "後"), ("有効", "無効"), ("以上", "以下"), ("未開封", "開封済み"),
+    ("増", "減"), ("追加", "削除"), ("必須", "任意"), ("毎日", "毎週", "毎月"),
+)
+CAPITALIZED_RE = re.compile(r"\b[A-ZÀ-Ỹ][\wÀ-ỹ]+")
+SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+|[。！？\n]+")
+CLAUSE_SPLIT = re.compile(r"\s*(?:(?<!\d),|,(?!\d)|;|\band\b|\bor\b)\s*", re.IGNORECASE)
+SINGLE_CHAR_RE = re.compile(r"\b[A-Z0-9]\b")
+
+
+@dataclass(frozen=True)
+class StrictGrounding:
+    score: float
+    claim_count: int
+    unsupported_claims: int
+    contradicted_claims: int
+    number_mismatches: int
+
+
+def strict_grounding(
+    case: EvalCase, response: RecordedResponse, *, min_overlap: float = 0.8
+) -> StrictGrounding:
+    sentences = _split(" ".join(case.evidence), SENTENCE_SPLIT)
+    claims = _split(response.answer, SENTENCE_SPLIT)
+    if not claims:
+        return StrictGrounding(0.0, 0, 1, 0, 0)
+    unsupported = contradicted = number_bad = 0
+    for claim in claims:
+        status = _claim_status(claim, sentences, min_overlap)
+        unsupported += status != "supported"
+        contradicted += status == "contradicted"
+        number_bad += status == "number"
+    return StrictGrounding(
+        score=(len(claims) - unsupported) / len(claims),
+        claim_count=len(claims),
+        unsupported_claims=unsupported,
+        contradicted_claims=contradicted,
+        number_mismatches=number_bad,
+    )
+
+
+def _claim_status(claim: str, sentences: list[str], min_overlap: float) -> str:
+    worst = "supported"
+    for clause in _split(claim, CLAUSE_SPLIT) or [claim]:
+        status = _clause_status(clause, sentences, min_overlap)
+        if status != "supported":
+            if status in {"contradicted", "number"}:
+                return status
+            worst = status
+    return worst
+
+
+def _clause_status(clause: str, sentences: list[str], min_overlap: float) -> str:
+    tokens = _strict_tokens(clause)
+    if not tokens:
+        return "supported"
+    best, best_overlap = "", -1.0
+    for sentence in sentences:
+        overlap = len(tokens & _strict_tokens(sentence)) / len(tokens)
+        if overlap > best_overlap:
+            best, best_overlap = sentence, overlap
+    if best_overlap >= 0.5:
+        if _critical(clause) - _critical(best):
+            return "number"
+        if _negated(clause) != _negated(best) or _exclusive_conflict(clause, best):
+            return "contradicted"
+    return "supported" if best_overlap >= min_overlap else "unsupported"
+
+
+def _split(value: str, pattern: re.Pattern[str]) -> list[str]:
+    return [part.strip() for part in pattern.split(unicodedata.normalize("NFKC", value)) if part.strip()]
+
+
+def _strict_tokens(value: str) -> set[str]:
+    normalized = unicodedata.normalize("NFKC", value)
+    words = {_stem(token) for token in tokenize(normalized) if token not in STRICT_STOP_WORDS}
+    return words | {m.casefold() for m in SINGLE_CHAR_RE.findall(normalized)}
+
+
+def _stem(token: str) -> str:
+    if len(token) > 3 and token.isascii() and token.endswith("s") and not token.endswith("ss"):
+        return token[:-1]
+    return token
+
+
+def _critical(value: str) -> set[str]:
+    """Numbers and one-character identifiers that must match exactly."""
+    normalized = unicodedata.normalize("NFKC", value)
+    numbers = {m.replace(",", ".") for m in NUMBER_RE.findall(normalized)}
+    words = normalized.split(maxsplit=1)
+    proper = {m.casefold() for m in CAPITALIZED_RE.findall(words[1] if len(words) > 1 else "")}
+    return numbers | {m.casefold() for m in SINGLE_CHAR_RE.findall(normalized)} | proper
+
+
+def _has_term(text: str, term: str) -> bool:
+    if CJK_RE.search(term):
+        return term in text
+    return re.search(rf"(?<!\w){re.escape(term)}(?!\w)", text) is not None
+
+
+def _exclusive_conflict(claim: str, evidence: str) -> bool:
+    claim_text = unicodedata.normalize("NFKC", claim).casefold()
+    evidence_text = unicodedata.normalize("NFKC", evidence).casefold()
+    for group in EXCLUSIVE_GROUPS:
+        for term in group:
+            if _has_term(claim_text, term) and not _has_term(evidence_text, term):
+                if any(other != term and _has_term(evidence_text, other) for other in group):
+                    return True
+    return False
+
+
+def _negated(value: str) -> bool:
+    folded = unicodedata.normalize("NFKC", value).casefold()
+    words = set(TOKEN_RE.findall(folded.replace("’", "'")))
+    return bool(words & NEGATION_WORDS) or any(marker in folded for marker in NEGATION_MARKERS)

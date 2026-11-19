@@ -4,6 +4,7 @@ import re
 from dataclasses import dataclass
 from typing import Protocol, runtime_checkable
 
+from ragops.evaluators import strict_grounding, tokenize
 from ragops.models import EvalCase, Finding, RecordedResponse
 
 
@@ -110,6 +111,61 @@ class ClaimSupportEvaluator:
         return PluginResult(
             metrics={"score": score, "unsupported_claims": float(unsupported)},
             findings=findings,
+        )
+
+
+class StrictGroundingEvaluator:
+    """Claim-level lexical grounding with exact numbers and negation checks.
+
+    Stricter than ``lexical_groundedness``: each claim must be supported by one
+    evidence sentence, numbers and one-character identifiers must match, and a
+    negation mismatch is a contradiction. Still lexical: it does not understand
+    synonyms or reasoning. Accuracy on the labeled benchmark is in
+    ``docs/evaluator-accuracy.md``.
+    """
+
+    name = "strict_grounding"
+
+    def __init__(self, *, min_overlap: float = 0.8) -> None:
+        if not 0 <= min_overlap <= 1:
+            raise ValueError("min_overlap must be between 0 and 1")
+        self.min_overlap = min_overlap
+
+    def evaluate(self, case: EvalCase, response: RecordedResponse) -> PluginResult:
+        result = strict_grounding(case, response, min_overlap=self.min_overlap)
+        findings: list[Finding] = []
+        if result.contradicted_claims:
+            findings.append(
+                Finding(
+                    rule="contradicted_claim",
+                    severity="critical",
+                    message=f"{result.contradicted_claims} claim(s) contradict the evidence polarity",
+                )
+            )
+        if result.number_mismatches:
+            findings.append(
+                Finding(
+                    rule="unsupported_number",
+                    severity="high",
+                    message=f"{result.number_mismatches} claim(s) state a number or identifier absent from the evidence",
+                )
+            )
+        other = result.unsupported_claims - result.contradicted_claims - result.number_mismatches
+        if other > 0:
+            findings.append(
+                Finding(
+                    rule="unsupported_claim",
+                    severity="high",
+                    message=f"{other} of {result.claim_count} claim(s) lack evidence support",
+                )
+            )
+        return PluginResult(
+            metrics={
+                "score": result.score,
+                "unsupported_claims": float(result.unsupported_claims),
+                "contradicted_claims": float(result.contradicted_claims),
+            },
+            findings=tuple(findings),
         )
 
 
@@ -220,4 +276,4 @@ class AbstentionContractEvaluator:
 
 
 def _meaningful_tokens(value: str) -> set[str]:
-    return {token.casefold() for token in re.findall(r"[\w\-]+", value) if len(token) > 1}
+    return tokenize(value)
