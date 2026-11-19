@@ -4,6 +4,7 @@
 
 ### English
 
+- Added property-based and tamper tests (Hypothesis) for the scenario, response, trace-graph, OpenTelemetry, contract and evidence loaders. They found and fixed crashes: wrongly typed JSON values raised `TypeError`/`AttributeError`, and a non-UTF-8 evidence/dataset/contract/decision file raised `UnicodeDecodeError`, instead of a `ContractError`.
 - Moved CLI helper functions into `cli_helpers.py` (`cli.py` is now ~770 lines).
 - Coverage gate raised to 88% (now ~88.1%) with in-process CLI tests and mutation tests for policy and run-plan loaders. Fixed: a release policy v2 with a wrongly typed value (for example `insufficient_evidence = []`) raised `TypeError` instead of a `ContractError`; an OpenTelemetry export containing a non-object span raised `AttributeError` instead of a `ContractError`.
 - CI now runs Python 3.11–3.15 on Linux plus 3.12 on macOS and type-checks with mypy (existing debt is listed in `pyproject.toml`; new modules are checked).

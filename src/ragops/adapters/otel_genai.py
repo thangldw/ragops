@@ -7,6 +7,13 @@ from ragops.trace_graph import TraceGraph, trace_graph_from_dict
 
 
 def otel_spans_to_trace_graph(spans: Iterable[Mapping[str, Any]]) -> TraceGraph:
+    try:
+        return _otel_spans_to_trace_graph(spans)
+    except (TypeError, AttributeError) as exc:
+        raise ContractError(f"OpenTelemetry export contains a value of the wrong type: {exc}") from exc
+
+
+def _otel_spans_to_trace_graph(spans: Iterable[Mapping[str, Any]]) -> TraceGraph:
     items = list(spans)
     if not items:
         raise ContractError("OpenTelemetry export contains no spans")

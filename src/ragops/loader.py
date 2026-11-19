@@ -38,6 +38,13 @@ def load_scenario(path: str | Path) -> Scenario:
 
 def scenario_from_dict(data: dict[str, Any]) -> Scenario:
     try:
+        return _scenario_from_dict(data)
+    except (TypeError, AttributeError) as exc:
+        raise ContractError(f"Scenario contains a value of the wrong type: {exc}") from exc
+
+
+def _scenario_from_dict(data: dict[str, Any]) -> Scenario:
+    try:
         threshold_data = data["thresholds"]
         thresholds = Thresholds(
             citation_coverage=threshold_data["citation_coverage"],
@@ -188,6 +195,13 @@ def load_attack_pack(path: str | Path) -> AttackPack:
 
 
 def responses_from_data(data: list[dict[str, Any]]) -> tuple[RecordedResponse, ...]:
+    try:
+        return _responses_from_data(data)
+    except (TypeError, AttributeError) as exc:
+        raise ContractError(f"Responses contain a value of the wrong type: {exc}") from exc
+
+
+def _responses_from_data(data: list[dict[str, Any]]) -> tuple[RecordedResponse, ...]:
     try:
         responses = tuple(
             RecordedResponse(
