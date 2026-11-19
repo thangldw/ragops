@@ -4,6 +4,7 @@
 
 ### English
 
+- `ragops init --candidate LOGS` takes logs of a later run, matches answers to baseline cases by id or question text and writes `candidate.json` plus a `compare-report.md`, so the first regression check needs no hand-written files.
 - Added `scripts/ragtruth_span_check.py`: explorer highlights land on annotated RAGTruth hallucination spans about 2x more than chance (precision 5.5 to 11.5%, recall 31 to 41%) but also mark about 16% of clean text. Documented as a reading aid, not a detector.
 - `scripts/nli_ragtruth_probe.py` can pick evidence by IDF overlap (`bm25`) and reports min and mean sentence aggregation. Neither improves off-the-shelf NLI on RAGTruth QA (AUROC 0.68 and 0.63 vs 0.76 for lexical); documented in `docs/semantic-evaluator.md`.
 - Added `examples/nli_scorer.py`, an optional local entailment scorer for `semantic_grounding`, and `scripts/nli_ragtruth_probe.py`. Measured result: off-the-shelf NLI models (AUROC 0.62 to 0.68) did not beat lexical grounding (0.76) on RAGTruth QA, so semantic scoring is documented as something to calibrate, not assume.

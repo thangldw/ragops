@@ -342,6 +342,10 @@ def build_parser() -> argparse.ArgumentParser:
     init_parser.add_argument("--output", required=True)
     init_parser.add_argument("--scenario-id", default="my-rag")
     init_parser.add_argument(
+        "--candidate",
+        help="Logs of a later run of the same questions: also writes candidate.json and a comparison",
+    )
+    init_parser.add_argument(
         "--source-format",
         choices=("generic", "langfuse", "openai", "anthropic"),
         default="generic",

@@ -384,6 +384,7 @@ def main() -> int:
                 args.output,
                 scenario_id=args.scenario_id,
                 source_format=args.source_format,
+                candidate=args.candidate,
             )
         except ContractError as exc:
             raise SystemExit(f"contract error: {exc}") from exc

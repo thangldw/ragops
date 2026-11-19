@@ -18,10 +18,10 @@ from pathlib import Path
 from typing import Any
 
 from ragops.adapters.trace_import import convert_traces
-from ragops.engine import evaluate
+from ragops.engine import compare, evaluate
 from ragops.loader import ContractError, load_responses, load_scenario
 from ragops.plugins import StrictGroundingEvaluator
-from ragops.reporters import evaluation_markdown
+from ragops.reporters import comparison_markdown, evaluation_markdown
 
 MAX_FILE_BYTES = 64 * 1024 * 1024
 ALIASES: dict[str, tuple[str, ...]] = {
@@ -70,7 +70,14 @@ def init_project(
     *,
     scenario_id: str = "my-rag",
     source_format: str = "generic",
+    candidate: str | Path | None = None,
 ) -> InitResult:
+    """Build ``scenario.json`` and ``responses.json`` from ``source`` logs.
+
+    With ``candidate`` logs (a later run of the same questions) also write ``candidate.json`` and a
+    baseline-versus-candidate comparison. Candidate answers are matched to baseline cases by id, else by
+    normalized question, and are judged against the baseline case's evidence.
+    """
     records = list(_read_records(Path(source)))
     if source_format != "generic":
         records = convert_traces(source_format, _unwrap(records))
@@ -93,6 +100,11 @@ def init_project(
             "No usable records. Each needs a question, an answer and retrieved contexts. "
             f"Skipped: {dict(result.skipped)}. Fields seen in the first record: "
             f"{sorted(records[0]) if isinstance(records[0], dict) else type(records[0]).__name__}"
+        )
+    candidate_responses: list[dict[str, Any]] = []
+    if candidate is not None:
+        cases, responses, candidate_responses = _match_candidate(
+            cases, responses, candidate, source_format, result
         )
     scenario = {
         "schema_version": "0.2",
@@ -124,7 +136,89 @@ def init_project(
         "required_citation_ids were taken from the citations in your logs; review them.",
         "Findings on this first run (strict_grounding) are leads to read, not verdicts.",
     ]
+    if candidate is not None:
+        candidate_path, compare_path = root / "candidate.json", root / "compare-report.md"
+        for path in (candidate_path, compare_path):
+            if path.exists():
+                raise ContractError(f"Refusing to overwrite {path}")
+        candidate_path.write_text(
+            json.dumps(candidate_responses, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+        comparison = compare(
+            loaded,
+            load_responses(responses_path),
+            load_responses(candidate_path),
+            evaluators=(StrictGroundingEvaluator(),),
+        )
+        compare_path.write_text(comparison_markdown(comparison).rstrip() + "\n", encoding="utf-8")
+        result.files += [str(candidate_path), str(compare_path)]
+        result.notes.append(
+            f"Compared {len(cases)} matched cases; candidate answers are judged against the baseline's evidence."
+        )
+        result.passed, result.failed_gates = comparison.passed, comparison.failed_gates
+        result.metrics = {**comparison.candidate.metrics}
     return result
+
+
+def _question_key(question: str) -> str:
+    return " ".join(question.casefold().split())
+
+
+def _match_candidate(
+    cases: list[dict[str, Any]],
+    responses: list[dict[str, Any]],
+    candidate: str | Path,
+    source_format: str,
+    result: InitResult,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    records = list(_read_records(Path(candidate)))
+    if source_format != "generic":
+        records = convert_traces(source_format, _unwrap(records))
+    by_id = {case["id"]: case for case in cases}
+    by_question = {_question_key(case["question"]): case for case in cases}
+    matched: dict[str, dict[str, Any]] = {}
+    for record in records:
+        if not isinstance(record, dict):
+            result.skipped["candidate record is not an object"] += 1
+            continue
+        raw_id = _get(record, "id")
+        question, answer = _text(_get(record, "question")), _text(_get(record, "answer"))
+        case = by_id.get(str(raw_id)) if raw_id is not None else None
+        if case is None and question:
+            case = by_question.get(_question_key(question))
+        if case is None:
+            result.skipped["candidate has no matching baseline case"] += 1
+            continue
+        if not answer:
+            result.skipped["candidate missing answer"] += 1
+            continue
+        if case["id"] in matched:
+            result.skipped["candidate duplicates a case"] += 1
+            continue
+        citations = _get(record, "citations")
+        cited = (
+            [str(c.get("id", c)) if isinstance(c, dict) else str(c) for c in citations]
+            if isinstance(citations, list)
+            else []
+        )
+        matched[case["id"]] = {
+            "case_id": case["id"],
+            "answer": answer,
+            "citation_ids": cited,
+            "retrieved_ids": [],
+            "latency_ms": int(_number(_get(record, "latency"), 0.0)),
+            "cost_usd": _number(_get(record, "cost"), 0.0),
+        }
+    if not matched:
+        raise ContractError(
+            "No candidate record matched a baseline case (matching uses the case id, then the question text)"
+        )
+    kept_cases = [case for case in cases if case["id"] in matched]
+    kept_responses = [response for response in responses if response["case_id"] in matched]
+    dropped = len(cases) - len(kept_cases)
+    if dropped:
+        result.skipped["baseline case without a candidate answer"] += dropped
+    return kept_cases, kept_responses, [matched[case["id"]] for case in kept_cases]
 
 
 def _read_records(source: Path) -> Iterable[Any]:
