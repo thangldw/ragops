@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 
 from ragops.models import EvalCase, Finding, RecordedResponse, RedTeamPolicy
 
 TOKEN_RE = re.compile(r"[\w\-]+", re.UNICODE)
+CJK_RE = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f]+")
 STOP_WORDS = {
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "in",
     "is", "it", "of", "on", "or", "that", "the", "to", "with", "を", "に",
@@ -62,9 +64,35 @@ def redteam_findings(policy: RedTeamPolicy, response: RecordedResponse) -> tuple
     return tuple(findings)
 
 
-def _tokens(value: str) -> set[str]:
-    return {
-        token.casefold()
-        for token in TOKEN_RE.findall(value)
-        if len(token) > 1 and token.casefold() not in STOP_WORDS
-    }
+def tokenize(value: str) -> set[str]:
+    """Meaningful, casefolded tokens.
+
+    Text is NFC-normalized so composed and decomposed Vietnamese match. Runs of
+    Japanese/Chinese characters have no spaces, so they are split into character
+    bigrams (a lone character is kept) instead of one sentence-sized token.
+    """
+    tokens: set[str] = set()
+    for word in TOKEN_RE.findall(unicodedata.normalize("NFC", value)):
+        for part in _split_cjk(word):
+            folded = part.casefold()
+            if len(folded) > 1 or CJK_RE.fullmatch(folded):
+                if folded not in STOP_WORDS:
+                    tokens.add(folded)
+    return tokens
+
+
+def _split_cjk(word: str) -> list[str]:
+    parts: list[str] = []
+    position = 0
+    for match in CJK_RE.finditer(word):
+        if match.start() > position:
+            parts.append(word[position : match.start()])
+        run = match.group()
+        parts.extend([run] if len(run) == 1 else [run[i : i + 2] for i in range(len(run) - 1)])
+        position = match.end()
+    if position < len(word):
+        parts.append(word[position:])
+    return parts
+
+
+_tokens = tokenize
