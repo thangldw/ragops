@@ -99,7 +99,7 @@ class SemanticGroundingEvaluator:
             conflicts += bool(conflict)
             supported += value >= self.threshold and not conflict
         unsupported = len(claims) - supported
-        findings = ()
+        findings: tuple[Finding, ...] = ()
         if unsupported:
             findings = (
                 Finding(
