@@ -57,6 +57,11 @@ def build_parser() -> argparse.ArgumentParser:
     calibrate = commands.add_parser("calibrate", help="Calibrate an evaluator against human labels")
     calibrate.add_argument("--input", required=True)
     calibrate.add_argument("--output")
+    calibrate.add_argument(
+        "--target-accuracy", type=float, default=0.9,
+        help="Agreement with humans required on the cases the evaluator may decide alone (confidence band)",
+    )
+    calibrate.add_argument("--minimum-decided", type=int, default=5)
     trace_parser = commands.add_parser("trace", help="Convert and evaluate agent trace graphs")
     trace_commands = trace_parser.add_subparsers(dest="trace_command", required=True)
     trace_evaluate = trace_commands.add_parser("evaluate", help="Evaluate a trace graph")
@@ -370,6 +375,14 @@ def build_parser() -> argparse.ArgumentParser:
         default="generic",
         help="Shape of the logs: a Langfuse trace export, OpenAI or Anthropic request/response logs",
     )
+    triage_parser = commands.add_parser(
+        "triage", help="Split evaluated cases into auto-pass, auto-fail and needs-human-review"
+    )
+    triage_parser.add_argument("--evaluation", required=True, help="JSON from `ragops evaluate --format json`")
+    triage_parser.add_argument("--calibration", required=True, help="JSON report from `ragops calibrate`")
+    triage_parser.add_argument("--metric", default="lexical_groundedness")
+    triage_parser.add_argument("--output")
+    triage_parser.add_argument("--format", choices=("json", "markdown"), default="markdown")
     mine_parser = commands.add_parser(
         "mine", help="Add production failures (thumbs-down, low rating, escalation) to a scenario"
     )

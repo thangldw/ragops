@@ -19,6 +19,21 @@
     "reviewer_agreement": {"type": ["number", "null"]},
     "reviewer_pair_count": {"type": "integer", "minimum": 0},
     "failed_gates": {"type": "array", "items": {"type": "string"}},
+    "confidence_band": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["threshold", "margin", "lower", "upper", "target_accuracy", "accuracy", "coverage", "decided_cases"],
+      "properties": {
+        "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "margin": {"type": "number", "minimum": 0, "maximum": 1},
+        "lower": {"type": "number", "minimum": 0, "maximum": 1},
+        "upper": {"type": "number", "minimum": 0, "maximum": 1},
+        "target_accuracy": {"type": "number", "minimum": 0, "maximum": 1},
+        "accuracy": {"type": "number", "minimum": 0, "maximum": 1},
+        "coverage": {"type": "number", "minimum": 0, "maximum": 1},
+        "decided_cases": {"type": "integer", "minimum": 1}
+      }
+    },
     "suggested_threshold": {
       "type": ["object", "null"],
       "additionalProperties": false,
