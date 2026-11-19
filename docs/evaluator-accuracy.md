@@ -17,6 +17,10 @@ Reproduce with `python scripts/grounding_benchmark.py`. `tests/test_grounding_be
 
 Across all 97 pairs, lexical groundedness has 26% false-pass and 31% false-block; `strict_grounding` has 2% false-pass and 17% false-block. Lexical does well on `heldout2` only because that split is mostly one-word substitutions, which an exact-containment threshold catches while still rejecting every paraphrase.
 
+## Independent check
+
+On 10,000 public HaluEval QA pairs, zero-shot, lexical groundedness scored 92.9% and `strict_grounding` 91.0%. The advantage above did not reproduce. The maintainer-written benchmark overstates strict grounding; see `docs/case-study-halueval.md` for the protocol and failure analysis.
+
 ## What `strict_grounding` adds
 
 Enable with `ragops evaluate --evaluator strict_grounding`. Every claim must be supported by a single evidence sentence; numbers and one-character identifiers must match exactly; a negation mismatch, or an antonym pair (before/after, enabled/disabled, daily/weekly, 前/後, 有効/無効 and similar) between claim and evidence, is a `contradicted_claim`; capitalized proper nouns must also match; extra clauses (`and ...`) must be supported separately. Japanese/Chinese use character bigrams and Vietnamese is NFC-normalized.
