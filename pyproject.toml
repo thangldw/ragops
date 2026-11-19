@@ -79,7 +79,7 @@ files = ["src/ragops"]
 
 # Run: pip install -e ".[mutation]" && PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 mutmut run && mutmut results; delete ./mutants afterwards.
 [tool.mutmut]
-paths_to_mutate = ["src/ragops/calibration.py", "src/ragops/explain.py", "src/ragops/policy_suggest.py", "src/ragops/ci.py"]
-tests_dir = ["tests/test_calibration.py", "tests/test_explain_ci.py", "tests/test_policy_suggest.py", "tests/test_calibration_boundaries.py", "tests/test_ci_render_exact.py", "tests/test_calibration_loader_errors.py"]
+paths_to_mutate = ["src/ragops/calibration.py", "src/ragops/explain.py", "src/ragops/policy_suggest.py", "src/ragops/ci.py", "src/ragops/policy_v2.py"]
+tests_dir = ["tests/test_calibration.py", "tests/test_explain_ci.py", "tests/test_policy_suggest.py", "tests/test_calibration_boundaries.py", "tests/test_ci_render_exact.py", "tests/test_calibration_loader_errors.py", "tests/test_policy_v2.py", "tests/test_policy_v2_mutations.py", "tests/test_policy_validation.py", "tests/test_slice_distribution.py", "tests/test_policy_v2_gate_semantics.py"]
 also_copy = ["src", "apps", "scenarios", "schemas", "pyproject.toml", "ragops.toml", "README.md", "scripts", "action.yml", ".github"]
 pytest_add_cli_args = ["-p", "no:cacheprovider"]

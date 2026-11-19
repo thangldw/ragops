@@ -1,5 +1,9 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
+## [Unreleased]
+
+- Mutation testing now also covers the release policy engine (`policy_v2.py`). It found that inclusive/exclusive boundaries, the `lower` direction, regression budgets, tail gates, slice `minimum_cases` and waiver windows were not pinned by any test; `tests/test_policy_v2_gate_semantics.py` now does (2023 of 2340 mutants killed across the five modules, up from 659 of 1152 on first run).
+
 ## [2.5.0] - 2026-11-20
 
 - Real mutation testing with `mutmut` (new `mutation` extra, config in `pyproject.toml`) on the calibration, explain, policy-suggest and CI-renderer modules. The first run killed 65% of 1152 mutants; new boundary, exact-value and malformed-input tests raised that to 91% (1041 of 1149). It also showed one redundant ranking key in `suggest_threshold`, now removed. Plain-language gate summaries now read "Overall, the …" / "For the ja slice, the …".
