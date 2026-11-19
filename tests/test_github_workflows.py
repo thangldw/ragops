@@ -10,6 +10,7 @@ def test_repository_has_consumer_ci_and_separate_release_publisher() -> None:
         "ci.yml",
         "codeql.yml",
         "publish-pypi.yml",
+        "weekly.yml",
     ]
     workflow = (WORKFLOW_ROOT / "publish-pypi.yml").read_text(encoding="utf-8")
     assert "id-token: write" in workflow
@@ -69,3 +70,17 @@ def test_current_operations_are_linked() -> None:
     ):
         assert Path(guide).is_file()
         assert guide in readme
+
+
+def test_weekly_benchmark_is_scheduled_read_only_and_pinned() -> None:
+    workflow = (WORKFLOW_ROOT / "weekly.yml").read_text(encoding="utf-8")
+
+    assert "schedule:" in workflow and "workflow_dispatch:" in workflow
+    assert "pull_request" not in workflow
+    assert "contents: read" in workflow
+    assert "write" not in workflow
+    assert "scripts/grounding_benchmark.py" in workflow
+    assert "--upgrade" in workflow
+    for line in workflow.splitlines():
+        if "uses:" in line:
+            assert "@" in line and len(line.split("@")[1].split()[0]) == 40
