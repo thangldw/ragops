@@ -4,6 +4,7 @@ import re
 from dataclasses import dataclass
 from typing import Protocol, runtime_checkable
 
+from ragops.evaluators import tokenize
 from ragops.models import EvalCase, Finding, RecordedResponse
 
 
@@ -220,4 +221,4 @@ class AbstentionContractEvaluator:
 
 
 def _meaningful_tokens(value: str) -> set[str]:
-    return {token.casefold() for token in re.findall(r"[\w\-]+", value) if len(token) > 1}
+    return tokenize(value)
