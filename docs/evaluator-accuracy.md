@@ -45,4 +45,4 @@ python scripts/grounding_labels.py ingest --sheet alice.json --sheet bob.json \
 ragops calibrate --input calibration.json
 ```
 
-`ingest` validates every sheet, prints reviewer agreement (Cohen kappa) and each item where reviewers disagree with the maintainer, and writes a calibration set so `ragops calibrate` reports accuracy and false-pass/false-block rates against the human labels. No independent labels have been collected yet.
+`ingest` validates every sheet, prints reviewer agreement (Cohen kappa) and each item where reviewers disagree with the maintainer, and writes a calibration set so `ragops calibrate` reports accuracy and false-pass/false-block rates against the human labels. The report also includes `suggested_threshold`, the cutoff that best fits those labels within your false-pass limit, so you can set the threshold from data instead of guessing. No independent labels have been collected yet.

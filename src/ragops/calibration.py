@@ -43,6 +43,17 @@ class CalibrationSet:
 
 
 @dataclass(frozen=True)
+class ThresholdSuggestion:
+    """The pass threshold that best fits the human labels, with what it would score."""
+
+    threshold: float
+    accuracy: float
+    false_pass_rate: float
+    false_block_rate: float
+    meets_false_pass_limit: bool
+
+
+@dataclass(frozen=True)
 class CalibrationReport:
     schema_version: str
     evaluator: str
@@ -57,6 +68,7 @@ class CalibrationReport:
     reviewer_agreement: float | None
     reviewer_pair_count: int
     failed_gates: tuple[str, ...]
+    suggested_threshold: ThresholdSuggestion | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -193,7 +205,46 @@ def calibrate_evaluator(
         reviewer_agreement=agreement,
         reviewer_pair_count=pair_count,
         failed_gates=tuple(failed),
+        suggested_threshold=suggest_threshold(labeled, policy),
     )
+
+
+def suggest_threshold(
+    labeled: tuple[CalibrationRecord, ...], policy: CalibrationPolicy
+) -> ThresholdSuggestion | None:
+    """Pick the threshold with the best accuracy among those within the false-pass limit.
+
+    Ties go to the threshold closest to the current one. When no threshold keeps false
+    passes within the limit, the one with the fewest false passes is returned and
+    ``meets_false_pass_limit`` is False. Returns None without labels.
+    """
+    if not labeled:
+        return None
+    humans = [int(fmean(label.label for label in r.human_labels) >= policy.threshold) for r in labeled]
+    scores = sorted({r.automated_score for r in labeled})
+    candidates = {0.0, *scores}
+    candidates.update(round((low + high) / 2, 4) for low, high in zip(scores, scores[1:]))
+    if scores[-1] < 1.0:
+        candidates.add(min(1.0, round(scores[-1] + 0.01, 4)))  # blocks everything
+    total = len(labeled)
+    best: tuple[tuple[float, ...], ThresholdSuggestion] | None = None
+    for threshold in sorted(candidates):
+        passed = [int(r.automated_score >= threshold) for r in labeled]
+        false_pass = sum(p == 1 and h == 0 for p, h in zip(passed, humans)) / total
+        false_block = sum(p == 0 and h == 1 for p, h in zip(passed, humans)) / total
+        accuracy = sum(p == h for p, h in zip(passed, humans)) / total
+        within = false_pass <= policy.maximum_false_pass_rate
+        key = (
+            0.0 if within else 1.0,
+            0.0 if within else false_pass,
+            -accuracy,
+            abs(threshold - policy.threshold),
+            threshold,
+        )
+        suggestion = ThresholdSuggestion(threshold, accuracy, false_pass, false_block, within)
+        if best is None or key < best[0]:
+            best = (key, suggestion)
+    return best[1] if best else None
 
 
 def _reviewer_agreement(
