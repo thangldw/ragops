@@ -230,14 +230,15 @@ def _observation(data: Any, line_number: int) -> PilotObservation:
     ):
         if not isinstance(value, str) or not pattern.fullmatch(value):
             raise PilotContractError(f"observation line {line_number} {label} is invalid")
+    # Types were validated above (strings matching the patterns, real bools).
     return PilotObservation(
-        pilot_id=pilot_id,
-        task_id=task_id,
+        pilot_id=str(pilot_id),
+        task_id=str(task_id),
         phase=phase,
-        user_id=user_id,
-        week=week,
-        completed=completed,
-        successful=successful,
+        user_id=str(user_id),
+        week=str(week),
+        completed=bool(completed),
+        successful=bool(successful),
         duration_seconds=_number(
             data.get("duration_seconds"), f"observation line {line_number} duration_seconds"
         ),

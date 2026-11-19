@@ -153,29 +153,35 @@ def compare_replay_bundles(
                 resamples=policy.resamples,
                 seed=policy.seed,
             )
+            limit = gate.minimum if gate.direction == "higher" else gate.maximum
+            if limit is None:
+                raise ContractError(f"Metric {metric_name!r} has no absolute threshold")
             if gate.direction == "higher":
                 candidate_bound = _quantile(candidate_samples, 1.0 - policy.confidence)
                 regression_bound = _quantile(delta_samples, 1.0 - policy.confidence)
-                if candidate_bound < gate.minimum:
+                if candidate_bound < limit:
                     metric_failed.append("absolute")
                     failed.append(f"metric_absolute:{metric_name}")
                 if regression_bound < -gate.max_regression:
                     metric_failed.append("regression")
                     failed.append(f"metric_regression:{metric_name}")
-                threshold = gate.minimum
+                threshold = limit
             else:
                 candidate_bound = _quantile(candidate_samples, policy.confidence)
                 regression_bound = _quantile(delta_samples, policy.confidence)
-                if candidate_bound > gate.maximum:
+                if candidate_bound > limit:
                     metric_failed.append("absolute")
                     failed.append(f"metric_absolute:{metric_name}")
                 if regression_bound > gate.max_regression:
                     metric_failed.append("regression")
                     failed.append(f"metric_regression:{metric_name}")
-                threshold = gate.maximum
+                threshold = limit
 
         if insufficient:
-            threshold = gate.minimum if gate.direction == "higher" else gate.maximum
+            fallback = gate.minimum if gate.direction == "higher" else gate.maximum
+            if fallback is None:
+                raise ContractError(f"Metric {metric_name!r} has no absolute threshold")
+            threshold = fallback
         metric_results[metric_name] = StatisticalMetricResult(
             direction=gate.direction,
             baseline_mean=baseline_mean,

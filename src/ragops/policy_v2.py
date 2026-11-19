@@ -6,7 +6,7 @@ import tomllib
 from dataclasses import asdict, dataclass, replace
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from ragops.distribution import quantile
 from ragops.loader import ContractError
@@ -221,7 +221,7 @@ def _parse_release_policy_v2(path: str | Path) -> ReleasePolicyV2:
         metrics.append(
             PolicyGate(
                 metric=name,
-                direction=gate.get("direction"),
+                direction=cast(str, gate.get("direction")),
                 minimum=gate.get("minimum"),
                 maximum=gate.get("maximum"),
                 max_regression=gate.get("max_regression"),
@@ -241,7 +241,7 @@ def _parse_release_policy_v2(path: str | Path) -> ReleasePolicyV2:
         slices.append(
             SlicePolicy(
                 selector=SliceSelector(
-                    name=item.get("name"),
+                    name=cast(str, item.get("name")),
                     category=item.get("category"),
                     severity=item.get("severity"),
                     language=item.get("language"),
@@ -261,7 +261,7 @@ def _parse_release_policy_v2(path: str | Path) -> ReleasePolicyV2:
         tails.append(
             TailGate(
                 metric=metric,
-                percentile=item.get("percentile"),
+                percentile=cast(float, item.get("percentile")),
                 minimum=item.get("minimum"),
                 maximum=item.get("maximum"),
                 severity=item.get("severity", "block"),

@@ -131,18 +131,21 @@ def _evaluate_look(
         regression_lower = _quantile(delta_samples, tail_alpha)
         regression_upper = _quantile(delta_samples, 1.0 - tail_alpha)
         reasons: list[str] = []
+        limit = gate.minimum if gate.direction == "higher" else gate.maximum
+        if limit is None:
+            raise ContractError(f"Metric {metric_name!r} has no absolute threshold")
         if gate.direction == "higher":
-            absolute_pass = candidate_lower >= gate.minimum
+            absolute_pass = candidate_lower >= limit
             regression_pass = regression_lower >= -gate.max_regression
-            absolute_harm = candidate_upper < gate.minimum
+            absolute_harm = candidate_upper < limit
             regression_harm = regression_upper < -gate.max_regression
-            threshold = gate.minimum
+            threshold = limit
         else:
-            absolute_pass = candidate_upper <= gate.maximum
+            absolute_pass = candidate_upper <= limit
             regression_pass = regression_upper <= gate.max_regression
-            absolute_harm = candidate_lower > gate.maximum
+            absolute_harm = candidate_lower > limit
             regression_harm = regression_lower > gate.max_regression
-            threshold = gate.maximum
+            threshold = limit
         if absolute_pass and regression_pass:
             decision = "pass"
         elif absolute_harm or regression_harm or final:
