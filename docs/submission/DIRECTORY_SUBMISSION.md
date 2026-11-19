@@ -4,9 +4,9 @@ Prepared: 2026-08-24
 
 Published on the OpenAI Plugin Directory: https://chatgpt.com/plugins/plugins_6a6ed9e25c60819194c48f4233ae507e
 
-PyPI release target: https://pypi.org/project/ragops/2.1.1/
+PyPI release target: https://pypi.org/project/ragops/2.2.0/
 
-Submission artifact: `dist/ragops-chatgpt-plugin-2.1.1.zip`
+Submission artifact: `dist/ragops-chatgpt-plugin-2.2.0.zip`
 
 ## Submission choice
 
@@ -61,9 +61,9 @@ Submission artifact: `dist/ragops-chatgpt-plugin-2.1.1.zip`
 
 No account or credential is required. Use Python 3.11+ and run the bundled wrapper at `skills/evaluate-ai-release/scripts/run_ragops.py`. The OpenAI ZIP stores review fixtures under `skills/evaluate-ai-release/references/fixtures/japanese_troubleshooting`; the GitHub plugin uses the canonical copies under `scenarios/japanese_troubleshooting`. A gate block may return exit code 2; this is an expected evaluated outcome.
 
-## v2.1.1 update notes
+## v2.2.0 update notes
 
-RAGOps 2.1.1 (same content as the GitHub-only 2.1.0 tag, whose PyPI filename was unavailable) adds a composite GitHub Action release gate, CJK-aware lexical groundedness, a CI coverage gate and a split CLI parser. It builds on 2.0.2, which added a synthetic retrieval-poisoning regression specimen, verified checkout-free Windows use of the published package, CodeQL and protected-branch gates, explicit opt-in local usage evidence, and a wheel-derived SBOM with no local build paths. It retains the 2.0 content-addressed evidence, slice-aware policy, calibration, trace-graph, dataset leakage, CI output, portable import, and blind-review contracts. The plugin remains skills-only and does not include a hosted MCP connector. The optional local API/workbench is distributed through the Python package, not as a remote ChatGPT connector.
+RAGOps 2.2.0 adds an opt-in strict_grounding evaluator with a labeled benchmark, `pilot-init` for design-partner pilots, and the 2.1.x CI action and coverage gate. Earlier notes: RAGOps 2.1.1 (same content as the GitHub-only 2.1.0 tag, whose PyPI filename was unavailable) adds a composite GitHub Action release gate, CJK-aware lexical groundedness, a CI coverage gate and a split CLI parser. It builds on 2.0.2, which added a synthetic retrieval-poisoning regression specimen, verified checkout-free Windows use of the published package, CodeQL and protected-branch gates, explicit opt-in local usage evidence, and a wheel-derived SBOM with no local build paths. It retains the 2.0 content-addressed evidence, slice-aware policy, calibration, trace-graph, dataset leakage, CI output, portable import, and blind-review contracts. The plugin remains skills-only and does not include a hosted MCP connector. The optional local API/workbench is distributed through the Python package, not as a remote ChatGPT connector.
 
 ## Final portal checks
 

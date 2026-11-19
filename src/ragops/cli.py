@@ -63,6 +63,7 @@ from ragops.pilot import (
     load_pilot_observations,
     pilot_markdown,
     summarize_pilot,
+    write_pilot_scaffold,
 )
 from ragops.plugins import (
     AbstentionContractEvaluator,
@@ -377,6 +378,13 @@ def main() -> int:
     if args.command == "workspace-audit":
         events = ControlPlane(args.root).audit_events(args.workspace_id, limit=args.limit)
         print(json.dumps(events, ensure_ascii=False, indent=2))
+        return 0
+    if args.command == "pilot-init":
+        try:
+            created = write_pilot_scaffold(args.output, args.pilot_id, args.label)
+        except PilotContractError as exc:
+            raise SystemExit(f"pilot contract error: {exc}") from exc
+        print(json.dumps({"created": [str(path) for path in created]}, indent=2))
         return 0
     if args.command == "pilot-report":
         try:
