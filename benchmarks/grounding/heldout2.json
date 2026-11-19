@@ -1,0 +1,167 @@
+{
+ "schema": "ragops-grounding-benchmark-0.1",
+ "split": "heldout2",
+ "note": "Author-labeled synthetic pairs (label 1 = answer fully supported by evidence). Written before the antonym check; not independent human annotation.",
+ "items": [
+  {
+   "id": "heldout2-01",
+   "language": "en",
+   "evidence": "Access is granted after the manager approves the request.",
+   "answer": "Access is granted before the manager approves the request.",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout2-02",
+   "language": "en",
+   "evidence": "Access is granted after the manager approves the request.",
+   "answer": "The manager approves the request, then access is granted.",
+   "label": 1,
+   "kind": "paraphrase"
+  },
+  {
+   "id": "heldout2-03",
+   "language": "en",
+   "evidence": "The plan allows up to 5 team members.",
+   "answer": "The plan allows up to 5 team members.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout2-04",
+   "language": "en",
+   "evidence": "The plan allows up to 5 team members.",
+   "answer": "The plan allows up to 50 team members.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout2-05",
+   "language": "en",
+   "evidence": "Notifications are enabled by default.",
+   "answer": "Notifications are disabled by default.",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout2-06",
+   "language": "en",
+   "evidence": "Notifications are enabled by default.",
+   "answer": "Notifications are enabled by default for all users.",
+   "label": 0,
+   "kind": "extra_claim"
+  },
+  {
+   "id": "heldout2-07",
+   "language": "en",
+   "evidence": "Uploads larger than 10 MB are rejected.",
+   "answer": "Uploads smaller than 10 MB are rejected.",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout2-08",
+   "language": "en",
+   "evidence": "Data is encrypted at rest and in transit.",
+   "answer": "Data is encrypted at rest.",
+   "label": 1,
+   "kind": "subset"
+  },
+  {
+   "id": "heldout2-09",
+   "language": "en",
+   "evidence": "Data is encrypted at rest and in transit.",
+   "answer": "Data is not encrypted in transit.",
+   "label": 0,
+   "kind": "negation"
+  },
+  {
+   "id": "heldout2-10",
+   "language": "en",
+   "evidence": "The free tier includes 1,000 requests per day.",
+   "answer": "The free tier includes 1,000 requests per day.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout2-11",
+   "language": "en",
+   "evidence": "The free tier includes 1,000 requests per day.",
+   "answer": "The paid tier includes 1,000 requests per day.",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout2-12",
+   "language": "en",
+   "evidence": "Open the settings page and select Security.",
+   "answer": "Open the settings page and select Billing.",
+   "label": 0,
+   "kind": "entity"
+  },
+  {
+   "id": "heldout2-13",
+   "language": "en",
+   "evidence": "Open the settings page and select Security.",
+   "answer": "Close the settings page and select Security.",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout2-14",
+   "language": "vi",
+   "evidence": "Tài khoản được kích hoạt sau khi xác minh email.",
+   "answer": "Tài khoản được kích hoạt trước khi xác minh email.",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout2-15",
+   "language": "vi",
+   "evidence": "Tài khoản được kích hoạt sau khi xác minh email.",
+   "answer": "Tài khoản được kích hoạt sau khi xác minh email.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout2-16",
+   "language": "vi",
+   "evidence": "Tệp tải lên lớn hơn 10 MB sẽ bị từ chối.",
+   "answer": "Tệp tải lên nhỏ hơn 10 MB sẽ bị từ chối.",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout2-17",
+   "language": "ja",
+   "evidence": "アカウントは承認後に有効になります。",
+   "answer": "アカウントは承認前に有効になります。",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout2-18",
+   "language": "ja",
+   "evidence": "アカウントは承認後に有効になります。",
+   "answer": "アカウントは承認後に有効になります。",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout2-19",
+   "language": "ja",
+   "evidence": "通知は初期設定で有効です。",
+   "answer": "通知は初期設定で無効です。",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout2-20",
+   "language": "ja",
+   "evidence": "ファイルは10MB以下にしてください。",
+   "answer": "ファイルは50MB以下にしてください。",
+   "label": 0,
+   "kind": "number"
+  }
+ ]
+}

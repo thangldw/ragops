@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from ragops.evaluators import lexical_groundedness, strict_grounding  # noqa: E402
 from ragops.models import EvalCase, RecordedResponse  # noqa: E402
 
-SPLITS = ("dev", "heldout")
+SPLITS = ("dev", "heldout", "heldout2", "heldout3")
 
 
 def load(split: str) -> list[dict]:
