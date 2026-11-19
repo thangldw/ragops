@@ -1,0 +1,135 @@
+{
+ "schema": "ragops-grounding-benchmark-0.1",
+ "split": "heldout3",
+ "note": "Author-labeled synthetic pairs (label 1 = answer fully supported by evidence). Written before the antonym/proper-noun checks and not used for tuning; not independent human annotation.",
+ "items": [
+  {
+   "id": "heldout3-01",
+   "language": "en",
+   "evidence": "Employees may work remotely up to 3 days per week.",
+   "answer": "Employees may work remotely up to 3 days per week.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout3-02",
+   "language": "en",
+   "evidence": "Employees may work remotely up to 3 days per week.",
+   "answer": "Employees may work remotely up to 5 days per week.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout3-03",
+   "language": "en",
+   "evidence": "Payments are processed before the shipment leaves the warehouse.",
+   "answer": "Payments are processed after the shipment leaves the warehouse.",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout3-04",
+   "language": "en",
+   "evidence": "The report is generated weekly on Monday.",
+   "answer": "The report is generated weekly.",
+   "label": 1,
+   "kind": "subset"
+  },
+  {
+   "id": "heldout3-05",
+   "language": "en",
+   "evidence": "The report is generated weekly on Monday.",
+   "answer": "The report is generated daily on Monday.",
+   "label": 0,
+   "kind": "word_swap"
+  },
+  {
+   "id": "heldout3-06",
+   "language": "en",
+   "evidence": "Only Premium users can export data to Excel.",
+   "answer": "Only Premium users can export data to Excel.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout3-07",
+   "language": "en",
+   "evidence": "Only Premium users can export data to Excel.",
+   "answer": "Only Basic users can export data to Excel.",
+   "label": 0,
+   "kind": "entity"
+  },
+  {
+   "id": "heldout3-08",
+   "language": "en",
+   "evidence": "The device is not compatible with Android 9.",
+   "answer": "The device is compatible with Android 9.",
+   "label": 0,
+   "kind": "negation"
+  },
+  {
+   "id": "heldout3-09",
+   "language": "en",
+   "evidence": "Increase the temperature to 80 degrees.",
+   "answer": "Decrease the temperature to 80 degrees.",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout3-10",
+   "language": "en",
+   "evidence": "Support replies within 24 hours.",
+   "answer": "You will get a reply from support within a day.",
+   "label": 1,
+   "kind": "synonym_paraphrase"
+  },
+  {
+   "id": "heldout3-11",
+   "language": "vi",
+   "evidence": "Đăng nhập thất bại 3 lần sẽ khóa tài khoản.",
+   "answer": "Đăng nhập thất bại 5 lần sẽ khóa tài khoản.",
+   "label": 0,
+   "kind": "number"
+  },
+  {
+   "id": "heldout3-12",
+   "language": "vi",
+   "evidence": "Tính năng này được bật mặc định.",
+   "answer": "Tính năng này bị tắt mặc định.",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout3-13",
+   "language": "vi",
+   "evidence": "Tính năng này được bật mặc định.",
+   "answer": "Tính năng này được bật mặc định.",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout3-14",
+   "language": "ja",
+   "evidence": "購入前にアカウントを作成してください。",
+   "answer": "購入後にアカウントを作成してください。",
+   "label": 0,
+   "kind": "antonym"
+  },
+  {
+   "id": "heldout3-15",
+   "language": "ja",
+   "evidence": "購入前にアカウントを作成してください。",
+   "answer": "購入前にアカウントを作成してください。",
+   "label": 1,
+   "kind": "copy"
+  },
+  {
+   "id": "heldout3-16",
+   "language": "ja",
+   "evidence": "返品は未開封の商品のみ可能です。",
+   "answer": "返品は開封済みの商品も可能です。",
+   "label": 0,
+   "kind": "word_swap"
+  }
+ ]
+}

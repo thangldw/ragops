@@ -1,5 +1,19 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
+## Unreleased
+
+### English
+
+- `strict_grounding` now treats antonym pairs and mismatched proper nouns as contradictions, and no longer splits numbers such as `1,000`. Benchmark grew to 97 pairs; strict accuracy is 93% overall versus 72% for lexical groundedness.
+
+### Tiếng Việt
+
+- `strict_grounding` nay coi cặp từ trái nghĩa và danh từ riêng không khớp là mâu thuẫn, và không còn tách số như `1,000`. Benchmark tăng lên 97 cặp; strict đạt 93% so với 72% của lexical groundedness.
+
+### 日本語
+
+- `strict_grounding` は反意語の組と一致しない固有名詞を矛盾として扱い、`1,000` のような数値を分割しなくなりました。ベンチマークは 97 組になり、strict は全体で 93%（lexical groundedness は 72%）です。
+
 ## [2.2.1] - 2026-11-19
 
 ### English
