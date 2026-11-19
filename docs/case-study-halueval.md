@@ -44,6 +44,10 @@ CI is the 95% Wilson interval for each rate.
   else, "Stanford University has a Chestnut Hill campus". A word-level check cannot see these.
   Neither can lexical grounding. Both need a semantic or entailment judge.
 
+## Where the errors come from (strict_grounding)
+
+Of 827 right answers blocked, 620 (75%) are bare `yes`/`no`; 205 are other short answers present in the passage. Of 967 hallucinations passed, 847 (88%) reuse the passage's own words in a wrong relation. Adding number-word normalisation (`nine` = `9`) and a reversed-name check (`Brooks Garth`) left accuracy unchanged at 91.0%: these rules are correct and tested, but they do not touch the dominant errors. Word matching has reached its ceiling here; the rest needs entailment (a semantic scorer).
+
 ## Takeaways
 
 1. Neither lexical evaluator is a hallucination detector for short-form QA. About 8–10% of
