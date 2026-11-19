@@ -68,3 +68,46 @@ def test_init_cli(monkeypatch, tmp_path: Path, capsys) -> None:
     monkeypatch.setattr("sys.argv", ["ragops", "init", "--from", str(tmp_path / "missing"), "--output", str(tmp_path / "o2")])
     with pytest.raises(SystemExit):
         main()
+
+
+def _log(question: str, answer: str, context: str, ident: str | None = None) -> dict:
+    record = {"query": question, "response": answer, "documents": [context], "latency": 900}
+    if ident:
+        record["id"] = ident
+    return record
+
+
+def test_init_with_candidate_logs_writes_a_comparison(tmp_path: Path) -> None:
+    base = tmp_path / "before.jsonl"
+    cand = tmp_path / "after.jsonl"
+    base.write_text("\n".join(json.dumps(r) for r in [
+        _log("Refund window?", "Refunds are available within 30 days.", "Refunds are available within 30 days of purchase."),
+        _log("Ship to Canada?", "We ship to the US only.", "We ship to the US only."),
+        _log("Only in baseline?", "Yes it is.", "Yes it is."),
+    ]), encoding="utf-8")
+    cand.write_text("\n".join(json.dumps(r) for r in [
+        _log("  ship TO canada?  ", "Yes, we ship to Canada in 3 days.", "irrelevant"),
+        _log("Refund window?", "Refunds are available within 30 days.", "x"),
+        _log("Brand new question", "Something.", "x"),
+    ]), encoding="utf-8")
+    result = init_project(base, tmp_path / "out", candidate=cand)
+    assert result.cases == 2
+    assert result.skipped["candidate has no matching baseline case"] == 1
+    assert result.skipped["baseline case without a candidate answer"] == 1
+    out = tmp_path / "out"
+    assert {p.name for p in out.iterdir()} >= {"scenario.json", "responses.json", "candidate.json", "compare-report.md"}
+    assert "Canada" in (out / "candidate.json").read_text(encoding="utf-8")
+    assert (out / "compare-report.md").read_text(encoding="utf-8").startswith("# RAGOps")
+    assert not result.passed
+
+
+def test_init_candidate_with_no_overlap_is_rejected(tmp_path: Path) -> None:
+    base = tmp_path / "a.jsonl"
+    cand = tmp_path / "b.jsonl"
+    base.write_text(json.dumps(_log("one?", "A.", "A.")), encoding="utf-8")
+    cand.write_text(json.dumps(_log("two?", "B.", "B.")), encoding="utf-8")
+    with pytest.raises(ContractError, match="No candidate record matched"):
+        init_project(base, tmp_path / "out", candidate=cand)
+    cand.write_text(json.dumps({"id": "x"}) + "\n" + json.dumps(_log("one?", "", "A.")) + "\n[1]", encoding="utf-8")
+    with pytest.raises(ContractError):
+        init_project(base, tmp_path / "out2", candidate=cand)

@@ -43,3 +43,15 @@ Limits, stated plainly:
 - These mappings follow the documented shapes of each platform's exports and are covered by
   fixture tests. They have not been run against a live account export. If yours differs,
   `--source-format generic` with the field aliases above is the fallback; please report the shape.
+
+## Compare two runs
+
+```bash
+ragops init --from logs-before --candidate logs-after --output gate
+```
+
+Writes `candidate.json` and `compare-report.md` (the same regression check as `ragops compare`, with
+`strict_grounding` reported). Candidate answers are matched to baseline cases by `id`, then by the question
+text (case and spacing ignored). Unmatched records are counted and left out. Candidate answers are judged
+against the baseline case's evidence, so a candidate that retrieved different documents is still held to the
+same facts.
