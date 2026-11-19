@@ -61,6 +61,7 @@ from ragops.evidence import create_evidence_bundle, verify_evidence_bundle
 from ragops.explain import explain_decision
 from ragops.explorer import explorer_html
 from ragops.governance import GovernanceStore
+from ragops.init_project import init_project
 from ragops.loader import ContractError, load_responses, load_scenario
 from ragops.pilot import (
     PilotContractError,
@@ -374,6 +375,18 @@ def main() -> int:
     if args.command == "workspace-audit":
         events = ControlPlane(args.root).audit_events(args.workspace_id, limit=args.limit)
         print(json.dumps(events, ensure_ascii=False, indent=2))
+        return 0
+    if args.command == "init":
+        try:
+            outcome = init_project(args.source, args.output, scenario_id=args.scenario_id)
+        except ContractError as exc:
+            raise SystemExit(f"contract error: {exc}") from exc
+        print(json.dumps(outcome.to_dict(), ensure_ascii=False, indent=2))
+        print(
+            f"\nNext: ragops evaluate --scenario {outcome.files[0]} --responses {outcome.files[1]}"
+            " --evaluator strict_grounding --format markdown",
+            file=sys.stderr,
+        )
         return 0
     if args.command == "pilot-init":
         try:
