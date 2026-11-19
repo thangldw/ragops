@@ -1,6 +1,6 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
-## [Unreleased]
+## [2.5.0] - 2026-11-20
 
 - Real mutation testing with `mutmut` (new `mutation` extra, config in `pyproject.toml`) on the calibration, explain, policy-suggest and CI-renderer modules. The first run killed 65% of 1152 mutants; new boundary, exact-value and malformed-input tests raised that to 91% (1041 of 1149). It also showed one redundant ranking key in `suggest_threshold`, now removed. Plain-language gate summaries now read "Overall, the …" / "For the ja slice, the …".
 - Added `.github/workflows/weekly.yml`: every Monday (and on demand) it installs the newest dependency releases, runs the test suite and the grounding benchmark, and writes the benchmark numbers to the job summary, so upstream breakage or an accuracy regression surfaces without waiting for a pull request.
