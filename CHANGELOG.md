@@ -1,6 +1,6 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
-## Unreleased
+## [2.4.0] - 2026-11-19
 
 ### English
 
@@ -24,10 +24,12 @@
 
 ### Tiếng Việt
 
+- Thêm `ragops init --from LOGS` (kèm `--source-format langfuse|openai|anthropic`) và `ragops compare --format explorer` (báo cáo HTML tương tác). Nhiều loader từng crash với dữ liệu sai kiểu nay trả lỗi hợp đồng. Benchmark công khai (HaluEval, RAGTruth) cho thấy con số 93% của strict_grounding không khái quát hoá; chỉ nên dùng cho câu trả lời ngắn. Xem `docs/releases/v2.4.0.md`.
 - Thêm evaluator plug-in `semantic_grounding` (`--semantic-command`): điểm theo từng claim từ scorer embedding/LLM của bạn, có chốt chặn lỗi số và đảo phủ định. Xem `docs/semantic-evaluator.md`.
 
 ### 日本語
 
+- `ragops init --from LOGS`（`--source-format langfuse|openai|anthropic` 対応）と `ragops compare --format explorer`（インタラクティブ HTML レポート）を追加しました。型が不正な入力でクラッシュしていた複数のローダーが契約エラーを返すようになりました。公開ベンチマーク（HaluEval、RAGTruth）で strict_grounding の 93% は一般化しないことが分かり、短い回答にのみ推奨します。詳細は `docs/releases/v2.4.0.md`。
 - プラグイン型 `semantic_grounding` evaluator（`--semantic-command`）を追加しました。独自の埋め込み/LLM スコアラーによる主張単位のスコアで、数値や否定の誤りを防ぎます。`docs/semantic-evaluator.md` を参照してください。
 
 ## [2.3.1] - 2026-11-19
