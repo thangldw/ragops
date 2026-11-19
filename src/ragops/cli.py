@@ -378,7 +378,12 @@ def main() -> int:
         return 0
     if args.command == "init":
         try:
-            outcome = init_project(args.source, args.output, scenario_id=args.scenario_id)
+            outcome = init_project(
+                args.source,
+                args.output,
+                scenario_id=args.scenario_id,
+                source_format=args.source_format,
+            )
         except ContractError as exc:
             raise SystemExit(f"contract error: {exc}") from exc
         print(json.dumps(outcome.to_dict(), ensure_ascii=False, indent=2))

@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from ragops.adapters.trace_import import convert_traces
 from ragops.engine import evaluate
 from ragops.loader import ContractError, load_responses, load_scenario
 from ragops.plugins import StrictGroundingEvaluator
@@ -63,8 +64,16 @@ class InitResult:
         }
 
 
-def init_project(source: str | Path, output: str | Path, *, scenario_id: str = "my-rag") -> InitResult:
+def init_project(
+    source: str | Path,
+    output: str | Path,
+    *,
+    scenario_id: str = "my-rag",
+    source_format: str = "generic",
+) -> InitResult:
     records = list(_read_records(Path(source)))
+    if source_format != "generic":
+        records = convert_traces(source_format, _unwrap(records))
     if not records:
         raise ContractError(f"No JSON or JSONL records found in {source}")
     result = InitResult(cases=0)
@@ -141,6 +150,15 @@ def _read_records(source: Path) -> Iterable[Any]:
                 yield from data if isinstance(data, list) else [data]
         except json.JSONDecodeError as exc:
             raise ContractError(f"{path} is not valid JSON: {exc}") from exc
+
+
+def _unwrap(records: list[Any]) -> list[Any]:
+    """Accept API envelopes such as {"data": [...]} around the real records."""
+    if len(records) == 1 and isinstance(records[0], dict):
+        for key in ("data", "traces", "logs", "records"):
+            if isinstance(records[0].get(key), list):
+                return records[0][key]
+    return records
 
 
 def _get(record: dict[str, Any], key: str) -> Any:
