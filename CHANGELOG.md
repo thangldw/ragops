@@ -1,6 +1,6 @@
 # RAGOps changelog / Lịch sử thay đổi / 変更履歴
 
-## Unreleased
+## [2.1.0] - 2026-11-19
 
 ### English
 
@@ -11,10 +11,14 @@
 
 ### Tiếng Việt
 
+- Chuyển bộ phân tích tham số khỏi `cli.py` sang `cli_parser.py`; thêm test API/baseline/usage/reporter và ngưỡng coverage trong CI (`fail_under = 82`).
+- Lexical groundedness tách chuỗi tiếng Nhật/Trung thành bigram ký tự và chuẩn hoá NFC; ghi rõ đây là baseline từ vựng, không phải bộ đánh giá ngữ nghĩa.
 - Bổ sung GitHub Action dạng composite (`action.yml`) áp dụng release policy v2 bằng `ragops gate-v2`, ghi quyết định chuẩn cùng bản render JUnit, SARIF và GitHub Summary, và chỉ làm step thất bại khi quyết định là BLOCK. Xem `docs/examples/github-action-release-gate.yml`.
 
 ### 日本語
 
+- 引数パーサーを `cli.py` から `cli_parser.py` に移動し、API・baseline・usage・reporter のテストと CI のカバレッジ基準 (`fail_under = 82`) を追加しました。
+- lexical groundedness は日本語・中国語の連続文字を文字 bigram に分割し NFC 正規化します。意味的な評価器ではなく語彙ベースラインであることを明記しました。
 - `ragops gate-v2` でリリースポリシー v2 を適用し、正規の判定と JUnit・SARIF・GitHub Summary を出力し、判定が BLOCK の場合のみステップを失敗させる composite GitHub Action (`action.yml`) を追加しました。`docs/examples/github-action-release-gate.yml` を参照してください。
 
 ## [2.0.2] - 2026-08-24

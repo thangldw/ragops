@@ -24,7 +24,7 @@ inputs:
   version:
     description: RAGOps version installed from PyPI.
     required: false
-    default: "2.0.2"
+    default: "2.1.0"
   python-version:
     description: Python version used to run RAGOps (3.11 or newer).
     required: false
