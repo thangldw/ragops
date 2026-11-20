@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-11-20
+
 - New `ragops counterfactual-selftest`: lets users check the counterfactual checks on their own scenario without any system. It builds an evidence-copying reference and an evidence-ignoring (or injection-obeying) system from the user's cases and reports, per perturbation, how often the reference is wrongly flagged, how often the failing system is caught, and whether enough cases apply (`valid`, `weak`, `too_few_cases`; exit 0, 2, 3).
 
 ## [2.6.0] - 2026-11-20
