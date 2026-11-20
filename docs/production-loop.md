@@ -1,6 +1,4 @@
-# Production loop / Vòng lặp production / 本番運用ループ
-
-[English](#english) · [Tiếng Việt](#tiếng-việt) · [日本語](#日本語)
+# Production loop
 
 Five commands that connect real usage to the release gate: set a policy from a baseline, trust the
 scorer only where it is accurate, catch unstable answers, grow the test set from production
@@ -23,8 +21,6 @@ flowchart LR
     classDef pink fill:#FFE1E6,stroke:#C96A7B,stroke-width:2px,color:#172B4D
     classDef green fill:#DDF5E3,stroke:#4F9D69,stroke-width:2px,color:#172B4D
 ```
-
-## English
 
 ### What was measured, and what was not
 
@@ -124,62 +120,3 @@ instruction-obeying system should be caught. Exit codes: counterfactual 0 PASS /
    uncertain cases.
 3. In CI, run `gate-v2` and `stability`; run `counterfactual` when answers must be grounded.
 4. After each incident, `mine` the flagged logs into the scenario so it cannot recur silently.
-
-## Tiếng Việt
-
-Năm lệnh nối việc dùng thật với cổng phát hành. Tất cả chạy offline, không gọi mạng, không cần
-model provider (`counterfactual` chỉ gọi đúng lệnh bạn đưa).
-
-**Giới hạn quan trọng:** các công cụ này mới được thử trên hệ thống mẫu và dữ liệu dựng sẵn cho test
-và demo, chưa đo trên hệ RAG production thật. Hãy coi kết quả là cách xem dữ liệu của bạn kỹ hơn,
-không phải chứng nhận.
-
-- **`policy-suggest`**: sinh release policy v2 từ baseline đã chấp nhận. Mỗi ngưỡng chất lượng là giá
-  trị baseline thấp nhất trừ `--margin` (mặc định 0,05), nên baseline qua được chính policy của nó.
-  Hãy review trước khi dùng rồi áp dụng bằng `ragops gate-v2`.
-- **`calibrate` + `triage`**: `calibrate` so điểm tự động với nhãn của người, đưa ra
-  `suggested_threshold` và `confidence_band` (vùng quanh ngưỡng nơi scorer đủ tin cậy theo
-  `--target-accuracy`, mặc định 0,9). `triage` chia từng case thành `auto-pass`, `auto-fail` hoặc
-  `needs-review`; chỉ case gần ngưỡng mới cần người xem. Ít nhãn thì vùng tin cậy rộng hoặc không có,
-  khi đó mọi case đều cần review.
-- **`stability`**: chặn ứng viên trả lời không ổn định giữa các lần chạy (một case không ổn định khi
-  metric lệch quá `--max-range`, mặc định 0,2; tối đa `--max-unstable-fraction`, mặc định 10%, case
-  được phép không ổn định). Mã thoát 2 khi BLOCK.
-- **`mine`**: thêm mọi log bị đánh dấu (thumbs down, rating ≤ `--max-rating`, escalated…) vào scenario
-  thành case `mined-feedback` mức high; câu trả lời lỗi được giữ làm baseline của case đó. Bỏ qua
-  câu hỏi đã có và không ghi đè output.
-- **`counterfactual` / `counterfactual-selftest`**: đổi bằng chứng rồi hỏi lại hệ thống của bạn để xem
-  câu trả lời có thật sự dựa vào bằng chứng; selftest kiểm tra chính các phép thử trên scenario của
-  bạn trước. Chi tiết: [counterfactual-test.md](counterfactual-test.md).
-
-Quy trình gợi ý: chấp nhận baseline → `policy-suggest` → `calibrate`/`triage` → CI chạy `gate-v2`,
-`stability`, `counterfactual` → sau mỗi sự cố, `mine` log bị đánh dấu vào scenario.
-
-## 日本語
-
-本番利用とリリースゲートをつなぐ5つのコマンドです。すべてオフラインで動作し、ネットワーク通信や
-モデルプロバイダーは不要です（`counterfactual` は指定したコマンドだけを呼び出します）。
-
-**重要な制限:** これらはテスト・デモ用に作った玩具システムと構成データで確認したもので、実際の
-本番 RAG では未測定です。結果は証明ではなく、自分のデータをより丁寧に見るための手段として扱って
-ください。
-
-- **`policy-suggest`**: 承認済みベースラインからリリース方針 v2 を生成します。各品質下限は
-  ベースラインの最低値から `--margin`（既定 0.05）を引いた値で、ベースライン自身は合格します。
-  使用前に確認し、`ragops gate-v2` で適用します。
-- **`calibrate` + `triage`**: `calibrate` は自動スコアを人のラベルと比較し、`suggested_threshold` と
-  `confidence_band`（`--target-accuracy`、既定 0.9 を満たす、しきい値周辺の外側の範囲）を出します。
-  `triage` は各ケースを `auto-pass` / `auto-fail` / `needs-review` に分け、しきい値に近いものだけを
-  人が確認します。ラベルが少ないと範囲は広くなり、全件が要確認になります。
-- **`stability`**: 繰り返し実行で回答がぶれる候補をブロックします（指標が `--max-range`、既定 0.2
-  を超えて変動したケースは不安定。不安定ケースは `--max-unstable-fraction`、既定 10% まで）。
-  BLOCK の終了コードは 2。
-- **`mine`**: 本番ログで問題とされたもの（thumbs down、`--max-rating` 以下の評価、エスカレーション
-  など）をシナリオに `mined-feedback`（高重要度）として追加し、失敗した回答をそのケースの基準回答と
-  して保持します。既存の質問は除外し、出力は上書きしません。
-- **`counterfactual` / `counterfactual-selftest`**: 根拠を変えて自分のシステムに再質問し、回答が根拠に
-  依存しているかを確認します。selftest は先に自分のシナリオでこの検査自体を確認します。詳細:
-  [counterfactual-test.md](counterfactual-test.md)。
-
-推奨手順: ベースライン承認 → `policy-suggest` → `calibrate`/`triage` → CI で `gate-v2`・`stability`・
-`counterfactual` → 障害のたびにフラグ付きログを `mine` でシナリオへ。
