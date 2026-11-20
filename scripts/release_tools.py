@@ -25,7 +25,7 @@ VERSION = re.compile(r"\d+\.\d+\.\d+")
 PLAIN_FILES = (
     "src/ragops/__init__.py",
     ".kimi-plugin/plugin.json",
-    ".claude-plugin/plugin.json",
+    "plugins/ragops/.claude-plugin/plugin.json",
     ".codex-plugin/plugin.json",
     "action.yml",
     "docs/examples/gitlab-ci-ragops.yml",

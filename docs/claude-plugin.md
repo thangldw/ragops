@@ -2,7 +2,7 @@
 
 The `ragops` plugin gives Claude one skill, `evaluate-ai-release`, that runs the RAGOps CLI to gate a RAG or
 agent release and explain the result. Everything runs locally: no account, API key or network access is needed
-by default, and Python 3.11 or newer is the only requirement (the plugin bundles the dependency-free core).
+by default, and Python 3.11 or newer and `pip install ragops` are required (the plugin folder holds only Markdown, JSON and an icon, so the CLI is installed from PyPI rather than bundled).
 
 ## Install
 
@@ -35,5 +35,5 @@ thresholds to obtain a pass, and never merges, tags or deploys on its own.
 ## For maintainers
 
 Skills for working on this repository live in `.claude/skills/` so they are not shipped to plugin users.
-Before a release run `claude plugin validate . --strict` on a fresh checkout and keep `.claude-plugin/plugin.json`
+The plugin lives in `plugins/ragops/` (the marketplace at the repository root points to it). Before a release run `claude plugin validate plugins/ragops --profile directory --strict` on a fresh checkout and keep `plugins/ragops/.claude-plugin/plugin.json`
 in step with `pyproject.toml` (`python scripts/release_tools.py bump` does it).

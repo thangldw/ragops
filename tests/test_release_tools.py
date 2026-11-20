@@ -10,7 +10,7 @@ import release_tools as tools  # noqa: E402
 
 COPIED = (
     "pyproject.toml", "README.md", "CHANGELOG.md", "action.yml", "src/ragops/__init__.py",
-    ".kimi-plugin/plugin.json", ".claude-plugin/plugin.json", ".codex-plugin/plugin.json",
+    ".kimi-plugin/plugin.json", "plugins/ragops/.claude-plugin/plugin.json", ".codex-plugin/plugin.json",
     "docs/examples/gitlab-ci-ragops.yml", "docs/examples/github-actions-ragops.yml",
     "docs/submission/DIRECTORY_SUBMISSION.md", "scripts/burned_versions.txt",
 )
