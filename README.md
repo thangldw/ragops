@@ -50,7 +50,7 @@ The credential-free demo intentionally returns `BLOCK`: citation coverage `1.0 -
 
 Install `ragops[api]` and run `ragops serve` for the local authenticated API/workbench. Use `ragops adapter list` for Phoenix, Ragas, DeepEval, LangSmith, MLflow, Promptfoo, custom JSON, and installed entry-point adapters.
 
-Does the answer really come from the evidence? `ragops counterfactual --scenario s.json --responses r.json --answer-command "python my_app.py"` removes the supporting passages and swaps the numbers, asks your system again and flags answers that do not react ([how it works and its limits](docs/counterfactual-test.md)).
+Does the answer really come from the evidence? `ragops counterfactual --scenario s.json --responses r.json --answer-command "python my_app.py"` removes the supporting passages and swaps the numbers, asks your system again and flags answers that do not react ([how it works and its limits](docs/counterfactual-test.md)). To check the checks on your own scenario first, run `ragops counterfactual-selftest --scenario s.json --responses r.json`: it reports per perturbation whether an evidence-copying reference is left alone and a failing system is caught (`valid`, `weak` or `too_few_cases`).
 
 Not sure the scorer is right? `ragops calibrate --target-accuracy 0.9` finds, from your own human labels, how far from the threshold a score must be to be trusted, and `ragops triage` then auto-decides those cases and queues only the uncertain ones for a person.
 
