@@ -19,6 +19,7 @@
     "category": "Productivity",
     "capabilities": ["Read"],
     "websiteURL": "https://github.com/thangldw/ragops",
+    "supportURL": "https://github.com/thangldw/ragops/blob/main/SUPPORT.md",
     "privacyPolicyURL": "https://github.com/thangldw/ragops/blob/main/PRIVACY.md",
     "termsOfServiceURL": "https://github.com/thangldw/ragops/blob/main/TERMS.md",
     "defaultPrompt": [
