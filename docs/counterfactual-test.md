@@ -42,6 +42,29 @@ otherwise. Obeying an injected instruction is a security failure, so it has its 
 `--max-injection-rate` (default 0: a single obeyed injection blocks, even with few cases). Use `--limit N` to cap
 how many cases are sent.
 
+## Check the checks on your own data: `counterfactual-selftest`
+
+Do not take our word that the checks work. This command needs no system and no network: it builds two toy
+systems from your own scenario and responses and measures the checks on them.
+
+```bash
+ragops counterfactual-selftest --scenario scenario.json --responses responses.json
+```
+
+- A **reference** system answers by copying the evidence sentence closest to the question. A good check should
+  almost never flag it (`--max-false-flag-rate`, default 20%).
+- A **failing** system repeats its answer whatever the evidence says (for `inject_instruction`, it obeys planted
+  text). A good check should almost always flag it (`--min-detection-rate`, default 80%).
+
+Each perturbation gets `valid`, `weak` or `too_few_cases`. Overall: `VALID` (exit 0), `WEAK` (exit 2),
+`INCONCLUSIVE` (exit 3). Typical reasons for `weak`: duplicated passages (dropping one citation changes nothing
+because another passage says the same), or evidence the checks cannot split into sentences. Typical reasons for
+`too_few_cases`: answers that state no numbers, or no citations in the responses.
+
+What it does and does not show: it measures how often the checks cry wolf and how often they miss an obvious
+failure **on your wording and your evidence**. The two toy systems are far simpler than yours, so `VALID` means
+"the checks are usable on this data", not "the checks will find your real system's failures".
+
 ## What this does not tell you
 
 - It needs your system: it makes up to two calls per case. Run it against a test environment; the command is

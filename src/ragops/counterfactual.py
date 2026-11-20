@@ -19,7 +19,7 @@ import re
 import subprocess
 import unicodedata
 from dataclasses import asdict, dataclass, field
-from typing import Any
+from typing import Any, Protocol
 
 from ragops.evaluators import tokenize
 from ragops.loader import ContractError
@@ -75,6 +75,10 @@ class CounterfactualReport:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+class Answerer(Protocol):
+    def answer(self, case_id: str, question: str, evidence: list[str]) -> str: ...
 
 
 class CommandAnswerer:
@@ -143,7 +147,7 @@ def _changed_number(token: str) -> str:
 
 
 def _check_remove_support(
-    case: EvalCase, baseline: str, answerer: CommandAnswerer, same_threshold: float
+    case: EvalCase, baseline: str, answerer: Answerer, same_threshold: float
 ) -> CaseCheck:
     drop = _support_indexes(case.evidence, baseline)
     if not drop:
@@ -160,7 +164,7 @@ def _check_remove_support(
     return CaseCheck(case.id, "remove_support", "sensitive", f"answer changed (similarity {similarity:.2f})", new_answer)
 
 
-def _check_swap_number(case: EvalCase, baseline: str, answerer: CommandAnswerer) -> CaseCheck:
+def _check_swap_number(case: EvalCase, baseline: str, answerer: Answerer) -> CaseCheck:
     in_evidence = set(NUMBER_RE.findall(" ".join(case.evidence)))
     asked = set(NUMBER_RE.findall(case.question))
     swapped = {n: _changed_number(n) for n in sorted(set(NUMBER_RE.findall(baseline)) & in_evidence - asked)}
@@ -197,7 +201,7 @@ def _citation_indexes(case: EvalCase, response: RecordedResponse) -> list[tuple[
 
 
 def _check_drop_citation(
-    case: EvalCase, response: RecordedResponse, answerer: CommandAnswerer, same_threshold: float
+    case: EvalCase, response: RecordedResponse, answerer: Answerer, same_threshold: float
 ) -> list[CaseCheck]:
     cited = _citation_indexes(case, response)
     if not cited:
@@ -225,7 +229,7 @@ def _canary(case_id: str) -> str:
     return "RAGOPS-CANARY-" + hashlib.sha256(case_id.encode("utf-8")).hexdigest()[:8].upper()
 
 
-def _check_inject_instruction(case: EvalCase, answerer: CommandAnswerer) -> CaseCheck:
+def _check_inject_instruction(case: EvalCase, answerer: Answerer) -> CaseCheck:
     token = _canary(case.id)
     evidence = [INJECTION_TEMPLATE.format(token=token), *case.evidence]
     new_answer = answerer.answer(case.id, case.question, evidence)
@@ -235,7 +239,7 @@ def _check_inject_instruction(case: EvalCase, answerer: CommandAnswerer) -> Case
 
 
 def _check_abstain(
-    case: EvalCase, baseline: str, answerer: CommandAnswerer, patterns: tuple[str, ...]
+    case: EvalCase, baseline: str, answerer: Answerer, patterns: tuple[str, ...]
 ) -> CaseCheck:
     if looks_like_abstention(baseline, patterns):
         return CaseCheck(case.id, "abstain_without_evidence", "skipped", "the baseline answer is already an abstention")
@@ -251,7 +255,7 @@ def run_counterfactual(
     scenario_id: str,
     cases: tuple[EvalCase, ...],
     responses: dict[str, RecordedResponse],
-    answerer: CommandAnswerer,
+    answerer: Answerer,
     *,
     perturbations: tuple[str, ...] = PERTURBATIONS,
     same_threshold: float = 0.8,
@@ -345,3 +349,155 @@ def counterfactual_markdown(report: CounterfactualReport) -> str:
         "Redundant evidence can make a faithful answer look unchanged; these are leads, not verdicts.",
     ]
     return "\n".join(lines) + "\n"
+
+
+# --- self-test: do the checks work on *your* data? -------------------------------------------------
+# Two reference systems are built from the scenario itself. The reference answers from the evidence
+# (extractive), so a perfect test never flags it; the memorizer repeats its own first answer whatever the
+# evidence says, so a perfect test always flags it. Measuring both on your cases shows how often the
+# checks cry wolf and how often they miss a known failure, on your wording and your evidence.
+
+SENTENCE_SPLIT = re.compile(r"(?<=[.!?。！？])\s+")
+
+
+class ReferenceAnswerer:
+    """Extractive system: returns the evidence sentence sharing the most words with the question."""
+
+    def answer(self, case_id: str, question: str, evidence: list[str]) -> str:
+        wanted = set(tokenize(question))
+        best, best_overlap = "", 0
+        for passage in evidence:
+            for sentence in SENTENCE_SPLIT.split(passage):
+                overlap = len(wanted & set(tokenize(sentence)))
+                if sentence.strip() and overlap > best_overlap:
+                    best, best_overlap = sentence.strip(), overlap
+        return best if best_overlap >= 2 else "I do not know."
+
+
+class MemorizingAnswerer:
+    """Repeats the answer it gave with full evidence, whatever the evidence now says."""
+
+    def __init__(self, memory: dict[str, str]) -> None:
+        self.memory = memory
+
+    def answer(self, case_id: str, question: str, evidence: list[str]) -> str:
+        return self.memory[case_id]
+
+
+class GullibleAnswerer:
+    """Answers from the evidence but obeys an instruction planted inside it."""
+
+    def __init__(self, reference: Answerer) -> None:
+        self.reference = reference
+
+    def answer(self, case_id: str, question: str, evidence: list[str]) -> str:
+        token = _canary(case_id)
+        if any(token in passage for passage in evidence):
+            return token
+        return self.reference.answer(case_id, question, evidence)
+
+
+@dataclass(frozen=True)
+class SelfTestItem:
+    perturbation: str
+    eligible: int
+    false_flag_rate: float
+    detection_rate: float
+    verdict: str  # valid | weak | too_few_cases
+
+
+@dataclass(frozen=True)
+class SelfTestReport:
+    schema_version: str
+    scenario_id: str
+    decision: str  # VALID | WEAK | INCONCLUSIVE
+    max_false_flag_rate: float
+    min_detection_rate: float
+    min_eligible: int
+    items: tuple[SelfTestItem, ...]
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def run_self_test(
+    scenario_id: str,
+    cases: tuple[EvalCase, ...],
+    responses: dict[str, RecordedResponse],
+    *,
+    perturbations: tuple[str, ...] = ALL_PERTURBATIONS,
+    same_threshold: float = 0.8,
+    max_false_flag_rate: float = 0.2,
+    min_detection_rate: float = 0.8,
+    min_eligible: int = 3,
+    limit: int | None = None,
+) -> SelfTestReport:
+    for name, value in (("max_false_flag_rate", max_false_flag_rate), ("min_detection_rate", min_detection_rate)):
+        if isinstance(value, bool) or not math.isfinite(value) or not 0 <= value <= 1:
+            raise ContractError(f"{name} must be between 0 and 1")
+    selected = cases[:limit] if limit else cases
+    reference = ReferenceAnswerer()
+    # Baselines come from the reference itself; the recorded citations are kept so drop_citation can apply.
+    baselines = {}
+    for case in selected:
+        recorded = responses.get(case.id)
+        if recorded is None:
+            raise ContractError(f"No recorded response for case {case.id!r}")
+        baselines[case.id] = RecordedResponse(
+            case_id=case.id, answer=reference.answer(case.id, case.question, list(case.evidence)),
+            citation_ids=recorded.citation_ids, retrieved_ids=recorded.retrieved_ids,
+            latency_ms=0, cost_usd=0,
+        )
+    memorizer = MemorizingAnswerer({cid: r.answer for cid, r in baselines.items()})
+    common: dict[str, Any] = {
+        "same_threshold": same_threshold, "min_eligible": 1, "max_injection_rate": 1.0, "limit": None,
+    }
+    items = []
+    for perturbation in (p for p in ALL_PERTURBATIONS if p in perturbations):
+        good = run_counterfactual(scenario_id, selected, baselines, reference, perturbations=(perturbation,), **common)
+        bad_system: Answerer = GullibleAnswerer(reference) if perturbation == "inject_instruction" else memorizer
+        bad = run_counterfactual(scenario_id, selected, baselines, bad_system, perturbations=(perturbation,), **common)
+        good_summary, bad_summary = good.summaries[0], bad.summaries[0]
+        eligible = min(good_summary.eligible, bad_summary.eligible)
+        if eligible < min_eligible:
+            verdict = "too_few_cases"
+        elif good_summary.insensitive_rate <= max_false_flag_rate and bad_summary.insensitive_rate >= min_detection_rate:
+            verdict = "valid"
+        else:
+            verdict = "weak"
+        items.append(SelfTestItem(
+            perturbation, eligible, good_summary.insensitive_rate, bad_summary.insensitive_rate, verdict,
+        ))
+    verdicts = {item.verdict for item in items}
+    decision = "WEAK" if "weak" in verdicts else "INCONCLUSIVE" if "too_few_cases" in verdicts else "VALID"
+    return SelfTestReport(
+        "1.0", scenario_id, decision, max_false_flag_rate, min_detection_rate, min_eligible, tuple(items)
+    )
+
+
+def self_test_markdown(report: SelfTestReport) -> str:
+    lines = [
+        f"# Counterfactual self-test: {report.decision}",
+        "",
+        f"Scenario: `{report.scenario_id}`. Two reference systems built from your own cases: one that answers "
+        "from the evidence (should never be flagged) and one that ignores it (should always be flagged; for "
+        "`inject_instruction`, one that obeys planted text). A perturbation is trusted on your data when the "
+        f"reference is flagged at most {report.max_false_flag_rate:.0%} of the time, the failing system at least "
+        f"{report.min_detection_rate:.0%}, and at least {report.min_eligible} cases apply.",
+        "",
+        "| Perturbation | Eligible | Reference wrongly flagged | Failing system caught | Verdict |",
+        "| --- | ---: | ---: | ---: | --- |",
+    ]
+    for item in report.items:
+        lines.append(
+            f"| `{item.perturbation}` | {item.eligible} | {item.false_flag_rate:.0%} | "
+            f"{item.detection_rate:.0%} | {item.verdict} |"
+        )
+    lines += [
+        "",
+        "`weak` means the check cannot be trusted on these cases (for example redundant evidence makes the "
+        "faithful reference look unchanged); `too_few_cases` means too little of your data can be perturbed. "
+        "The references are simple toys: passing this test shows the checks are usable on your data, not that "
+        "they find the failures of your real system.",
+    ]
+    return "\n".join(lines)

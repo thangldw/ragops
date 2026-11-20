@@ -23,6 +23,7 @@ Pick the check that fits the question (details and flags in `references/commands
 - No release policy yet: `policy-suggest` writes a slice-aware policy from an accepted baseline. Present it as a draft for the owner to review, never as approved.
 - A bad answer was found in production: `mine` adds flagged logs (thumbs down, low rating, escalated) to the scenario as regression cases.
 - Is the answer really based on the evidence: `counterfactual` alters the evidence and re-asks the user's own system (removing support, swapping numbers, dropping a citation, planting an instruction, removing all evidence).
+- Do the counterfactual checks work on this data: `counterfactual-selftest` needs no system; run it before trusting a `counterfactual` result, and report `weak` or `too_few_cases` perturbations as unreliable.
 - Results differ between runs: `stability` gates the spread of repeated runs.
 - Is the scorer trustworthy: `calibrate` (with the user's human labels) reports an accuracy-based confidence band and a suggested threshold; `triage` then routes cases to auto-pass, auto-fail or human review.
 
