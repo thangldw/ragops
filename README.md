@@ -32,7 +32,7 @@ RAGOps compares recorded candidate behavior with an accepted baseline, applies a
 
 Requirements: Python 3.11+.
 
-Current technical references: [architecture](docs/ARCHITECTURE.md), [contracts](docs/CONTRACTS.md), [governance](docs/governance.md), [operations](docs/OPERATIONS.md), [security](SECURITY.md), and [v2.7.1 release notes](docs/releases/v2.7.1.md).
+Current technical references: [architecture](docs/ARCHITECTURE.md), [contracts](docs/CONTRACTS.md), [governance](docs/governance.md), [operations](docs/OPERATIONS.md), [production loop](docs/production-loop.md), [counterfactual test](docs/counterfactual-test.md), [security](SECURITY.md), and [v2.7.1 release notes](docs/releases/v2.7.1.md).
 
 The repository is also a skills-only plugin for ChatGPT, Codex, Claude Code and Cowork. It does not include a hosted MCP connector. See the [directory submission package](docs/submission/DIRECTORY_SUBMISSION.md), [privacy policy](PRIVACY.md), [terms](TERMS.md), and [support guidance](SUPPORT.md).
 
@@ -72,6 +72,8 @@ RAGOps so sánh trace ứng viên với baseline được chấp nhận, áp d�
 
 Yêu cầu: Python 3.11+. Dùng các lệnh ở phần English để cài đặt, kiểm tra scenario, lint và test.
 
+Ngoài cổng phát hành còn có vòng lặp production (offline): `policy-suggest`, `calibrate`/`triage`, `stability`, `mine`, `counterfactual`, `counterfactual-selftest`. Các công cụ này mới thử trên hệ thống mẫu và dữ liệu dựng sẵn, chưa đo trên hệ RAG thật. Xem [docs/production-loop.md](docs/production-loop.md).
+
 ## 日本語
 
 紹介ページ: [thangldw.github.io/ragops/](https://thangldw.github.io/ragops/)。最新の公開 release は [v2.7.1](https://github.com/thangldw/ragops/releases/tag/v2.7.1) です。Main の新しい source/documentation change は公開 artifact やその検証記録を置換しません。
@@ -79,5 +81,7 @@ Yêu cầu: Python 3.11+. Dùng các lệnh ở phần English để cài đặt
 RAGOps は記録済み候補を承認済みベースラインと比較し、バージョン管理された方針から一つの `PASS`・`WARN`・`BLOCK` 判定を JSON、Markdown、HTML、JUnit、SARIF に出力します。依存関係のない core はオフラインで動作し、API/workbench は任意の extra です。デモは synthetic evidence であり、本番導入実績ではありません。
 
 必要環境は Python 3.11 以上です。セットアップ、lint、テストには English セクションのコマンドを使用してください。
+
+リリースゲートに加え、オフラインの本番運用ループ（`policy-suggest`、`calibrate`/`triage`、`stability`、`mine`、`counterfactual`、`counterfactual-selftest`）があります。玩具・構成データでのみ確認済みで、実際の RAG では未測定です。[docs/production-loop.md](docs/production-loop.md) を参照。
 
 Released under the [Apache License 2.0](LICENSE).
