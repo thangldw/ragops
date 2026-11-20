@@ -20,7 +20,7 @@ def test_plugin_manifests_match_package_version() -> None:
         json.loads(Path(path).read_text(encoding="utf-8"))["version"]
         for path in (
             ".codex-plugin/plugin.json",
-            ".claude-plugin/plugin.json",
+            "plugins/ragops/.claude-plugin/plugin.json",
             ".kimi-plugin/plugin.json",
         )
     }
