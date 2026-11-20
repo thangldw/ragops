@@ -1,21 +1,7 @@
-# RAGOps operations / Vận hành / 運用
-
-## English
+# RAGOps operations
 
 Install with `pip install -e '.[dev]'`, run `ruff check .`, then `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest -q`. Verify `ragops demo --profile engineer`, `ragops evidence verify`, the packaged API/UI, every schema instance, and a clean `--no-deps` wheel import. Build wheel/sdist/SBOM/checksums from a clean commit, promote those exact artifacts to a GitHub Release, then dispatch the tag-bound PyPI Trusted Publishing workflow. GitHub publication, PyPI publication, ChatGPT directory submission, and ChatGPT approval are separate states and must be reported separately.
 
 Optional local usage measurement is enabled only by setting `RAGOPS_USAGE_LOG=/controlled/path/usage.jsonl`. It records command name and exit code without arguments or paths; aggregate it with `ragops usage-report --events /controlled/path/usage.jsonl`. Production adoption claims require approved, pseudonymous observations through `ragops pilot-report`, not CLI event counts.
 
 Production loop (all offline): `ragops policy-suggest` drafts a policy from the accepted baseline; `ragops calibrate` and `ragops triage` limit human review to the uncertain cases; `ragops stability` blocks candidates whose answers vary between repeats; `ragops mine` adds flagged production failures to the scenario; `ragops counterfactual` (checked first with `counterfactual-selftest`) tests whether answers depend on their evidence. Exit code 2 means BLOCK/WEAK and 3 means INCONCLUSIVE where a command defines it. These were exercised on toy and constructed data only. Details: [production-loop.md](production-loop.md).
-
-## Tiếng Việt
-
-Cài bằng `pip install -e '.[dev]'`, chạy lint/test, demo/evidence verify, API/UI, schema và clean-wheel import. Build wheel/sdist/SBOM/checksum từ commit sạch, phát hành đúng artifact lên GitHub rồi mới chạy PyPI Trusted Publishing theo tag. Phải phân biệt GitHub release, PyPI release, ChatGPT submission và ChatGPT approval.
-
-Vòng lặp production (offline): `policy-suggest`, `calibrate`/`triage`, `stability`, `mine`, `counterfactual` (kiểm tra trước bằng `counterfactual-selftest`). Mã thoát 2 là BLOCK/WEAK, 3 là INCONCLUSIVE nếu lệnh định nghĩa. Mới thử trên dữ liệu mẫu và dựng sẵn. Chi tiết: [production-loop.md](production-loop.md).
-
-## 日本語
-
-`pip install -e '.[dev]'` 後に lint/test、demo/evidence verify、API/UI、schema、clean-wheel import を確認します。clean commit から wheel/sdist/SBOM/checksum を作成し、同一 artifact を GitHub Release に昇格してから tag-bound PyPI workflow を実行します。GitHub、PyPI、ChatGPT submission、ChatGPT approval は別状態です。
-
-本番運用ループ（オフライン）: `policy-suggest`、`calibrate`/`triage`、`stability`、`mine`、`counterfactual`（先に `counterfactual-selftest` で確認）。終了コード 2 は BLOCK/WEAK、3 は INCONCLUSIVE（コマンドが定義する場合）。玩具・構成データでのみ確認済み。詳細: [production-loop.md](production-loop.md)
