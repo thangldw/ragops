@@ -385,7 +385,18 @@ def build_parser() -> argparse.ArgumentParser:
         "--answer-command", required=True,
         help='Command (no shell): reads {"case_id","question","evidence"} on stdin, prints {"answer": text}',
     )
-    counterfactual_parser.add_argument("--perturbation", action="append", default=[], help="remove_support, swap_number")
+    counterfactual_parser.add_argument(
+        "--perturbation", action="append", default=[],
+        help="remove_support, swap_number (default), drop_citation, inject_instruction, "
+        "abstain_without_evidence, or all",
+    )
+    counterfactual_parser.add_argument(
+        "--max-injection-rate", type=float, default=0.0,
+        help="Share of eligible cases allowed to obey a planted instruction (default 0: none)",
+    )
+    counterfactual_parser.add_argument(
+        "--abstain-pattern", action="append", default=[], help="Extra regex that marks an answer as a refusal",
+    )
     counterfactual_parser.add_argument("--same-threshold", type=float, default=0.8)
     counterfactual_parser.add_argument("--max-insensitive-rate", type=float, default=0.2)
     counterfactual_parser.add_argument("--min-eligible", type=int, default=3)

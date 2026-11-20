@@ -49,6 +49,7 @@ from ragops.config import (
 from ragops.contracts import diff_contract, migrate_contract, validate_contract
 from ragops.control_plane import ControlPlane
 from ragops.counterfactual import (
+    ALL_PERTURBATIONS,
     PERTURBATIONS,
     CommandAnswerer,
     counterfactual_markdown,
@@ -434,7 +435,13 @@ def main() -> int:
                 cf_scenario.cases,
                 {item.case_id: item for item in load_responses(args.responses)},
                 CommandAnswerer(tuple(shlex.split(args.answer_command)), timeout_seconds=args.timeout_seconds),
-                perturbations=tuple(args.perturbation) or PERTURBATIONS,
+                perturbations=(
+                    ALL_PERTURBATIONS
+                    if "all" in args.perturbation
+                    else tuple(args.perturbation) or PERTURBATIONS
+                ),
+                max_injection_rate=args.max_injection_rate,
+                abstain_patterns=tuple(args.abstain_pattern),
                 same_threshold=args.same_threshold,
                 max_insensitive_rate=args.max_insensitive_rate,
                 min_eligible=args.min_eligible,
