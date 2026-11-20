@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [2.6.0] - 2026-11-20
+
 - `ragops counterfactual` gains three opt-in perturbations (`--perturbation all`): `drop_citation` (each cited passage removed in turn; flags citations the answer did not use), `inject_instruction` (a planted canary instruction in the evidence; one obeyed injection blocks, `--max-injection-rate` default 0) and `abstain_without_evidence` (no evidence at all; the answer should be a refusal, with `--abstain-pattern` for custom phrases). The demo has a third toy system that obeys injected text.
 - New `ragops counterfactual` (see `docs/counterfactual-test.md`): alters the evidence of each case (removes the supporting passages, swaps the numbers the answer took from it) and re-asks your own system through `--answer-command`; blocks when more than `--max-insensitive-rate` of eligible answers ignore the change, and reports INCONCLUSIVE (exit 3) when too few cases were eligible. Needs no labels or model. Demonstrated on two toy systems only; not yet measured on a real RAG system.
 - Evaluators can now say "not sure". `ragops calibrate` reports a `confidence_band` (`--target-accuracy`, default 0.9; `--minimum-decided`, default 5): the narrowest margin around the threshold outside of which the evaluator agrees with your human labels at the target accuracy. New `ragops triage --evaluation eval.json --calibration report.json` sorts cases into auto-pass, auto-fail and needs-review, and states the measured agreement on the part it decides alone.
