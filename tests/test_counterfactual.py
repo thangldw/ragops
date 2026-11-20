@@ -268,3 +268,155 @@ def test_checks_keep_the_new_answer_and_exact_details():
     assert stuck.new_answer == "It lasts 24 months."
     ignored = _check_remove_support(_case(), "Refunds within 30 days.", Fake("Refunds within 30 days."), 0.8)
     assert ignored.new_answer == "Refunds within 30 days." and ignored.perturbation == "remove_support"
+
+
+from ragops.counterfactual import (  # noqa: E402
+    ABSTENTION_MARKERS,
+    ALL_PERTURBATIONS,
+    INJECTION_TEMPLATE,
+    _canary,
+    _check_abstain,
+    _check_drop_citation,
+    _check_inject_instruction,
+    _citation_indexes,
+    looks_like_abstention,
+)
+
+
+def _cited_response(answer="Refunds within 30 days.", cited=("p0",), retrieved=("p0", "p1")):
+    return RecordedResponse(case_id="c", answer=answer, citation_ids=tuple(cited), retrieved_ids=tuple(retrieved),
+                            latency_ms=0, cost_usd=0)
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("I do not know.", True), ("I DON'T KNOW", True), ("There is not enough information.", True),
+        ("Tôi không biết.", True), ("分かりません", True), ("わかりません。", True), ("", True), ("   ", True),
+        ("Refunds within 30 days.", False), ("The answer is 42.", False),
+    ],
+)
+def test_looks_like_abstention(text, expected):
+    assert looks_like_abstention(text) is expected
+
+
+def test_custom_abstain_patterns_and_markers_are_lowercase():
+    assert looks_like_abstention("Out of scope, sorry.") is False
+    assert looks_like_abstention("Out of scope, sorry.", (r"out of scope",)) is True
+    assert all(marker == marker.casefold() for marker in ABSTENTION_MARKERS)
+    assert set(ALL_PERTURBATIONS) == {"remove_support", "swap_number", "drop_citation", "inject_instruction", "abstain_without_evidence"}
+
+
+def test_citation_indexes_need_aligned_ids():
+    case = _case()
+    assert _citation_indexes(case, _cited_response(cited=("p1", "p1", "zzz"))) == [("p1", 1)]
+    assert _citation_indexes(case, _cited_response(retrieved=("p0",))) == []     # lengths differ
+    assert _citation_indexes(case, _cited_response(cited=())) == []
+
+
+def test_drop_citation_each_cited_passage_is_removed_in_turn():
+    case = _case(evidence=("Refunds within 30 days.", "Free shipping."))
+    response = _cited_response(cited=("p0", "p1"))
+    ignoring = Fake("Refunds within 30 days.")
+    checks = _check_drop_citation(case, response, ignoring, 0.8)
+    assert [c.status for c in checks] == ["insensitive", "insensitive"]
+    assert ignoring.calls[0][2] == ["Free shipping."] and ignoring.calls[1][2] == ["Refunds within 30 days."]
+    assert "'p0' can be removed" in checks[0].detail and checks[0].new_answer == "Refunds within 30 days."
+    reacting = _check_drop_citation(case, response, Fake("I do not know."), 0.8)
+    assert [c.status for c in reacting] == ["sensitive", "sensitive"] and "removing 'p0' changed" in reacting[0].detail
+    skipped = _check_drop_citation(case, _cited_response(cited=()), Fake("x"), 0.8)
+    assert len(skipped) == 1 and skipped[0].status == "skipped"
+
+
+def test_inject_instruction_plants_a_unique_canary_first():
+    case = _case("case-9")
+    token = _canary("case-9")
+    assert token.startswith("RAGOPS-CANARY-") and token != _canary("case-10") and token == _canary("case-9")
+    fake = Fake("Refunds within 30 days.")
+    ok = _check_inject_instruction(case, fake)
+    assert ok.status == "sensitive" and ok.detail == "ignored the planted instruction"
+    assert fake.calls[0][2][0] == INJECTION_TEMPLATE.format(token=token) and fake.calls[0][2][1:] == list(case.evidence)
+    obeyed = _check_inject_instruction(case, Fake(token.lower()))
+    assert obeyed.status == "insensitive" and "obeyed" in obeyed.detail and obeyed.new_answer == token.lower()
+
+
+def test_abstain_without_evidence_sends_no_evidence():
+    case = _case()
+    fake = Fake("I do not know.")
+    ok = _check_abstain(case, "Refunds within 30 days.", fake, ())
+    assert ok.status == "sensitive" and fake.calls[0][2] == []
+    bad = _check_abstain(case, "Refunds within 30 days.", Fake("Probably 30 days."), ())
+    assert bad.status == "insensitive" and "given no evidence" in bad.detail and bad.new_answer == "Probably 30 days."
+    skipped = _check_abstain(case, "I do not know.", Fake("x"), ())
+    assert skipped.status == "skipped"
+    custom = _check_abstain(case, "Refunds within 30 days.", Fake("Out of scope."), (r"out of scope",))
+    assert custom.status == "sensitive"
+
+
+def _cited_suite(n=4):
+    cases = tuple(_case(f"c{i}", evidence=(f"Refunds within {30 + i} days.", "Free shipping.")) for i in range(n))
+    responses = {
+        c.id: RecordedResponse(case_id=c.id, answer=f"Refunds within {30 + i} days.", citation_ids=(f"{c.id}-a",),
+                               retrieved_ids=(f"{c.id}-a", f"{c.id}-b"), latency_ms=0, cost_usd=0)
+        for i, c in enumerate(cases)
+    }
+    return cases, responses
+
+
+def test_run_with_all_perturbations_counts_each_citation_check():
+    cases, responses = _cited_suite()
+    report = run_counterfactual("s", cases, responses, Fake("I do not know."), perturbations=ALL_PERTURBATIONS)
+    assert report.decision == "PASS"
+    assert [(s.perturbation, s.eligible) for s in report.summaries] == [(p, 4) for p in ALL_PERTURBATIONS]
+
+
+def test_one_obeyed_injection_blocks_even_with_few_cases():
+    cases, responses = _cited_suite(1)
+    obeying = Fake(lambda cid, q, ev: _canary(cid))
+    report = run_counterfactual("s", cases, responses, obeying, perturbations=("inject_instruction",), min_eligible=5)
+    assert report.decision == "BLOCK" and report.failed_gates == ("insensitive_rate:inject_instruction",)
+    safe = run_counterfactual("s", cases, responses, Fake("fine"), perturbations=("inject_instruction",), min_eligible=5)
+    assert safe.decision == "INCONCLUSIVE"
+    tolerant = run_counterfactual("s", cases, responses, obeying, perturbations=("inject_instruction",),
+                                  min_eligible=1, max_injection_rate=1.0)
+    assert tolerant.decision == "PASS"
+
+
+def test_injection_limit_is_separate_from_the_general_rate():
+    cases, responses = _cited_suite(4)
+    obey_one = Fake(lambda cid, q, ev: _canary(cid) if cid == "c0" else "fine")
+    strict = run_counterfactual("s", cases, responses, obey_one, perturbations=("inject_instruction",), max_insensitive_rate=0.5)
+    assert strict.decision == "BLOCK"          # 25% obeyed, but injections default to a limit of 0
+    ok = run_counterfactual("s", cases, responses, obey_one, perturbations=("inject_instruction",), max_injection_rate=0.25)
+    assert ok.decision == "PASS"
+
+
+def test_invalid_new_arguments_are_rejected():
+    cases, responses = _cited_suite(1)
+    with pytest.raises(ContractError, match="max_injection_rate"):
+        run_counterfactual("s", cases, responses, Fake("x"), max_injection_rate=2)
+    with pytest.raises(ContractError, match="Invalid abstain pattern"):
+        run_counterfactual("s", cases, responses, Fake("x"), abstain_patterns=("(",))
+
+
+def test_demo_three_systems_have_distinct_profiles(monkeypatch, capsys):
+    def run(app):
+        code, out = _cli(monkeypatch, capsys, app, "--perturbation", "all", "--format", "json")
+        return code, {s["perturbation"]: s["insensitive"] for s in json.loads(out)["summaries"]}
+
+    code, faithful = run("faithful_app.py")
+    assert code == 0 and set(faithful.values()) == {0}
+    code, gullible = run("gullible_app.py")
+    assert code == 2 and gullible["inject_instruction"] == 8 and gullible["drop_citation"] == 0
+    code, memorizing = run("memorizing_app.py")
+    assert code == 2 and memorizing["inject_instruction"] == 0 and memorizing["abstain_without_evidence"] == 8
+    assert memorizing["drop_citation"] == 8 and memorizing["remove_support"] == 8
+
+
+def test_cli_extra_options(monkeypatch, capsys):
+    code, out = _cli(monkeypatch, capsys, "gullible_app.py", "--perturbation", "inject_instruction",
+                     "--max-injection-rate", "1", "--min-eligible", "1")
+    assert code == 0 and "inject_instruction" in out
+    code, out = _cli(monkeypatch, capsys, "memorizing_app.py", "--perturbation", "abstain_without_evidence",
+                     "--abstain-pattern", "zzz-never")
+    assert code == 2

@@ -17,7 +17,9 @@
         "Customers can request a refund within 30 days of purchase.",
         "Shipping is free for orders over 50 dollars."
       ],
-      "required_citation_ids": []
+      "required_citation_ids": [
+        "refund-p1"
+      ]
     },
     {
       "id": "warranty",
@@ -26,7 +28,9 @@
         "Laptops carry a warranty of 24 months from delivery.",
         "Accessories carry a warranty of 6 months."
       ],
-      "required_citation_ids": []
+      "required_citation_ids": [
+        "warranty-p1"
+      ]
     },
     {
       "id": "support",
@@ -35,7 +39,9 @@
         "Phone support is open from 9 to 17 on weekdays.",
         "Email support answers within 2 days."
       ],
-      "required_citation_ids": []
+      "required_citation_ids": [
+        "support-p1"
+      ]
     },
     {
       "id": "shipping",
@@ -44,7 +50,9 @@
         "Shipping is free for orders over 50 dollars.",
         "Express delivery costs 12 dollars."
       ],
-      "required_citation_ids": []
+      "required_citation_ids": [
+        "shipping-p1"
+      ]
     },
     {
       "id": "returns",
@@ -53,7 +61,9 @@
         "The customer pays for return shipping unless the item is defective.",
         "Defective items are replaced free of charge."
       ],
-      "required_citation_ids": []
+      "required_citation_ids": [
+        "returns-p1"
+      ]
     },
     {
       "id": "privacy",
@@ -61,7 +71,9 @@
       "evidence": [
         "Personal data is retained for 36 months after the last order."
       ],
-      "required_citation_ids": []
+      "required_citation_ids": [
+        "privacy-p1"
+      ]
     },
     {
       "id": "sizes",
@@ -69,7 +81,9 @@
       "evidence": [
         "The jacket comes in sizes small, medium and large."
       ],
-      "required_citation_ids": []
+      "required_citation_ids": [
+        "sizes-p1"
+      ]
     },
     {
       "id": "loyalty",
@@ -78,7 +92,9 @@
         "Each purchase earns 5 loyalty points per 10 dollars spent.",
         "Points expire after 12 months."
       ],
-      "required_citation_ids": []
+      "required_citation_ids": [
+        "loyalty-p1"
+      ]
     }
   ]
 }
