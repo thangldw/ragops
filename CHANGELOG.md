@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [2.7.1] - 2026-11-20
+
+- The Codex/ChatGPT plugin manifest now declares `interface.supportURL` (the OpenAI plugin portal requires it), so the published ChatGPT package and the GitHub release are identical. No CLI changes.
+
 ## [2.7.0] - 2026-11-20
 
 - New `ragops counterfactual-selftest`: lets users check the counterfactual checks on their own scenario without any system. It builds an evidence-copying reference and an evidence-ignoring (or injection-obeying) system from the user's cases and reports, per perturbation, how often the reference is wrongly flagged, how often the failing system is caught, and whether enough cases apply (`valid`, `weak`, `too_few_cases`; exit 0, 2, 3).
