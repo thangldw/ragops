@@ -375,6 +375,20 @@ def build_parser() -> argparse.ArgumentParser:
         default="generic",
         help="Shape of the logs: a Langfuse trace export, OpenAI or Anthropic request/response logs",
     )
+    selftest_parser = commands.add_parser(
+        "counterfactual-selftest",
+        help="Check, on your own cases, that the counterfactual checks flag a known-bad system and spare a faithful one",
+    )
+    selftest_parser.add_argument("--scenario", required=True)
+    selftest_parser.add_argument("--responses", required=True)
+    selftest_parser.add_argument("--perturbation", action="append", default=[], help="Default: all")
+    selftest_parser.add_argument("--same-threshold", type=float, default=0.8)
+    selftest_parser.add_argument("--max-false-flag-rate", type=float, default=0.2)
+    selftest_parser.add_argument("--min-detection-rate", type=float, default=0.8)
+    selftest_parser.add_argument("--min-eligible", type=int, default=3)
+    selftest_parser.add_argument("--limit", type=int)
+    selftest_parser.add_argument("--output")
+    selftest_parser.add_argument("--format", choices=["markdown", "json"], default="markdown")
     counterfactual_parser = commands.add_parser(
         "counterfactual",
         help="Alter the evidence and re-ask your system: does the answer depend on it? (calls your system)",

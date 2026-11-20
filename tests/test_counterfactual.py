@@ -420,3 +420,82 @@ def test_cli_extra_options(monkeypatch, capsys):
     code, out = _cli(monkeypatch, capsys, "memorizing_app.py", "--perturbation", "abstain_without_evidence",
                      "--abstain-pattern", "zzz-never")
     assert code == 2
+
+
+from ragops.counterfactual import (  # noqa: E402
+    GullibleAnswerer,
+    MemorizingAnswerer,
+    ReferenceAnswerer,
+    run_self_test,
+    self_test_markdown,
+)
+
+
+def _self_suite(n=4, duplicate=False):
+    cases, responses = [], {}
+    for i in range(n):
+        fact = f"Customers can request a refund within {30 + i} days of purchase."
+        evidence = (fact, fact) if duplicate else (fact, "Shipping is free for orders over 50 dollars.")
+        cases.append(EvalCase(f"c{i}", "How many days to request a refund?", evidence, ()))
+        responses[f"c{i}"] = RecordedResponse(
+            case_id=f"c{i}", answer=fact, citation_ids=(f"c{i}-a",), retrieved_ids=(f"c{i}-a", f"c{i}-b"),
+            latency_ms=0, cost_usd=0,
+        )
+    return tuple(cases), responses
+
+
+def test_reference_answerer_extracts_the_best_sentence_or_declines():
+    ref = ReferenceAnswerer()
+    evidence = ["Shipping is free over 50 dollars. Refunds are possible within 30 days of purchase."]
+    assert ref.answer("c", "How many days for refunds?", evidence) == "Refunds are possible within 30 days of purchase."
+    assert ref.answer("c", "What colour is the moon?", evidence) == "I do not know."
+    assert ref.answer("c", "How many days for refunds?", []) == "I do not know."
+
+
+def test_memorizer_and_gullible_behaviour():
+    assert MemorizingAnswerer({"c": "same"}).answer("c", "q", ["anything"]) == "same"
+    gullible = GullibleAnswerer(ReferenceAnswerer())
+    token = _canary("c")
+    assert gullible.answer("c", "q", [f"x {token} y"]) == token
+    assert gullible.answer("c", "q", ["Nothing planted."]) == "I do not know."
+
+
+def test_self_test_is_valid_on_clean_data_and_flags_redundant_evidence():
+    cases, responses = _self_suite()
+    report = run_self_test("s", cases, responses)
+    assert report.decision == "VALID"
+    assert [i.verdict for i in report.items] == ["valid"] * 5
+    assert all(i.false_flag_rate == 0 and i.detection_rate == 1 and i.eligible == 4 for i in report.items)
+    dup_cases, dup_responses = _self_suite(duplicate=True)
+    weak = run_self_test("s", dup_cases, dup_responses)
+    by_name = {i.perturbation: i for i in weak.items}
+    assert weak.decision == "WEAK"
+    assert by_name["drop_citation"].verdict == "weak" and by_name["drop_citation"].false_flag_rate == 1.0
+
+
+def test_self_test_too_few_cases_and_argument_checks():
+    cases, responses = _self_suite(2)
+    report = run_self_test("s", cases, responses, perturbations=("remove_support",))
+    assert report.decision == "INCONCLUSIVE" and report.items[0].verdict == "too_few_cases"
+    assert run_self_test("s", cases, responses, perturbations=("remove_support",), min_eligible=2).decision == "VALID"
+    assert run_self_test("s", *_self_suite(5), limit=3, perturbations=("remove_support",)).items[0].eligible == 3
+    with pytest.raises(ContractError, match="min_detection_rate"):
+        run_self_test("s", cases, responses, min_detection_rate=1.5)
+    with pytest.raises(ContractError, match="No recorded response"):
+        run_self_test("s", cases, {})
+
+
+def test_self_test_markdown_and_cli(monkeypatch, capsys, tmp_path):
+    cases, responses = _self_suite()
+    text = self_test_markdown(run_self_test("s", cases, responses))
+    assert text.startswith("# Counterfactual self-test: VALID") and "| `drop_citation` | 4 | 0% | 100% | valid |" in text
+    monkeypatch.setattr(sys, "argv", ["ragops", "counterfactual-selftest", "--scenario", str(DEMO / "scenario.json"),
+                                      "--responses", str(DEMO / "responses.json"), "--format", "json",
+                                      "--output", str(tmp_path / "o" / "st.json")])
+    assert main() == 0
+    data = json.loads((tmp_path / "o" / "st.json").read_text(encoding="utf-8"))
+    assert data["decision"] == "VALID" and len(data["items"]) == 5
+    monkeypatch.setattr(sys, "argv", ["ragops", "counterfactual-selftest", "--scenario", str(DEMO / "scenario.json"),
+                                      "--responses", str(DEMO / "responses.json"), "--min-eligible", "9"])
+    assert main() == 3
+    assert "too_few_cases" in capsys.readouterr().out

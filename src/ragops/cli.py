@@ -54,6 +54,8 @@ from ragops.counterfactual import (
     CommandAnswerer,
     counterfactual_markdown,
     run_counterfactual,
+    run_self_test,
+    self_test_markdown,
 )
 from ragops.datasets import (
     create_dataset_manifest,
@@ -427,6 +429,34 @@ def main() -> int:
             file=sys.stderr,
         )
         return 0
+    if args.command == "counterfactual-selftest":
+        try:
+            st_scenario = load_scenario(args.scenario)
+            st_report = run_self_test(
+                st_scenario.id,
+                st_scenario.cases,
+                {item.case_id: item for item in load_responses(args.responses)},
+                perturbations=ALL_PERTURBATIONS if not args.perturbation else tuple(args.perturbation),
+                same_threshold=args.same_threshold,
+                max_false_flag_rate=args.max_false_flag_rate,
+                min_detection_rate=args.min_detection_rate,
+                min_eligible=args.min_eligible,
+                limit=args.limit,
+            )
+        except (ContractError, OSError, ValueError) as exc:
+            raise SystemExit(f"counterfactual-selftest error: {exc}") from exc
+        rendered = (
+            json.dumps(st_report.to_dict(), ensure_ascii=False, indent=2)
+            if args.format == "json"
+            else self_test_markdown(st_report)
+        )
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(rendered.rstrip() + "\n", encoding="utf-8")
+        else:
+            print(rendered.rstrip())
+        return {"VALID": 0, "WEAK": 2, "INCONCLUSIVE": 3}[st_report.decision]
     if args.command == "counterfactual":
         try:
             cf_scenario = load_scenario(args.scenario)

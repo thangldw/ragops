@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- New `ragops counterfactual-selftest`: lets users check the counterfactual checks on their own scenario without any system. It builds an evidence-copying reference and an evidence-ignoring (or injection-obeying) system from the user's cases and reports, per perturbation, how often the reference is wrongly flagged, how often the failing system is caught, and whether enough cases apply (`valid`, `weak`, `too_few_cases`; exit 0, 2, 3).
+
 ## [2.6.0] - 2026-11-20
 
 - `ragops counterfactual` gains three opt-in perturbations (`--perturbation all`): `drop_citation` (each cited passage removed in turn; flags citations the answer did not use), `inject_instruction` (a planted canary instruction in the evidence; one obeyed injection blocks, `--max-injection-rate` default 0) and `abstain_without_evidence` (no evidence at all; the answer should be a refusal, with `--abstain-pattern` for custom phrases). The demo has a third toy system that obeys injected text.
