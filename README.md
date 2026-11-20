@@ -24,6 +24,8 @@ flowchart LR
 
 ## English
 
+Use it from Claude Code or Cowork: `/plugin marketplace add thangldw/ragops`, then `/plugin install ragops@ragops` (or in one step on Claude Code 2.1.275 or later: `/plugin install ragops --marketplace thangldw/ragops`). Details: [docs/claude-plugin.md](docs/claude-plugin.md).
+
 Product introduction: [thangldw.github.io/ragops/](https://thangldw.github.io/ragops/). Latest published release: [v2.5.0](https://github.com/thangldw/ragops/releases/tag/v2.5.0). Main may contain later source or documentation changes; they do not replace the published artifact or its recorded verification.
 
 RAGOps compares recorded candidate behavior with an accepted baseline, applies a versioned release policy, and emits one canonical `PASS`, `WARN`, or `BLOCK` decision across JSON, Markdown, HTML, JUnit, SARIF, and GitHub Summary. The dependency-free core performs no network calls. Optional adapters import vendor exports; the API/workbench ships in the wheel through the `api` extra.

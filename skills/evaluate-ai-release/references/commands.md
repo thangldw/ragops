@@ -7,6 +7,14 @@
 - Verify an evidence bundle: `python3 scripts/run_ragops.py evidence verify --bundle OUTPUT_DIR/evidence`
 - Explain a canonical decision: `python3 scripts/run_ragops.py explain --input OUTPUT_DIR/decision.json`
 
+Further checks (run each with `--help` first; none needs a network or provider unless noted):
+
+- Draft a release policy from a baseline: `policy-suggest --scenario PATH --baseline PATH [--margin 0.05] [--min-cases 3] [--output policy.toml]`, then apply it with `gate-v2 --scenario PATH --baseline PATH --candidate PATH --policy policy.toml`.
+- Grow the scenario from production failures: `mine --from LOGS --scenario PATH --responses PATH --output NEW_DIR` (writes a new directory; never overwrites).
+- Does the answer depend on the evidence: `counterfactual --scenario PATH --responses PATH --answer-command "COMMAND" [--perturbation all] [--limit N]`. Exit `0` PASS, `2` BLOCK, `3` INCONCLUSIVE. This runs the given command, which calls the user's system; see `docs/counterfactual-test.md` in the repository for the protocol and limits.
+- Repeatability: `stability --bundle RUNS.json [--baseline-bundle OLD.json] [--max-stddev-increase X]` (bundles come from `collect-runs`).
+- Scorer trust: `calibrate --input CALIBRATION.json --output report.json [--target-accuracy 0.9]`, then `evaluate ... --format json > evaluation.json` and `triage --evaluation evaluation.json --calibration report.json`.
+
 Run `python3 scripts/run_ragops.py COMMAND --help` before using an unfamiliar option. Exit code `2` from an evaluation means the release gate deliberately blocked the candidate.
 
 The public upload bundle includes a vendored copy of the dependency-free RAGOps core and review fixtures under `references/fixtures/`. The repository checkout uses its canonical `src/ragops` package instead.
