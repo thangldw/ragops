@@ -1,16 +1,14 @@
 # RAGOps
 
-[English](#english) · [Tiếng Việt](#tiếng-việt) · [日本語](#日本語)
-
 Offline, reproducible release gates for RAG systems and AI agents.
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","fontFamily":"Arial, sans-serif","lineColor":"#667085","primaryTextColor":"#172B4D"}}}%%
 flowchart LR
-    S["Scenario<br/>Kịch bản / シナリオ"]:::yellow
-    B["Accepted baseline<br/>Mốc chuẩn / 基準"]:::blue
-    C["Candidate traces<br/>Ứng viên / 候補"]:::purple
-    E["Evaluators & policy<br/>Đánh giá / 評価"]:::green
+    S["Scenario"]:::yellow
+    B["Accepted baseline"]:::blue
+    C["Candidate traces"]:::purple
+    E["Evaluators & policy"]:::green
     G{"PASS / WARN / BLOCK"}:::pink
     S --> E
     B --> E
@@ -21,8 +19,6 @@ flowchart LR
     classDef green fill:#DDF5E3,stroke:#4F9D69,stroke-width:2px,color:#172B4D
     classDef pink fill:#FFE1E6,stroke:#C96A7B,stroke-width:2px,color:#172B4D
 ```
-
-## English
 
 Use it from Claude Code or Cowork: `/plugin marketplace add thangldw/ragops`, then `/plugin install ragops@ragops` (or in one step on Claude Code 2.1.275 or later: `/plugin install ragops --marketplace thangldw/ragops`). Details: [docs/claude-plugin.md](docs/claude-plugin.md).
 
@@ -63,25 +59,5 @@ No release policy yet? `ragops policy-suggest --scenario scenario.json --baselin
 `lexical_groundedness` is a transparent lexical-overlap baseline, not a semantic judge: a correct paraphrase can score low and a wrong answer that reuses evidence vocabulary can score high. Japanese/Chinese text is compared as character bigrams and Vietnamese is NFC-normalized. For a stricter deterministic check (claim-level, exact numbers, negation) use `--evaluator strict_grounding`; measured accuracy and known failures are in [evaluator accuracy](docs/evaluator-accuracy.md). For semantic grounding, import Ragas/DeepEval scores through the adapters and calibrate against human labels.
 
 Local CLI usage evidence is disabled by default. Set `RAGOPS_USAGE_LOG` to an explicit JSONL path to record only the UTC timestamp, RAGOps version, top-level command, and exit code; arguments and file paths are never recorded. Summarize the file with `ragops usage-report --events usage.jsonl`. Use the consent-aware `pilot-report` contract and the [production pilot runbook](docs/gtm/production-pilot.md) for production adoption evidence.
-
-## Tiếng Việt
-
-Trang giới thiệu: [thangldw.github.io/ragops/](https://thangldw.github.io/ragops/). Release đã phát hành mới nhất: [v2.7.1](https://github.com/thangldw/ragops/releases/tag/v2.7.1). Main có thể chứa source hoặc tài liệu mới hơn; chúng không thay thế artifact đã phát hành hay evidence kiểm chứng của artifact.
-
-RAGOps so sánh trace ứng viên với baseline được chấp nhận, áp dụng release policy có version và xuất cùng một quyết định `PASS`, `WARN` hoặc `BLOCK` sang JSON/Markdown/HTML/JUnit/SARIF. Core không dependency, chạy offline; API/workbench là extra tùy chọn. Demo synthetic cố ý tạo `BLOCK`, không phải bằng chứng production adoption.
-
-Yêu cầu: Python 3.11+. Dùng các lệnh ở phần English để cài đặt, kiểm tra scenario, lint và test.
-
-Ngoài cổng phát hành còn có vòng lặp production (offline): `policy-suggest`, `calibrate`/`triage`, `stability`, `mine`, `counterfactual`, `counterfactual-selftest`. Các công cụ này mới thử trên hệ thống mẫu và dữ liệu dựng sẵn, chưa đo trên hệ RAG thật. Xem [docs/production-loop.md](docs/production-loop.md).
-
-## 日本語
-
-紹介ページ: [thangldw.github.io/ragops/](https://thangldw.github.io/ragops/)。最新の公開 release は [v2.7.1](https://github.com/thangldw/ragops/releases/tag/v2.7.1) です。Main の新しい source/documentation change は公開 artifact やその検証記録を置換しません。
-
-RAGOps は記録済み候補を承認済みベースラインと比較し、バージョン管理された方針から一つの `PASS`・`WARN`・`BLOCK` 判定を JSON、Markdown、HTML、JUnit、SARIF に出力します。依存関係のない core はオフラインで動作し、API/workbench は任意の extra です。デモは synthetic evidence であり、本番導入実績ではありません。
-
-必要環境は Python 3.11 以上です。セットアップ、lint、テストには English セクションのコマンドを使用してください。
-
-リリースゲートに加え、オフラインの本番運用ループ（`policy-suggest`、`calibrate`/`triage`、`stability`、`mine`、`counterfactual`、`counterfactual-selftest`）があります。玩具・構成データでのみ確認済みで、実際の RAG では未測定です。[docs/production-loop.md](docs/production-loop.md) を参照。
 
 Released under the [Apache License 2.0](LICENSE).
