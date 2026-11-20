@@ -26,13 +26,13 @@ flowchart LR
 
 Use it from Claude Code or Cowork: `/plugin marketplace add thangldw/ragops`, then `/plugin install ragops@ragops` (or in one step on Claude Code 2.1.275 or later: `/plugin install ragops --marketplace thangldw/ragops`). Details: [docs/claude-plugin.md](docs/claude-plugin.md).
 
-Product introduction: [thangldw.github.io/ragops/](https://thangldw.github.io/ragops/). Latest published release: [v2.7.0](https://github.com/thangldw/ragops/releases/tag/v2.7.0). Main may contain later source or documentation changes; they do not replace the published artifact or its recorded verification.
+Product introduction: [thangldw.github.io/ragops/](https://thangldw.github.io/ragops/). Latest published release: [v2.7.1](https://github.com/thangldw/ragops/releases/tag/v2.7.1). Main may contain later source or documentation changes; they do not replace the published artifact or its recorded verification.
 
 RAGOps compares recorded candidate behavior with an accepted baseline, applies a versioned release policy, and emits one canonical `PASS`, `WARN`, or `BLOCK` decision across JSON, Markdown, HTML, JUnit, SARIF, and GitHub Summary. The dependency-free core performs no network calls. Optional adapters import vendor exports; the API/workbench ships in the wheel through the `api` extra.
 
 Requirements: Python 3.11+.
 
-Current technical references: [architecture](docs/ARCHITECTURE.md), [contracts](docs/CONTRACTS.md), [governance](docs/governance.md), [operations](docs/OPERATIONS.md), [security](SECURITY.md), and [v2.7.0 release notes](docs/releases/v2.7.0.md).
+Current technical references: [architecture](docs/ARCHITECTURE.md), [contracts](docs/CONTRACTS.md), [governance](docs/governance.md), [operations](docs/OPERATIONS.md), [security](SECURITY.md), and [v2.7.1 release notes](docs/releases/v2.7.1.md).
 
 The repository is also a skills-only plugin for ChatGPT, Codex, Claude Code and Cowork. It does not include a hosted MCP connector. See the [directory submission package](docs/submission/DIRECTORY_SUBMISSION.md), [privacy policy](PRIVACY.md), [terms](TERMS.md), and [support guidance](SUPPORT.md).
 
@@ -66,7 +66,7 @@ Local CLI usage evidence is disabled by default. Set `RAGOPS_USAGE_LOG` to an ex
 
 ## Tiếng Việt
 
-Trang giới thiệu: [thangldw.github.io/ragops/](https://thangldw.github.io/ragops/). Release đã phát hành mới nhất: [v2.7.0](https://github.com/thangldw/ragops/releases/tag/v2.7.0). Main có thể chứa source hoặc tài liệu mới hơn; chúng không thay thế artifact đã phát hành hay evidence kiểm chứng của artifact.
+Trang giới thiệu: [thangldw.github.io/ragops/](https://thangldw.github.io/ragops/). Release đã phát hành mới nhất: [v2.7.1](https://github.com/thangldw/ragops/releases/tag/v2.7.1). Main có thể chứa source hoặc tài liệu mới hơn; chúng không thay thế artifact đã phát hành hay evidence kiểm chứng của artifact.
 
 RAGOps so sánh trace ứng viên với baseline được chấp nhận, áp dụng release policy có version và xuất cùng một quyết định `PASS`, `WARN` hoặc `BLOCK` sang JSON/Markdown/HTML/JUnit/SARIF. Core không dependency, chạy offline; API/workbench là extra tùy chọn. Demo synthetic cố ý tạo `BLOCK`, không phải bằng chứng production adoption.
 
@@ -74,7 +74,7 @@ Yêu cầu: Python 3.11+. Dùng các lệnh ở phần English để cài đặt
 
 ## 日本語
 
-紹介ページ: [thangldw.github.io/ragops/](https://thangldw.github.io/ragops/)。最新の公開 release は [v2.7.0](https://github.com/thangldw/ragops/releases/tag/v2.7.0) です。Main の新しい source/documentation change は公開 artifact やその検証記録を置換しません。
+紹介ページ: [thangldw.github.io/ragops/](https://thangldw.github.io/ragops/)。最新の公開 release は [v2.7.1](https://github.com/thangldw/ragops/releases/tag/v2.7.1) です。Main の新しい source/documentation change は公開 artifact やその検証記録を置換しません。
 
 RAGOps は記録済み候補を承認済みベースラインと比較し、バージョン管理された方針から一つの `PASS`・`WARN`・`BLOCK` 判定を JSON、Markdown、HTML、JUnit、SARIF に出力します。依存関係のない core はオフラインで動作し、API/workbench は任意の extra です。デモは synthetic evidence であり、本番導入実績ではありません。
 
